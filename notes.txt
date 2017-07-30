@@ -1,0 +1,74 @@
+Heart's Desire: Black Lake
+
+5 levels? or 4?
+	 						size	mercury	sewage	radio	toxic	garbage
+karachay			sm										yes
+onondaga			s/m		yes			yes						yes
+tai						m/l													yes?
+serra palada	sm		yes
+victoria			l							yes						yes		yes
+
+fight waves of enemies on single board to purify lakes. day = your turn, night = enemy turn
+- if you die, start again from same level?
+
+enemies...
+- will move OR attack on their turn
+- spawn semi-frequently, sometimes multiples at once. almost every night adds a new enemy
+  - different thresholds for different lakes? e.g. at most 3 enemies for lv1, at most 4 for lv2, etc
+- come in a few varieties, but not many
+  - garby: basic attacks & moves? or restrains you?
+	- mercury/hermy/mercuri: moves quickly & for free? or just acts twice?
+	- sewy: high HP
+	- toxy: holds you in place? or does DoT without moving
+	- algy: holds you in place?
+	- pharma: heals other enemies
+	- radioactive/nukey: self-destructs when killed
+- drop rewards when defeated ("purified"), either HP bubbles or items (if flashing)
+
+bosses... 1 for each stage?
+- all:
+  - only appear when all other enemies defeated, after minor fanfare
+  - attack 3 times per turn?
+	- have unique graphics
+	- randomly summon HP bubbles so player can survive more easily? but only some
+	- have fairly high HP
+- invasive species
+- noise pollution
+- heat pollution: strong attack at range?
+- light pollution
+- pesticide: constant damage over time
+- humans? summon garbage adds?
+
+implement enemy syncs if time, but keep very basic. no scaling, maybe even all the same effect
+
+moving and attacking cost 1AP each
+
+move into enemy to melee attack
+
+special does special attack
+- can use 3 times, get 1 use back per day
+- default: 3 random hits to any enemies
+- augment: more damage
+- augment: more hits?
+- augment: also attacks adjacent with strong hit
+- augment: also attacks center with strong hit
+- augment: 
+
+pick up power-ups that passively enhance stats
+- free moves at water's surface
+- phys attack + 2
+- phys attack + 3 at surface
+- phys attack + 3 at lake bottom
+- more special attack uses total
+- 3 free moves each turn
+- AP + 1
+- heal more HP during the day (+1 on top of 3)
+- max HP + 3
+- HP bubbles heal 2x HP
+* picking up a 10th power-up when you already have 9 forces you to dump the oldest one? or opens a menu?
+  * i think do if time, otherwise you just keep all powerups you find
+* randomly given out in each stage
+
+music should be easy: 1 for stages, 1 for bosses, 1 for menus/everything else
+
+sfx will be a little harder. play for nearly everything!
