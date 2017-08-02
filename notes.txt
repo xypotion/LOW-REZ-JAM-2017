@@ -97,6 +97,13 @@ music should be easy: 1 for stages, 1 for bosses, 1 for menus/everything else
 sfx will be a little harder. play for nearly everything!
 
 
+title screen:
+- play
+- hints/controls
+- hi scores
+- credits
+
+
 enemy
 {
 	type
