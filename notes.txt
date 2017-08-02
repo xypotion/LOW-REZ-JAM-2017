@@ -10,19 +10,31 @@ victoria			l							yes						yes		yes
 
 fight waves of enemies on single board to purify lakes. day = your turn, night = enemy turn
 - if you die, start again from same level?
+- base attack = 3
+- base AP = 3
+- base HP = 9
 
 enemies...
 - will move OR attack on their turn
 - spawn semi-frequently, sometimes multiples at once. almost every night adds a new enemy
   - different thresholds for different lakes? e.g. at most 3 enemies for lv1, at most 4 for lv2, etc
 - come in a few varieties, but not many
-  - garby: basic attacks & moves? or restrains you?
-	- mercury/hermy/mercuri: moves quickly & for free? or just acts twice?
-	- sewy: high HP
-	- toxy: holds you in place? or does DoT without moving
-	- algy: holds you in place?
-	- pharma: heals other enemies
-	- radioactive/nukey: self-destructs when killed
+  - garby: basic attacks & moves
+	  - 6 HP, 1 attack
+	- mercuri: acts twice but has low HP
+	  - 4 HP, 1 attack
+	- sewy: can't do special attack if adjacent
+	  - 6 HP, 1 attack
+	- plasty: high HP
+	  - 10 HP
+	- toxy: attacks at range
+	  - 6 HP, 2 attack melee, 1 ranged?
+	- algy: holds you in place if melee attack connects either way ("don't touch it!")
+	  - 8 HP, 1 attack, or 2 if restrained?
+	- pharma: heals other enemies on its turn (all +3 HP)
+	  - 8 HP, 1 attack (but always heals if able)
+	- nukey: self-destructs when killed
+	  - 3 HP, 1 attack, 2 dmg for self-destruct
 - drop rewards when defeated ("purified"), either HP bubbles or items (if flashing)
 
 bosses... 1 for each stage?
@@ -32,11 +44,12 @@ bosses... 1 for each stage?
 	- have unique graphics
 	- randomly summon HP bubbles so player can survive more easily? but only some
 	- have fairly high HP
-- invasive species
-- noise pollution
-- heat pollution: strong attack at range?
+- invasive species: summons adds?
+- noise pollution: strong, ranged attack?
+- heat pollution: melee attack gets stronger over time? +1 every time it hits?
 - light pollution
 - pesticide: constant damage over time
+- 1 of each normal enemy all at once?
 - humans? summon garbage adds?
 
 implement enemy syncs if time, but keep very basic. no scaling, maybe even all the same effect
@@ -46,25 +59,35 @@ moving and attacking cost 1AP each
 move into enemy to melee attack
 
 special does special attack
-- can use 3 times, get 1 use back per day
-- default: 3 random hits to any enemies
-- augment: more damage
-- augment: more hits?
-- augment: also attacks adjacent with strong hit
-- augment: also attacks center with strong hit
-- augment: 
+* call it "wish"?
+x can use 3 times, get 1 use back per day
+- can use 3 times, get uses back after collecting Special fish
+- default: 3 random hits to any enemies, 3 damage
+? augment: more damage
+? augment: more hits from base effect?
+- augment: also attacks adjacent enemies with strong hit
+? augment: also attacks center with strong hit
+- alligator: also heals 3 HP for every enemy defeated
 
 pick up power-ups that passively enhance stats
-- free moves at water's surface
-- phys attack + 2
-- phys attack + 3 at surface
-- phys attack + 3 at lake bottom
-- more special attack uses total
-- 3 free moves each turn
-- AP + 1
-- heal more HP during the day (+1 on top of 3)
-- max HP + 3
-- HP bubbles heal 2x HP
+- cattail: max HP + 1
+- lotus: max HP + 2
+? free moves at water's surface
+- eel: phys attack + 1
+- duck: phys attack + 2 at surface
+- crab: phys attack + 2 at lake bottom
+- more special attack uses stockable
+- more special recharge fish
+- toy boat: many more special recharge fish at surface
+- sunken treasure: many more special recharge fish at bottom
+- frog: more HP fish
+- turtle: many more HP fish at surface
+- crayfish: many more HP fish at bottom
+- nessie: AP + 1
+? heal more HP during the day (+1 on top of 3)
+? HP bubbles heal 2x HP
+? heal 3 HP after killing enemy
+
 * picking up a 10th power-up when you already have 9 forces you to dump the oldest one? or opens a menu?
   * i think do if time, otherwise you just keep all powerups you find
 * randomly given out in each stage
@@ -72,3 +95,65 @@ pick up power-ups that passively enhance stats
 music should be easy: 1 for stages, 1 for bosses, 1 for menus/everything else
 
 sfx will be a little harder. play for nearly everything!
+
+
+enemy
+{
+	type
+	hp
+	attack
+	carrying (= powerup or nothing)
+}
+
+hero
+{
+	hp
+	attack
+	AP
+	SP
+	powers
+	{
+		... (ordered list; referenced when wish made)
+	}
+}
+
+powerup
+{
+	id
+	graphic
+}
+
+field
+{
+	1
+	{
+		1 = ...anything (enemy, powerup, hero) or nothing
+		2
+		3
+	}
+	2
+	{
+		1
+		2
+		3
+	}
+	3
+	{
+		1
+		2
+		3
+	}
+}
+
+stage
+{
+	id
+	kills = (if <= 0, then mode = boss)
+	bgm
+}
+
+paused
+
+music
+
+turn (0 = hero, any other = that enemy)
