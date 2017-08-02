@@ -28,7 +28,7 @@ function love.load()
 	--init game variables
 	frame = 0
 	stage = {}
-	stage.field = {{"empty", "empty", "empty"}, {"empty", "empty", "FULL"}, {"empty", "empty", "empty"}}
+	stage.field = {{empty(), empty(), empty()}, {empty(), empty(), empty()}, {empty(), empty(), empty()}}
 	
 	hero = {id = "hero"}
 	stage.field[2][1] = hero
@@ -63,16 +63,16 @@ function love.keypressed(key)
 
 	--take directional input
 	if key == "w" or key == "up" then
-		heroMove(-1, 0)
+		heroImpetus(-1, 0)
 	end
 	if key == "s" or key == "down" then
-		heroMove(1, 0)
+		heroImpetus(1, 0)
 	end
 	if key == "a" or key == "left" then
-		heroMove(0, -1)
+		heroImpetus(0, -1)
 	end
 	if key == "d" or key == "right" then
-		heroMove(0, 1)
+		heroImpetus(0, 1)
 	end
 	
 end
@@ -105,19 +105,36 @@ function white()
 	love.graphics.setColor(255, 255, 255, 255)
 end
 
+function empty()
+	return {class = "clear"}
+end
+
 function getAnimFrame()
 	return math.floor(frame % 2)
 end
 
-function heroMove(dy, dx)
+function heroImpetus(dy, dx)
 	local y, x = locateHero()
 	
-	if stage.field[y + dy] and stage.field[y + dy][x + dx] and cellIsNavigable(stage.field[y + dy][x + dx]) then
-		stage.field[y + dy][x + dx] = stage.field[y][x]
-		stage.field[y][x] = "empty"
-	else
-		-- print("not empty: ", y+dy, x+dx)
+	--see what lies ahead TODO this can still be optimized
+	local destClass = nil
+	if stage.field[y + dy] and stage.field[y + dy][x + dx] then
+		destClass = stage.field[y + dy][x + dx].class
 	end
+	
+	--move or fight
+	if destClass == "clear" then
+		heroMove(y, x, dy, dx)
+	end
+	
+	if destClass == "enemy" then
+		heroFight(y, x, dy, dx)
+	end			
+end
+
+function heroMove(y, x, dy, dx)
+	stage.field[y + dy][x + dx] = stage.field[y][x]
+	stage.field[y][x] = empty()
 end
 
 function locateHero()
@@ -128,8 +145,4 @@ function locateHero()
 			end
 		end
 	end
-end
-
-function cellIsNavigable(cell)
-	return cell == "empty"
 end
