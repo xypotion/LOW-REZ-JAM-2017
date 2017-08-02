@@ -11,6 +11,7 @@ function love.load()
 	bg_day = love.graphics.newImage("bg_day1.png")
 	grid = love.graphics.newImage("grid.png")
 	sheet_player = love.graphics.newImage("sheet_player.png")
+	sheet_enemy = love.graphics.newImage("sheet_enemy.png")
 	
 	--init quads
 	quads_idle = {}
@@ -30,12 +31,25 @@ function love.load()
 	stage = {}
 	stage.field = {{empty(), empty(), empty()}, {empty(), empty(), empty()}, {empty(), empty(), empty()}}
 	
-	hero = {id = "hero"}
-	stage.field[2][1] = hero
-	
-	drawStage()
-	
+	--init hero
+	hero = {
+		class = "hero",
+		maxHP = 9,
+		hp = 9,
+		maxAP = 3,
+		ap = 3,
+		maxSP = 3,
+		sp = 3,
+		attack = 3,
+		powers = {}
+	}
+		
 	--display title
+	
+
+	--DEBUG
+	stage.field[2][1] = hero
+	stage.field[2][3] = enemy()
 end
 
 function love.update(dt)
@@ -59,6 +73,15 @@ function love.keypressed(key)
 	--DEBUG
 	if key == "escape" then
 		love.event.quit()
+	end
+	if key == "return" then
+		print("\nstuff:")
+		for y,r in ipairs(stage.field) do
+			for x,c in ipairs(r) do
+				print(y, x, c.class, c.hp)
+			end
+			print()
+		end
 	end
 
 	--take directional input
@@ -85,15 +108,25 @@ function drawStage()
 	
 	for y,r in ipairs(stage.field) do
 		for x,c in ipairs(r) do			
-			if c.id then
-				if c.id == "hero" then
+			-- if c.id then
+				-- if c.id == "hero" then
 					-- print(hero, k, l)
-					love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
-				end
-			end
+					--love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
+					drawCellContents(c, y, x)
+				-- end
+			-- end
 		end
 	end
+end
+
+function drawCellContents(obj, y, x)
+	if obj.class == "hero" then
+		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
+	end
 	
+	if obj.class == "enemy" then
+		love.graphics.draw(sheet_enemy, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
+	end
 end
 
 function loadTitleScreen()
@@ -107,6 +140,17 @@ end
 
 function empty()
 	return {class = "clear"}
+end
+
+function enemy()
+	return {
+		class = "enemy",
+		maxHP = 5,
+		hp = 5,
+		maxAP = 1,
+		ap = 1,
+		attack = 1
+	}
 end
 
 function getAnimFrame()
@@ -137,10 +181,29 @@ function heroMove(y, x, dy, dx)
 	stage.field[y][x] = empty()
 end
 
+function heroFight(y, x, dy, dx)
+	local ty, tx = y + dy, x + dx
+	local target = stage.field[ty][tx]
+	
+	-- stage.field[y + dy][x + dx] = empty()
+	target.hp = target.hp - hero.attack
+	
+	if target.hp <= 0 then
+		killEnemy(target, ty, tx)
+	end
+end
+
+function killEnemy(t, ty, tx)
+	--play sound
+	
+	--queue enemy death animation
+	stage.field[ty][tx] = empty()
+end
+
 function locateHero()
 	for y,r in ipairs(stage.field) do
 		for x,c in ipairs(r) do
-			if c and c.id and c.id == "hero" then
+			if c and c.class and c.class == "hero" then
 				return y, x
 			end
 		end

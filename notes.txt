@@ -100,7 +100,7 @@ sfx will be a little harder. play for nearly everything!
 title screen:
 - play
 - hints/controls
-- hi scores
+- hi scores (fewest days to finish each stage)
 - credits
 
 
