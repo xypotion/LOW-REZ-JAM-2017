@@ -23,11 +23,15 @@ function love.load()
 	--init canvas stuff
 	gameCan = love.graphics.newCanvas(64, 64)
 	gameCan:setFilter("nearest")
-	
+
 	--find & load autosave
 	
-	--init game variables
+	--init mechanical variables
 	frame = 0
+	animFPS = 10
+	eventSetQueue = {}
+	
+	--init game variables
 	stage = {}
 	stage.field = {{empty(), empty(), empty()}, {empty(), empty(), empty()}, {empty(), empty(), empty()}}
 	
@@ -53,6 +57,8 @@ function love.load()
 end
 
 function love.update(dt)
+	processEventSets(dt)
+	
 	frame = frame + dt * 2
 	frame = frame % 24
 end
@@ -132,6 +138,68 @@ end
 function loadTitleScreen()
 end
 
+function processEventSets(dt)
+	--stop if there are no events to process
+	if #eventSetQueue == 0 then return end
+	
+	local e = peek(eventSetQueue)
+	
+	eventSetStep(e, dt)
+	
+	if e.finished then
+		pop(eventSetQueue)
+	end
+end
+
+function eventSetStep(e, dt)
+	--first-frame events
+	if e.progress == 0 then
+		--play e.sound
+		
+		--change subject states
+		-- for 
+		--set subject.beingDamaged
+	end
+	
+	--change animation frame
+	e.anim.frame = math.floor((e.progress + dt) * e.fps)
+	
+	--are we all done? if so, reset subjects' states, remove event set
+	e.progress = e.progress + dt
+	if e.progress >= e.duration then
+		e.finished = true
+	end
+end
+
+--DEBUG kinda
+function newEventSet(enemy)
+	local set = {
+		--sound = ?
+		finishedCount = 0,
+		progress = 0,
+		frame = 0,
+		events = {}
+	}
+	
+	--hero attacks
+	set.events[1] = {
+		subject = hero,
+		frames = {
+			"attack", --will need to be directional
+		}
+	}
+	
+	--enemy gets attacked
+	set.events[2] = {
+		subject = enemy,
+		frames = {
+			"victim",			--literally a quad on the sheet
+			-- "idle",
+			-- "victim"
+		}
+	}
+end
+
 --------------------------------------------------------------------------
 
 function white()
@@ -208,4 +276,26 @@ function locateHero()
 			end
 		end
 	end
+end
+
+function peek(q)
+	return q[1]
+end
+
+function pop(q)
+	local item = q[1]
+	
+	q[1] = nil
+	
+	for i = 1, #q do
+		q[i - 1] = q[i]
+	end
+	
+	q[#q] = nil
+	
+	return item
+end
+
+function push(q, item)
+	q.insert(item)
 end

@@ -7,6 +7,8 @@ onondaga			s/m		yes			yes						yes
 tai						m/l													yes?
 serra palada	sm		yes
 victoria			l							yes						yes		yes
+9 enemies, then 15, 21, 27, 33? or 7, 12, 17, 22, 27, 32?
+8 types of enemies... 12, 123, 1234, 2345, 3456, 4567, 45678
 
 fight waves of enemies on single board to purify lakes. day = your turn, night = enemy turn
 - if you die, start again from same level?
@@ -47,7 +49,7 @@ bosses... 1 for each stage?
 - invasive species: summons adds?
 - noise pollution: strong, ranged attack?
 - heat pollution: melee attack gets stronger over time? +1 every time it hits?
-- light pollution
+- light pollution: immune to physical attacks?
 - pesticide: constant damage over time
 - 1 of each normal enemy all at once?
 - humans? summon garbage adds?
@@ -168,7 +170,8 @@ stage
 	field
 	kills = (if <= 0, then mode = boss)
 	bgm
-	enemy frequencies
+	enemy array (shuffled but pre-set, including some blanks? OR weighted frequencies + overall rate)
+	maxEnemies
 	powerup frequencies
 }
 
@@ -177,3 +180,45 @@ paused
 music
 
 turn (0 = hero, any other = that enemy)
+
+firstSightingInfo (for enemies AND powerups. maybe even instructions at start?)
+{
+	{name, seen = false, infographic}
+}
+
+eventSet
+{
+	finishedCount (incremented by 1 every time a member event reaches its end; done when count = #events)
+	progress (incremented by dt * fps value)
+	frame (floor of progress)
+	sound (played at frame 0)
+	
+	events
+	{...pushed by cloning from reference file
+		{...pushed by cloning from reference file
+			subject (hero or enemy or usually-invisible anim)
+			frames (an ordered list of named poses, which are interpreted as quads when drawing)
+			 (fps - multiplier for counting frames. unnecessary! just hard-code this, i think)
+			 (duration - nope, that's just the number of frames)
+			 (finished - also nope, that's just if super.frame >= #frames)
+			final (state to leave subject in)
+			destX, destY
+			offset
+		}
+	}
+}
+
+what are all values for frames[]?
+- attackN, attackS, attackE, attackW = the same quad, but draw will shift the position a little
+- victim = 1 quad, for taking damage
+- cast1, cast2 = for making wishes + some enemies have special attacks
+* move... ugh. you weren't even thinking about this. :|
+- so moveN1, moveN2..., moveN15, moveS1, etc? this seems so sloppy. can we just use destination markers?
+
+example of many-set queue: hero makes a wish with several effects
+1. effect A damages 3 enemies (hero -> idle, then immediately hero -> casting. no biggie?)
+2. effect B damages 2 enemies
+3. remove one defeated enemy killed by effect B
+4. effect C damages 1 enemy
+5. effect D heals hero
+big question: the logic for all these (some effects are random!?) will have to be calculated, too. unite with animation? or separate and pre-plan all? :(
