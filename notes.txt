@@ -155,8 +155,11 @@ field
 stage
 {
 	id
+	field
 	kills = (if <= 0, then mode = boss)
 	bgm
+	enemy frequencies
+	powerup frequencies
 }
 
 paused
