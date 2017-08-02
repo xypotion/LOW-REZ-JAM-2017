@@ -104,6 +104,13 @@ title screen:
 - credits
 
 
+toss item screen:
+- wasd/dir to select
+- i = info
+- delete/backspace = replace
+- x/esc to cancel
+
+
 enemy
 {
 	type
@@ -120,7 +127,7 @@ hero
 	SP
 	powers
 	{
-		... (ordered list; referenced when wish made)
+		...(each thing will or won't happen; inventory referenced when wish made)
 	}
 }
 

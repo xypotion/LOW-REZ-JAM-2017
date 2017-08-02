@@ -28,10 +28,10 @@ function love.load()
 	--init game variables
 	frame = 0
 	stage = {}
-	stage.field = {{"empty", "empty", "empty"}, {"empty", "empty", "empty"}, {"empty", "empty", "empty"}}
+	stage.field = {{"empty", "empty", "empty"}, {"empty", "empty", "FULL"}, {"empty", "empty", "empty"}}
 	
 	hero = {id = "hero"}
-	stage.field[2][2] = hero
+	stage.field[2][1] = hero
 	
 	drawStage()
 	
@@ -60,6 +60,20 @@ function love.keypressed(key)
 	if key == "escape" then
 		love.event.quit()
 	end
+
+	--take directional input
+	if key == "w" or key == "up" then
+		heroMove(-1, 0)
+	end
+	if key == "s" or key == "down" then
+		heroMove(1, 0)
+	end
+	if key == "a" or key == "left" then
+		heroMove(0, -1)
+	end
+	if key == "d" or key == "right" then
+		heroMove(0, 1)
+	end
 	
 end
 
@@ -69,12 +83,12 @@ function drawStage()
 	love.graphics.draw(bg_day)
 	love.graphics.draw(grid)
 	
-	for k,r in ipairs(stage.field) do
-		for l,c in ipairs(r) do			
+	for y,r in ipairs(stage.field) do
+		for x,c in ipairs(r) do			
 			if c.id then
 				if c.id == "hero" then
 					-- print(hero, k, l)
-					love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * k - 13, cellD * l - 13)
+					love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
 				end
 			end
 		end
@@ -93,4 +107,29 @@ end
 
 function getAnimFrame()
 	return math.floor(frame % 2)
+end
+
+function heroMove(dy, dx)
+	local y, x = locateHero()
+	
+	if stage.field[y + dy] and stage.field[y + dy][x + dx] and cellIsNavigable(stage.field[y + dy][x + dx]) then
+		stage.field[y + dy][x + dx] = stage.field[y][x]
+		stage.field[y][x] = "empty"
+	else
+		-- print("not empty: ", y+dy, x+dx)
+	end
+end
+
+function locateHero()
+	for y,r in ipairs(stage.field) do
+		for x,c in ipairs(r) do
+			if c and c.id and c.id == "hero" then
+				return y, x
+			end
+		end
+	end
+end
+
+function cellIsNavigable(cell)
+	return cell == "empty"
 end
