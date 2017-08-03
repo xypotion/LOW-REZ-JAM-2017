@@ -219,8 +219,9 @@ event types... (pushed & processed in sets)
   ? moveN1, moveN2..., moveN15, moveS1, etc? this seems so sloppy. can we just use destination markers?
 	- populate frames with 
 - attack + direction
-- cast
-- damage
+? cast (vague)
+- display damage
+  - idea: a random fuzz grid over the enemy graphic; more fuzz = less HP, proportionally
 - ~animations~ for special effects
 - spawn
   ? same for powerups dropped by enemies?
@@ -247,6 +248,54 @@ x i think DO choose targets and process attack effects as part of event sets. wo
 	  ... or wait, what if you QUEUE the animations AFTER doing the target calculations and math?
 		... i think it's kill() that i'm worried about. can that come in between effects without breaking shit?
 * ok, so upon further reflection, i think you can do all the attack processing ahead of time, queueing events including enemy removals
+	
+what does an event look like? 
+x they are only animations; data changes happen before event queueing/processing 
+  - nope, moves and removals actually affect data, so... 
+	- there may be no elegant way to avoid classifying these, and maybe that's OK. classes ahoy
+* class: animation
+	- pointer to some drawable object
+	- ordered list of {pose, xoffset, yoffset}s for that object to draw after frames tick
+		- "final" pose to leave object in (in case co-animating events finish early) is just the last element in this list.
+* class: cell operation
+	- cell coordinates, and
+	- what to put in cell. use to:
+	  - kill enemy i.e. replace with empty() and prevent it from drawing/interacting forevermore once the event is processed
+		- move one entity from cell A to cell B
+		  - e.g. pass cell B's coordinates and literally stage.field[yA][xA], AND cell A's coordinates and an empty(). done. right?
+		- spawn a new entity. made in pre-process then passed to cell via event
+* class: sound
+  - id of sound to start
+* class: screen
+  - screen to display
+	- frames (if animated. maybe none actually are?)
+	- x/y offsets
+	- ALPHA offsets, too. a lot of these things will fade in or out
+* class: enemy counter (use for filling at stage start AND when enemies are killed)
+  - ordered list of ints to display on each frame?
+	* if a sound plays for each counter added, will that just happen @ processing? or should it be queued?
+	
+think again: hero (& enemy?) HP is always visible. so you can't alter it in pre-processing! must be done as event. ditto for AP/SP, boss HP, enemy count...
+- event class: counter mod? for changing HP, SP, AP, enemy stats, enemy count, boss HP
+  - target counter (just object + member name?)
+  - target amount
+	- step
+	- sound (optional)
+* sucks, but the examples/studies below are now partially invalidated. events will have to queue other events? damage -> kill? -> branching logic
+- another option: decouple counters and counter displays? also messy...
+  x each counter is a table: {actual, shown, maximum, sound, quick}; update actual in pre-processing, then queue up "actuate" events that update these
+	  - actual can go under 0 but never over max
+		- shown can never go over max or under 0
+		- if "quick", then actuate all at once, not over multiple frames
+		- actuation is basically another kind of animation. sound plays on each "frame" if present
+	* nope. coulda worked, but at least needs a tweak: what if the same enemy is damaged by 2 effects? actuating will show ALL the damage after just the 1st
+	- exactly the same as above, but "actuate" events come with deltas
+	  - maybe also a "shown-goal" member? or can you just decrement the delta in the event object on key frames?
+	  - if you ignore actual in animation, signed deltas would allow queued things like wish -> enemy self-destructs -> hero heals
+* so it's pre-processing + complex counters + actuations vs. real-time attack resolution logic. why am i leaning towards the former? :/
+
+poses can be multi-frame: idle, casting (each 2 = frames that animate automatically on universal timer (?))
+or they can be single frames, shown in sequence: step1, step2, step3, step4 (for e.g. a "boom" animation), hide
 
 things that are NOT queued events & instead interrupt the normal flow of input <-> event processing:
 - popup info
@@ -255,6 +304,11 @@ things that are NOT queued events & instead interrupt the normal flow of input <
   - initial fade-in
   - credits display
 ? ending (queue music change + display of screen (heart over lake with trees & mountains, sun shining) that fades to black after input -> title fade-in)
+
+
+
+
+NAIVE DESIGN
 
 example of many-set queue: hero makes a wish with several effects
 1. effect A damages 3 enemies (hero -> idle, then immediately hero -> casting. no biggie?)
@@ -284,6 +338,7 @@ wish -> effect A hits 3 random enemies -> enemy Z dies -> effect B hits 2 enemie
 				QUEUE Y EXPLODING (surrounding animations, sound)
 				hero hit? (yes)
 					QUEUE HERO DAMAGE ANIM (important: .final = current, so hero returns to casting after)
+					* so yeah, if damaged while <casting or idle>, return to same. gotta build that into the damage-anim-event builder
 					deal damage to hero
 					QUEUE DAMAGE DISPLAY
 		...
@@ -320,3 +375,149 @@ hero attacks last enemy -> enemy dies -> intro boss
 	any enemies left? (no; yes = no-op)
 		QUEUE BOSS INTRO (flyover if doing) + BOSS UI SWAP + MUSIC CHANGE 
 	end; begin processing
+	
+	
+
+REAL-TIME ATTACK RESOLUTION + BI-DIRECTIONAL QUEUE
+* "QUEUE FOO" = put on bottom, "STACK FOO" = put on top
+
+wish -> effect A hits 3 random enemies -> enemy Z dies -> effect B hits 2 enemies -> enemy Y dies and self-destructs -> hero takes damage -> enemy X dies
+	QUEUE EFFECT A
+	QUEUE EFFECT B
+	QUEUE EFFECT C
+event processing...
+	:EFFECT A
+		who do i hit? X, Y, Z
+		STACK DAMAGE+ANIMATION FOR X, Y, Z
+		:DAMAGE+ANIM FOR X Y Z
+			STACK ANIM
+			:ANIM
+				play sound + explosions or whatever on X Y Z
+			end
+			hp for each -1
+			hp for each -1
+			hp for each -1
+			damage done, any dead? yes, Z
+			STACK REMOVE Z
+			:REMOVE Z
+				set Z's cell to empty
+			end
+		end
+	end
+	:EFFECT B
+...and i kinda hate this! it feels so fragile and backwards! like things will get queued in the wrong order and it'll massively break. even when it works it'd be super confusing to follow. nope.
+
+
+
+
+PRE-PROCESS EVERYTHING + COMPLEX COUNTERS + DELTA-ACTUATION
+
+wish -> effect A hits 3 random enemies -> enemy Z dies -> effect B hits 2 enemies -> enemy Y dies and self-destructs -> hero takes damage -> enemy X dies -> hero healed by effect C
+	reduce AP
+	wish: reduce SP
+	QUEUE AP AND SP ACTUATION
+	choose 3 targets for A
+  QUEUE ANIMATION A (hero casting with .final = casting, XYZ damage poses, XYZ sparkles or whatever)
+	deal actual damage to X Y Z. 
+	QUEUE DAMAGE ACTUATION FOR X Y Z
+	any dead? (yes, Z)
+		for each dead: 
+			self-destructing? no
+				QUEUE Z REMOVAL + ENEMY COUNTER DECREMENT
+	choose targets for B
+	QUEUE ANIMATION B (hero still casting because of A's .final)
+	deal actual damage to X Y
+	QUEUE DAMAGE ACTUATION (X + Y)
+	any dead? (yes, Y and X)
+		for each dead: 
+			self-destructing? (Y: yes)
+				QUEUE Y EXPLODING (surrounding animations, sound) & REMOVAL
+				hero hit? (yes)
+					QUEUE HERO DAMAGE ANIM-ACTUATION (important: .final = current, so hero returns to casting after)
+					* so yeah, if damaged while <casting or idle>, return to same. gotta build that into the damage-anim-event builder
+					deal damage to hero
+					QUEUE DAMAGE DISPLAY
+		...
+			self-destructing? (X: no)
+				QUEUE X REMOVAL + ENEMY COUNTER DECREMENT
+	QUEUE EFFECT C (heal on hero)
+	restore hero's actual HP
+	QUEUE HEALING ACTUATION
+	end
+and begin processing events:
+	:ACTUATE AP-1 AND SP-1 (simultaneous)
+  :A'S ANIMATION (incl. hero=casting, XYZ = victim then back to idle)
+	:A'S DAMAGE ACTUATION ON X Y Z
+	:REMOVE Z (set cell to empty()) + ENEMY COUNTER DECREMENT
+	:B'S ANIMATION (XY = victim)
+	:B'S DAMAGE ACTUATION ON X Y
+	:Y EXPLODES & IS REMOVED & ENEMY COUNTER DECREMENT
+	:HERO DAMAGE ACTUATION (cringe, then back to casting)
+	:REMOVE X
+	:C'S ANIMATION (hero casting, then idle)
+	:C'S HEAL ACTUATION
++ all idle, to be safe? hm
+
+directional impetus:
+	enemy in the way? attack,	don't move
+		reduce AP
+		QUEUE AP ACTUATION
+		damage target
+		QUEUE ATTACK ANIMATION
+		QUEUE DAMAGE ACTUATION
+		dead?
+			QUEUE ENEMY REMOVAL + ENEMY COUNTER DECREMENT
+	else
+	  stuck?
+			don't move
+		  QUEUE STUCK-MOVE ANIMATION	
+		else
+			dest clear?
+				reduce AP
+				QUEUE AP ACTUATION
+				QUEUE CELL CHANGE + MOVE ANIMATION (move first, set offset high, decrement until 0)
+	end; begin processing
+processing attack:
+	AP ACTUATION
+	ATTACK ANIMATION (hero shifty, target cringey)
+	DAMAGE ACTUATION
+	(ENEMY REMOVAL, COUNTER DECREMENT)
+processing stuck:
+	STUCK ANIMATION, that's it
+processing move:
+	AP ACTUATION
+	CELL CHANGE, ANIMATE
+
+hero attacks last enemy -> enemy dies -> intro boss
+	reduce AP
+	QUEUE AP ACTUATION
+	impetus triggers attack
+	QUEUE ATTACK ANIM (hero attacks, target cringes)
+	deal damage to target
+	QUEUE DAMAGE ACTUATION
+	dead?
+		self-destructing? (no)
+			QUEUE REMOVAL
+	any enemies left? (no; yes = no-op)
+		QUEUE BOSS INTRO (flyover if doing) + BOSS UI SWAP + MUSIC CHANGE 
+	end; begin processing
+...
+	
+hero attacks algy -> hero stuck -> can't move away -> make wish to attack again -> algy dies -> hero unstuck
+...stuck has to be a pointer to an algy? can't just unstick after killing any algy. if pointer to algy doesn't work, can probably hack this :/
+
+(enemy turn) -> new enemy X spawns -> show new enemy info -> enemy Y approaches -> enemy Z attacks hero -> enemy turn over
+
+hero attacks -> enemy dies & drops new powerup -> hero collects powerup -> show info
+...attack, actuation, damage, remove enemy + add powerup to that cell...hero move, gain powerup*, remove powerup from cell, actuate changes
+  * interrupt for inv. management here? i think?
+
+(enemy turn) -> toxy A moves away -> toxy B attacks ...gah, AI.
+
+
+
+ROUGH AI
+- garby, plasty, sewy, algy, nukey: attack if adjacent to hero, otherwise move closer (compare locations)
+- mercuri: same but do it twice
+- toxy: move away if adjacent, otherwise shoot (attack)
+- pharma: heal all enemies if any below max HP, otherwise attack, otherwise move closer
