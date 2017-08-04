@@ -28,6 +28,10 @@ function processEventSets(dt)
 				processPoseEvent(e)
 			end
 			
+			if e.class == "anim" then
+				processAnimEvent(e)
+			end
+			
 			if e.class == "bg" then
 				processBgEvent(e)
 			end
@@ -55,7 +59,6 @@ function processCellOpEvent(e)
 end
 
 --TODO "quick" actuations
---TODO regardless of delta, shown should never go over max or under 0; finish if you hit those
 --TODO pos/neg sounds
 function processActuationEvent(e)
 	--decrement shown and increment delta OR vice-versa, as long as shown is not already at max or 0
@@ -90,7 +93,13 @@ function processPoseEvent(e)
 end
 
 
-function processAnimEvent()
+function processAnimEvent(e)
+	if peek(e.frames) then
+		stage.field[e.fieldY][e.fieldX].overlayQuad = pop(e.frames)
+	else
+		stage.field[e.fieldY][e.fieldX].overlayQuad = nil
+		e.finished = true
+	end
 end
 
 

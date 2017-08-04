@@ -34,12 +34,13 @@ function poseEvent(y, x, f)
 end
 
 --for fancy battle graphics. automatically targets cells' invisible animation overlays
-function animEvent()
+function animEvent(y, x, f)--fx, f)
 	local e = {
 		class = "anim",
-		--location of drawable entity (cell overlay)
-		--named effect (column of effects sheet)
-		--frames = { quads (row on effects sheet) }
+		fieldY = y,		--location of drawable entity (cell overlay)
+		fieldX = x,
+		-- effect = fx,	--named effect (column of effects sheet) --actually don't need if overlay.quad points to column and row
+		frames = f		--frames = { quad pointers (row on effects sheet) }
 	}
 	
 	return e

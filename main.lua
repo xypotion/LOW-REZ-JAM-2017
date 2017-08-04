@@ -1,6 +1,7 @@
 require "queueProcessing"
 require "eventSetQueue"
 require "enemyAI"
+require "animScripts"
 
 function love.load()
 	--initial setup stuff & constants
@@ -15,6 +16,7 @@ function love.load()
 	grid = love.graphics.newImage("grid.png")
 	sheet_player = love.graphics.newImage("sheet_player.png")
 	sheet_enemy = love.graphics.newImage("sheet_enemy.png")
+	sheet_effects = love.graphics.newImage("effects.png")
 	ui = love.graphics.newImage("ui.png")
 	
 	backgrounds = {
@@ -27,7 +29,14 @@ function love.load()
 	quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
 	quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
 	
-	--quads_animation = {}
+	quads_animation = {
+		spark = {
+			love.graphics.newQuad(0, 0, 16, 16, 128, 64),
+			love.graphics.newQuad(0, 16, 16, 16, 128, 64),
+			love.graphics.newQuad(0, 32, 16, 16, 128, 64),
+			love.graphics.newQuad(0, 48, 16, 16, 128, 64),
+		}
+	}
 	
 	quads_ui = {
 		hp = love.graphics.newQuad(0, 0, 9, 5, 64, 64),
@@ -132,6 +141,12 @@ function love.keypressed(key)
 			print()
 		end
 	end
+	if key == "o" then
+		hero.ap.actual = 3
+		hero.ap.shown = 3
+		hero.sp.actual = 3
+		hero.sp.shown = 3
+	end
 	if key == "p" then
 		--test spawn
 		-- spawnEnemy()
@@ -195,14 +210,20 @@ function drawStage()
 end
 
 function drawCellContents(obj, y, x)
-	---VERY DEBUGGY
+	---DEBUG FOR HP
 	if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
 	
+	--draw hero or enemy --TODO optimize/clean up
 	if obj.class == "hero" then
 		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 	end
 	if obj.class == "enemy" then
 		love.graphics.draw(sheet_enemy, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
+	end
+	
+	--draw overlay if present
+	if obj.overlayQuad then
+		love.graphics.draw(sheet_effects, obj.overlayQuad, cellD * x - 13, cellD * y - 13)
 	end
 end
 
@@ -254,7 +275,7 @@ end
 function enemy()
 	return {
 		class = "enemy",
-		species = "garby", --used for graphics
+		species = "garby", --will be used for graphics TODO
 		ai = "melee", --or ranged or healer
 		hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
 		ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
@@ -372,6 +393,7 @@ function heroSpecialAttack()
 			if c and c.class and c.class == "enemy" then
 				c.hp.actual = c.hp.actual - 1
 				push(attacky, actuationEvent(c.hp, -1))
+				push(attacky, animEvent(y, x, sparkAnimFrames()))
 			end
 		end
 	end
