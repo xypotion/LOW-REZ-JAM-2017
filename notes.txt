@@ -287,23 +287,30 @@ think again: hero (& enemy?) HP is always visible. so you can't alter it in pre-
 	  - actual can go under 0 but never over max
 		- shown can never go over max or under 0
 		- if "quick", then actuate all at once, not over multiple frames
-		- actuation is basically another kind of animation. sound plays on each "frame" if present
+		- actuation is basically another kind of animation. sound plays on each "frame" if present (unless quick)
 	* nope. coulda worked, but at least needs a tweak: what if the same enemy is damaged by 2 effects? actuating will show ALL the damage after just the 1st
 	- exactly the same as above, but "actuate" events come with deltas
 	  - maybe also a "shown-goal" member? or can you just decrement the delta in the event object on key frames?
 	  - if you ignore actual in animation, signed deltas would allow queued things like wish -> enemy self-destructs -> hero heals
-* so it's pre-processing + complex counters + actuations vs. real-time attack resolution logic. why am i leaning towards the former? :/
+	* also posSound and negSound, not just sound
+* so it's pre-processing + complex counters + actuations vs. real-time attack resolution logic. why am i still leaning towards the former?
 
 poses can be multi-frame: idle, casting (each 2 = frames that animate automatically on universal timer (?))
 or they can be single frames, shown in sequence: step1, step2, step3, step4 (for e.g. a "boom" animation), hide
 
+
 things that are NOT queued events & instead interrupt the normal flow of input <-> event processing:
-- popup info
-- inventory management
+? popup info
+  - ...or maybe it is, if info boxes can pop up AFTER spawns
+  * two arrays: enemy popups for the first time you SEE them, and item popups for the first time you GET them
+? inventory management
 - title screen ops, including:
   - initial fade-in
   - credits display
 ? ending (queue music change + display of screen (heart over lake with trees & mountains, sun shining) that fades to black after input -> title fade-in)
+- bg transition between turns? or is that also an event?
+
+obviously event processing will block input. might need input levels for info boxes, or some kind of 
 
 
 
@@ -451,7 +458,8 @@ and begin processing events:
 	:REMOVE Z (set cell to empty()) + ENEMY COUNTER DECREMENT
 	:B'S ANIMATION (XY = victim)
 	:B'S DAMAGE ACTUATION ON X Y
-	:Y EXPLODES & IS REMOVED & ENEMY COUNTER DECREMENT
+	:Y EXPLODING ANIMATION
+	:Y IS REMOVED & ENEMY COUNTER DECREMENT
 	:HERO DAMAGE ACTUATION (cringe, then back to casting)
 	:REMOVE X
 	:C'S ANIMATION (hero casting, then idle)

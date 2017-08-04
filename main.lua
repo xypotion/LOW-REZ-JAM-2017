@@ -18,7 +18,7 @@ function love.load()
 	quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
 	quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
 	
-	--load sound
+	--load sounds
 	
 	--init canvas stuff
 	gameCan = love.graphics.newCanvas(64, 64)
@@ -38,16 +38,12 @@ function love.load()
 	--init hero
 	hero = {
 		class = "hero",
-		maxHP = 9,
-		hp = 9,
-		maxAP = 3,
-		ap = 3,
-		maxSP = 3,
-		sp = 3,
+		hp = {max = 9, actual = 9, shown = 9, posSound = nil, negSound = nil, quick = false},
+		ap = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
+		sp = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
 		attack = 3,
 		powers = {}
-	}
-		
+	}		
 	--display title
 	
 
@@ -126,10 +122,13 @@ function drawStage()
 end
 
 function drawCellContents(obj, y, x)
+	
+	---VERY DEBUGGY
+	if obj.hp then love.graphics.print(obj.hp.actual, x * 15 - 5, y * 15 - 5) end
+	
 	if obj.class == "hero" then
 		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
 	end
-	
 	if obj.class == "enemy" then
 		love.graphics.draw(sheet_enemy, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
 	end
@@ -138,17 +137,28 @@ end
 function loadTitleScreen()
 end
 
+--------------------------------------------------------------------------
+
+function queue(event)
+	queueSet(event)
+end
+
+function queueSet(eventSet)
+	print("pushing eventSet: ", eventSet[1].class)
+	push(eventSetQueue, eventSet)
+end
+
 function processEventSets(dt)
 	--stop if there are no events to process
 	if #eventSetQueue == 0 then return end
 	
-	local e = peek(eventSetQueue)
-	
-	eventSetStep(e, dt)
-	
-	if e.finished then
-		pop(eventSetQueue)
-	end
+	-- local e = peek(eventSetQueue)
+	--
+	-- eventSetStep(e, dt)
+	--
+	-- if e.finished then
+	-- 	pop(eventSetQueue)
+	-- end
 end
 
 function eventSetStep(e, dt)
@@ -202,6 +212,81 @@ end
 
 --------------------------------------------------------------------------
 
+function cellOpEvent()
+	local e = {
+		class = "cellOp",
+		--where
+		--put what
+	}
+	
+	return e
+end
+
+---counter = {actual, shown, posSound, negSound, quick}
+
+function actuationEvent()
+	local e = {
+		class = "actuation",
+		--what counter
+		--delta; decremented as counter.shown incremented (or vv)
+	}
+	
+	-- print(e.class)
+	
+	return e
+end
+
+function animEvent()
+	local e = {
+		class = "anim",
+		--what drawable entity
+		--frames = { {pose, xOffset, yOffset}s }
+	}
+	
+	return e
+end
+
+function soundEvent()
+	local e = {
+		class = "sound",
+		--what sound to start
+		--TODO what if you're fading music in or out?
+	}
+	
+	return e
+end
+
+function screenEvent()
+	local e = {
+		class = "screen",
+		--graphic to display
+		--frames = {{xOffset, yOffset, alpha}s }
+	}
+	
+	return e
+end
+
+--bgEvent()?
+
+--------------------------------------------------------------------------
+
+function processCellOpEvent()
+end
+
+function processActuationEvent()
+end
+
+function processAnimEvent()
+end
+
+function processSoundEvent()
+end
+
+function processScreenEvent()
+end
+
+--------------------------------------------------------------------------
+
 function white()
 	love.graphics.setColor(255, 255, 255, 255)
 end
@@ -213,10 +298,10 @@ end
 function enemy()
 	return {
 		class = "enemy",
-		maxHP = 5,
-		hp = 5,
-		maxAP = 1,
-		ap = 1,
+		species = "garby", --used for graphics
+		ai = "melee", --or ranged or healer
+		hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
+		ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
 		attack = 1
 	}
 end
@@ -254,10 +339,16 @@ function heroFight(y, x, dy, dx)
 	local target = stage.field[ty][tx]
 	
 	-- stage.field[y + dy][x + dx] = empty()
-	target.hp = target.hp - hero.attack
+	target.hp.actual = target.hp.actual - hero.attack
 	
-	if target.hp <= 0 then
-		killEnemy(target, ty, tx)
+	--queue damage actuation
+	queue({actuationEvent(target.hp, -hero.attack)})
+	
+	--dead? queue removal
+	if target.hp.actual <= 0 then
+		-- killEnemy(target, ty, tx)
+		
+		queue({cellOpEvent(ty, tx, empty())})
 	end
 end
 
@@ -297,5 +388,5 @@ function pop(q)
 end
 
 function push(q, item)
-	q.insert(item)
+	table.insert(q, item)
 end
