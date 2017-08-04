@@ -238,6 +238,7 @@ end
 
 --TODO clean up, maybe rename
 function heroFight(y, x, dy, dx)
+	local hy, hx = locateHero()
 	local ty, tx = y + dy, x + dx
 	local target = stage.field[ty][tx]
 	
@@ -245,7 +246,16 @@ function heroFight(y, x, dy, dx)
 	target.hp.actual = target.hp.actual - hero.attack
 	
 	--queue damage actuation
-	queue(actuationEvent(target.hp, -hero.attack))
+	queueSet({
+		poseEvent(hy, hx, {
+			{pose = "idle", yOffset = dy * 4, xOffset = dx * 4},
+			{pose = "idle", yOffset = dy * 5, xOffset = dx * 5},
+			{pose = "idle", yOffset = dy * 2, xOffset = dx * 2},
+			{pose = "idle", yOffset = dy * 1, xOffset = dx * 1},
+			{pose = "idle", yOffset = 0, xOffset = 0},
+		}),
+		actuationEvent(target.hp, -hero.attack)
+	})
 	
 	--dead? queue removal
 	if target.hp.actual <= 0 then
@@ -253,6 +263,8 @@ function heroFight(y, x, dy, dx)
 		
 		queue(cellOpEvent(ty, tx, empty()))
 	end
+	
+	processNow()
 end
 
 function locateHero()

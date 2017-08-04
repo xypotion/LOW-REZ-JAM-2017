@@ -84,18 +84,14 @@ function peek(q)
 end
 
 function pop(q)
-	print(table.getn(q))
 	local item = q[1]
-	
-	-- q[1] = nil
-	print(table.getn(q))
 	
 	for i = 1, table.getn(q) do
 		q[i - 1] = q[i]
 	end
 	
 	q[table.getn(q)] = nil
-	print(table.getn(q))
+
 	return item
 end
 
