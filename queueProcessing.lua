@@ -27,6 +27,10 @@ function processEventSets(dt)
 			if e.class == "pose" then
 				processPoseEvent(e)
 			end
+			
+			if e.class == "bg" then
+				processBgEvent(e)
+			end
 		end
 				
 		--tally finished events in set
@@ -95,6 +99,23 @@ end
 
 
 function processScreenEvent()
+end
+
+function processBgEvent(e)
+	if not bgNext then
+		bgNext = {graphic = e.graphic, alpha = 0}
+	end
+	
+	--what if e.time is 0? TODO
+	
+	bgNext.alpha = bgNext.alpha + math.ceil(256 * eventFrameLength / e.time)
+	
+	--fade completed? then we're done
+	if bgNext.alpha >= 255 then
+		bgMain = bgNext
+		bgNext = nil
+		e.finished = true
+	end
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------

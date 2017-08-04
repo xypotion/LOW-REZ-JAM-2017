@@ -1,5 +1,6 @@
 require "queueProcessing"
 require "eventSetQueue"
+require "enemyAI"
 
 function love.load()
 	--initial setup stuff & constants
@@ -11,11 +12,15 @@ function love.load()
 	cellD = 15 --D as in "dimension"
 	
 	--load graphics
-	bg_day = love.graphics.newImage("bg_day1.png")
 	grid = love.graphics.newImage("grid.png")
 	sheet_player = love.graphics.newImage("sheet_player.png")
 	sheet_enemy = love.graphics.newImage("sheet_enemy.png")
 	ui = love.graphics.newImage("ui.png")
+	
+	backgrounds = {
+		day1 = love.graphics.newImage("bg_day1.png"),
+		night1 = love.graphics.newImage("bg_night1.png")
+	}
 	
 	--init quads
 	quads_idle = {} --TODO probably quads_poses or something would be better, and put them all in here
@@ -53,7 +58,7 @@ function love.load()
 	eventFrame = 0
 	eventFrameLength = 0.05
 	eventSetQueue = {}
-	inputLevel = "normal"
+	inputLevel = "normal" --TODO should be a stack, not a string
 	
 	--init game variables
 	stage = {}
@@ -62,6 +67,8 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
+	bgMain = {graphic = "day1", alpha = 255}
+	bgNext = nil
 	
 	--init hero
 	hero = {
@@ -151,6 +158,9 @@ function love.keypressed(key)
 		if key == "d" or key == "right" then
 			heroImpetus(0, 1)
 		end
+		if key == "space" then
+			heroSpecialAttack()
+		end
 	end
 	
 	if hero.ap.actual <= 0 then
@@ -158,13 +168,22 @@ function love.keypressed(key)
 	end
 end
 
---------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 function drawStage()
-	love.graphics.draw(bg_day)
+	--backgrounds
+	love.graphics.draw(backgrounds[bgMain.graphic])
+	
+	if bgNext then
+		love.graphics.setColor(255, 255, 255, bgNext.alpha)
+		love.graphics.draw(backgrounds[bgNext.graphic])
+	end
+	
+	white()
+	
+	--grid & UI
 	love.graphics.draw(grid)
 
-	--draw UI
 	drawUI()
 	
 	--draw cells' contents
@@ -191,7 +210,7 @@ function drawUI()
 	--HP
 	love.graphics.draw(ui, quads_ui.hp, 2, 57)
 	for i = 1, hero.hp.max do
-		if i <= hero.hp.actual then
+		if i <= hero.hp.shown then
 			love.graphics.draw(ui, quads_ui.hpT, 9 + i * 4, 57)
 		else
 			love.graphics.draw(ui, quads_ui.hpF, 9 + i * 4, 57)
@@ -201,7 +220,7 @@ function drawUI()
 	--AP
 	love.graphics.draw(ui, quads_ui.ap, 2, 50)
 	for i = 1, hero.ap.max do
-		if i <= hero.ap.actual then
+		if i <= hero.ap.shown then
 			love.graphics.draw(ui, quads_ui.apT1, 6 + i * 6, 50)
 		else
 			love.graphics.draw(ui, quads_ui.apF1, 6 + i * 6, 50)
@@ -211,7 +230,7 @@ function drawUI()
 	--SP
 	love.graphics.draw(ui, quads_ui.sp, 33, 50)
 	for i = 1, hero.sp.max do
-		if i <= hero.sp.actual then
+		if i <= hero.sp.shown then
 			love.graphics.draw(ui, quads_ui.spT1, 37 + i * 6, 50)
 		else
 			love.graphics.draw(ui, quads_ui.spF1, 37 + i * 6, 50)
@@ -222,7 +241,7 @@ end
 function loadTitleScreen()
 end
 
---------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 function white()
 	love.graphics.setColor(255, 255, 255, 255)
@@ -255,7 +274,7 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 	if stage.field[y + dy] and stage.field[y + dy][x + dx] then
 		destClass = stage.field[y + dy][x + dx].class
 	else
-		--seems like you're trying to move off the grid; end
+		--seems like you're trying to move off the grid, so...
 		return
 	end
 	
@@ -328,6 +347,9 @@ function heroFight(y, x, dy, dx)
 	processNow()
 end
 
+function heroSpecialAttack()
+end
+
 function locateHero()
 	for y,r in ipairs(stage.field) do
 		for x,c in ipairs(r) do
@@ -336,11 +358,4 @@ function locateHero()
 			end
 		end
 	end
-end
-
-function queueEnemyTurn()
-	--DEBUG
-	hero.sp.actual = hero.sp.actual - 1
-	queue(actuationEvent(hero.sp, -1))
-	hero.ap.actual = 3
 end

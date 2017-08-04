@@ -9,18 +9,19 @@ function cellOpEvent(y, x, thing)
 	return e
 end
 
----counter = {actual, shown, posSound, negSound, quick}
-
+--for updating visible counters to their actual values
+--counter = {actual, shown, posSound, negSound, quick}
 function actuationEvent(c, d)
 	local e = {
 		class = "actuation",
 		counter = c,
-		delta = d
+		delta = d --or c.actual - c.shown --i wish this worked, but it mis-calculates/actuates if the same counter is changed in multiple queued events
 	}
-	
+		
 	return e
 end
 
+--for making battle entities change poses and/or move around
 function poseEvent(y, x, f)
 	local e = {
 		class = "pose",
@@ -32,6 +33,7 @@ function poseEvent(y, x, f)
 	return e
 end
 
+--for fancy battle graphics. automatically targets cells' invisible animation overlays
 function animEvent()
 	local e = {
 		class = "anim",
@@ -43,6 +45,7 @@ function animEvent()
 	return e
 end
 
+--for starting or stopping (? TODO) sounds
 function soundEvent()
 	local e = {
 		class = "sound",
@@ -53,6 +56,7 @@ function soundEvent()
 	return e
 end
 
+--for info popups, stage intros, boss intros, etc
 function screenEvent()
 	local e = {
 		class = "screen",
@@ -63,7 +67,16 @@ function screenEvent()
 	return e
 end
 
---bgEvent()?
+--for changing backgrounds
+function bgEvent(bg, time)
+	local e = {
+		class = "bg",
+		graphic = bg, --night, day, title, etc.; all named graphics to fade into background layer
+		time = time or 0.5 --seconds to draw out fade
+	}
+	
+	return e
+end
 
 --------------------------------------------------------------------------
 
