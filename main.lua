@@ -15,11 +15,30 @@ function love.load()
 	grid = love.graphics.newImage("grid.png")
 	sheet_player = love.graphics.newImage("sheet_player.png")
 	sheet_enemy = love.graphics.newImage("sheet_enemy.png")
+	ui = love.graphics.newImage("ui.png")
 	
 	--init quads
-	quads_idle = {}
+	quads_idle = {} --TODO probably quads_poses or something would be better, and put them all in here
 	quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
 	quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
+	
+	--quads_animation = {}
+	
+	quads_ui = {
+		hp = love.graphics.newQuad(0, 0, 9, 5, 64, 64),
+		hpT = love.graphics.newQuad(10, 0, 3, 5, 64, 64),
+		hpF = love.graphics.newQuad(14, 0, 3, 5, 64, 64),
+		ap = love.graphics.newQuad(0, 6, 9, 5, 64, 64),
+		apT1 = love.graphics.newQuad(10, 6, 5, 5, 64, 64),
+		apF1 = love.graphics.newQuad(16, 6, 5, 5, 64, 64),
+		apT2 = love.graphics.newQuad(22, 6, 4, 5, 64, 64),
+		apF2 = love.graphics.newQuad(27, 6, 4, 5, 64, 64),
+		sp = love.graphics.newQuad(0, 12, 9, 5, 64, 64),
+		spT1 = love.graphics.newQuad(10, 12, 5, 5, 64, 64),
+		spF1 = love.graphics.newQuad(16, 12, 5, 5, 64, 64),
+		spT2 = love.graphics.newQuad(22, 12, 4, 5, 64, 64),
+		spF2 = love.graphics.newQuad(27, 12, 4, 5, 64, 64),
+	}
 	
 	--load sounds
 	
@@ -27,7 +46,7 @@ function love.load()
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
 
-	--find & load autosave
+	--find & load autosave for hi scores. also info panels that have been seen? AND maybe change title screen if game beaten?
 	
 	--init mechanical variables
 	frame = 0 --for idle animations only? figure it out TODO
@@ -47,9 +66,9 @@ function love.load()
 	--init hero
 	hero = {
 		class = "hero",
-		hp = {max = 9, actual = 9, shown = 9, posSound = nil, negSound = nil, quick = false},
-		ap = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
-		sp = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
+		hp = {max = 9, actual = 2, shown = 9, posSound = nil, negSound = nil, quick = false},
+		ap = {max = 3, actual = 1, shown = 3, posSound = nil, negSound = nil, quick = false},
+		sp = {max = 3, actual = 1, shown = 3, posSound = nil, negSound = nil, quick = false},
 		attack = 3,
 		powers = {},
 		pose = "idle",
@@ -141,6 +160,9 @@ end
 function drawStage()
 	love.graphics.draw(bg_day)
 	love.graphics.draw(grid)
+
+	--draw UI
+	drawUI()
 	
 	--draw cells' contents
 	for y, r in ipairs(stage.field) do
@@ -159,6 +181,38 @@ function drawCellContents(obj, y, x)
 	end
 	if obj.class == "enemy" then
 		love.graphics.draw(sheet_enemy, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
+	end
+end
+
+function drawUI()
+	--HP
+	love.graphics.draw(ui, quads_ui.hp, 2, 57)
+	for i = 1, hero.hp.max do
+		if i <= hero.hp.actual then
+			love.graphics.draw(ui, quads_ui.hpT, 9 + i * 4, 57)
+		else
+			love.graphics.draw(ui, quads_ui.hpF, 9 + i * 4, 57)
+		end
+	end
+
+	--AP
+	love.graphics.draw(ui, quads_ui.ap, 2, 50)
+	for i = 1, hero.ap.max do
+		if i <= hero.ap.actual then
+			love.graphics.draw(ui, quads_ui.apT1, 6 + i * 6, 50)
+		else
+			love.graphics.draw(ui, quads_ui.apF1, 6 + i * 6, 50)
+		end
+	end
+
+	--SP
+	love.graphics.draw(ui, quads_ui.sp, 33, 50)
+	for i = 1, hero.ap.max do
+		if i <= hero.ap.actual then
+			love.graphics.draw(ui, quads_ui.spT1, 37 + i * 6, 50)
+		else
+			love.graphics.draw(ui, quads_ui.spF1, 37 + i * 6, 50)
+		end
 	end
 end
 
@@ -242,10 +296,9 @@ function heroFight(y, x, dy, dx)
 	local ty, tx = y + dy, x + dx
 	local target = stage.field[ty][tx]
 	
-	-- stage.field[y + dy][x + dx] = empty()
 	target.hp.actual = target.hp.actual - hero.attack
 	
-	--queue damage actuation
+	--queue attack animation & damage actuation
 	queueSet({
 		poseEvent(hy, hx, {
 			{pose = "idle", yOffset = dy * 4, xOffset = dx * 4},
@@ -259,8 +312,6 @@ function heroFight(y, x, dy, dx)
 	
 	--dead? queue removal
 	if target.hp.actual <= 0 then
-		-- killEnemy(target, ty, tx)
-		
 		queue(cellOpEvent(ty, tx, empty()))
 	end
 	

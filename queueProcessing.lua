@@ -14,7 +14,7 @@ function processEventSets(dt)
 	for k, e in pairs(es) do
 		--if not already finished, process this event
 		if not e.finished then
-			print("processing "..e.class)
+			-- print("processing "..e.class)
 		
 			if e.class == "actuation" then
 				processActuationEvent(e)

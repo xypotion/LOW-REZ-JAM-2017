@@ -85,6 +85,7 @@ pick up power-ups that passively enhance stats
 - frog: more HP fish
 - turtle: many more HP fish at surface
 - crayfish: many more HP fish at bottom
+* for fish-multipliers above: instead of spawning more, maybe effects are stronger (overall or at surface/bottom)
 - nessie: AP + 1
 ? heal more HP during the day (+1 on top of 3)
 ? HP bubbles heal 2x HP

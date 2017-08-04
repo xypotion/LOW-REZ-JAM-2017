@@ -68,12 +68,12 @@ end
 --------------------------------------------------------------------------
 
 function queue(event)
-	print("pushing event: ", event.class)
+	-- print("pushing event: ", event.class)
 	push(eventSetQueue, {event})
 end
 
 function queueSet(eventSet)
-	print("pushing eventSet with "..#eventSet.." members")
+	-- print("pushing eventSet with "..#eventSet.." members")
 	push(eventSetQueue, eventSet)
 end
 
