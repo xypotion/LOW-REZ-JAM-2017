@@ -1,3 +1,6 @@
+require "queueProcessing"
+require "eventSetQueue"
+
 function love.load()
 	--initial setup stuff & constants
 	math.randomseed(os.time())
@@ -5,7 +8,7 @@ function love.load()
 	
 	love.graphics.setLineWidth(1)
 	
-	cellD = 15
+	cellD = 15 --D as in "dimension"
 	
 	--load graphics
 	bg_day = love.graphics.newImage("bg_day1.png")
@@ -21,8 +24,8 @@ function love.load()
 	--load sounds
 	
 	--init canvas stuff
-	gameCan = love.graphics.newCanvas(64, 64)
-	gameCan:setFilter("nearest")
+	gameCanvas = love.graphics.newCanvas(64, 64)
+	gameCanvas:setFilter("nearest")
 
 	--find & load autosave
 	
@@ -35,7 +38,11 @@ function love.load()
 	
 	--init game variables
 	stage = {}
-	stage.field = {{empty(), empty(), empty()}, {empty(), empty(), empty()}, {empty(), empty(), empty()}}
+	stage.field = {
+		{empty(), empty(), empty()}, 
+		{empty(), empty(), empty()}, 
+		{empty(), empty(), empty()}
+	}
 	
 	--init hero
 	hero = {
@@ -68,15 +75,16 @@ function love.update(dt)
 end
 
 function love.draw()
-	love.graphics.setCanvas(gameCan)
+	--switch to gameCanvas
+	love.graphics.setCanvas(gameCanvas)
 	
 	white()
 	
 	drawStage()
 	
-	--draw gameCan
+	--draw gameCanvas
 	love.graphics.setCanvas()
-	love.graphics.draw(gameCan, 0, 0, 0, 8, 8)
+	love.graphics.draw(gameCanvas, 0, 0, 0, 8, 8)
 end
 
 function love.keypressed(key)
@@ -131,21 +139,15 @@ function drawStage()
 	love.graphics.draw(bg_day)
 	love.graphics.draw(grid)
 	
-	for y,r in ipairs(stage.field) do
-		for x,c in ipairs(r) do			
-			-- if c.id then
-				-- if c.id == "hero" then
-					-- print(hero, k, l)
-					--love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
-					drawCellContents(c, y, x)
-				-- end
-			-- end
+	--draw cells' contents
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do			
+			drawCellContents(c, y, x)
 		end
 	end
 end
 
 function drawCellContents(obj, y, x)
-	
 	---VERY DEBUGGY
 	if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
 	
@@ -173,29 +175,32 @@ function queueSet(eventSet)
 end
 
 function processEventSets(dt)
-	--stop and allow input if there are no events to process
-	if #eventSetQueue == 0 then 
+	--block input during processing if there are any events, otherwise allow reenable input and break
+	if peek(eventSetQueue) then 
+		inputLevel = "none"
+	else
 		inputLevel = "normal"
 		return
 	end
 	
-	inputLevel = "none"
-	
 	local es = peek(eventSetQueue)
 	local numFinished = 0
 	
-	-- touch them all
+	--process them all
 	for k, e in pairs(es) do
-		print("processing "..e.class)
+		--if not already finished, process this event
+		if not e.finished then
+			print("processing "..e.class)
 		
-		if e.class == "actuation" then
-			processActuationEvent(e)
+			if e.class == "actuation" then
+				processActuationEvent(e)
+			end
+		
+			if e.class == "cellOp" then
+				processCellOpEvent(e)
+			end
 		end
-		
-		if e.class == "cellOp" then
-			processCellOpEvent(e)
-		end
-		
+				
 		--tally finished events in set
 		if e.finished then
 			numFinished = numFinished + 1
@@ -206,149 +211,6 @@ function processEventSets(dt)
 	if numFinished == #es then
 		pop(eventSetQueue)
 	end
-end
-
-function eventSetStep(e, dt)
-	--first-frame events
-	if e.progress == 0 then
-		--play e.sound
-		
-		--change subject states
-		-- for 
-		--set subject.beingDamaged
-	end
-	
-	--change animation frame
-	e.anim.frame = math.floor((e.progress + dt) * e.fps)
-	
-	--are we all done? if so, reset subjects' states, remove event set
-	e.progress = e.progress + dt
-	if e.progress >= e.duration then
-		e.finished = true
-	end
-end
-
---DEBUG kinda
-function newEventSet(enemy)
-	local set = {
-		--sound = ?
-		finishedCount = 0,
-		progress = 0,
-		frame = 0,
-		events = {}
-	}
-	
-	--hero attacks
-	set.events[1] = {
-		subject = hero,
-		frames = {
-			"attack", --will need to be directional
-		}
-	}
-	
-	--enemy gets attacked
-	set.events[2] = {
-		subject = enemy,
-		frames = {
-			"victim",			--literally a quad on the sheet
-			-- "idle",
-			-- "victim"
-		}
-	}
-end
-
---------------------------------------------------------------------------
-
-function cellOpEvent(y, x, thing)
-	local e = {
-		class = "cellOp",
-		fieldY = y,
-		fieldX = x,
-		payload = thing
-	}
-	
-	return e
-end
-
----counter = {actual, shown, posSound, negSound, quick}
-
-function actuationEvent(c, d)
-	local e = {
-		class = "actuation",
-		counter = c,
-		delta = d
-	}
-	
-	return e
-end
-
-function animEvent()
-	local e = {
-		class = "anim",
-		--what drawable entity
-		--frames = { {pose, xOffset, yOffset}s }
-	}
-	
-	return e
-end
-
-function soundEvent()
-	local e = {
-		class = "sound",
-		--what sound to start
-		--TODO what if you're fading music in or out?
-	}
-	
-	return e
-end
-
-function screenEvent()
-	local e = {
-		class = "screen",
-		--graphic to display
-		--frames = {{xOffset, yOffset, alpha}s }
-	}
-	
-	return e
-end
-
---bgEvent()?
-
---------------------------------------------------------------------------
-
---TODO sound? moving, enemy kills...
-function processCellOpEvent(e)
-	stage.field[e.fieldY][e.fieldX] = e.payload
-	
-	e.finished = true
-end
-
---TODO "quick" actuations
---TODO regardless of delta, shown should never go over max or under 0; finish if you hit those
---TODO pos/neg sounds
-function processActuationEvent(e)
-	--decrement shown and increment delta OR vice-versa
-	if e.delta > 0 then
-		e.counter.shown = e.counter.shown + 1
-		e.delta = e.delta - 1
-	elseif e.delta < 0 then
-		e.counter.shown = e.counter.shown - 1
-		e.delta = e.delta + 1
-	end
-	
-	--finished if delta is depleted
-	if e.delta == 0 then
-		e.finished = true
-	end
-end
-
-function processAnimEvent()
-end
-
-function processSoundEvent()
-end
-
-function processScreenEvent()
 end
 
 --------------------------------------------------------------------------
@@ -428,26 +290,4 @@ function locateHero()
 			end
 		end
 	end
-end
-
-function peek(q)
-	return q[1]
-end
-
-function pop(q)
-	local item = q[1]
-	
-	q[1] = nil
-	
-	for i = 1, #q do
-		q[i - 1] = q[i]
-	end
-	
-	q[#q] = nil
-	
-	return item
-end
-
-function push(q, item)
-	table.insert(q, item)
 end
