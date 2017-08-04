@@ -32,7 +32,7 @@ function love.load()
 	--init mechanical variables
 	frame = 0 --for idle animations only? figure it out TODO
 	eventFrame = 0
-	eventFrameLength = 0.1
+	eventFrameLength = 0.05
 	eventSetQueue = {}
 	inputLevel = "normal"
 	
@@ -51,7 +51,10 @@ function love.load()
 		ap = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
 		sp = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
 		attack = 3,
-		powers = {}
+		powers = {},
+		pose = "idle",
+		yOffset = 0,
+		xOffset = 0
 	}	
 		
 	--display title
@@ -152,7 +155,7 @@ function drawCellContents(obj, y, x)
 	if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
 	
 	if obj.class == "hero" then
-		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
+		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 	end
 	if obj.class == "enemy" then
 		love.graphics.draw(sheet_enemy, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
@@ -160,57 +163,6 @@ function drawCellContents(obj, y, x)
 end
 
 function loadTitleScreen()
-end
-
---------------------------------------------------------------------------
-
-function queue(event)
-	print("pushing event: ", event.class)
-	push(eventSetQueue, {event})
-end
-
-function queueSet(eventSet)
-	print("pushing eventSet with "..#eventSet.." members")
-	push(eventSetQueue, eventSet)
-end
-
-function processEventSets(dt)
-	--block input during processing if there are any events, otherwise allow reenable input and break
-	if peek(eventSetQueue) then 
-		inputLevel = "none"
-	else
-		inputLevel = "normal"
-		return
-	end
-	
-	local es = peek(eventSetQueue)
-	local numFinished = 0
-	
-	--process them all
-	for k, e in pairs(es) do
-		--if not already finished, process this event
-		if not e.finished then
-			print("processing "..e.class)
-		
-			if e.class == "actuation" then
-				processActuationEvent(e)
-			end
-		
-			if e.class == "cellOp" then
-				processCellOpEvent(e)
-			end
-		end
-				
-		--tally finished events in set
-		if e.finished then
-			numFinished = numFinished + 1
-		end
-	end
-	
-	--pop event if all finished
-	if numFinished == #es then
-		pop(eventSetQueue)
-	end
 end
 
 --------------------------------------------------------------------------
@@ -257,10 +209,31 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 	end			
 end
 
---TODO queueing for this, probably rename
+--TODO probably rename
 function heroMove(y, x, dy, dx)
-	stage.field[y + dy][x + dx] = stage.field[y][x]
-	stage.field[y][x] = empty()
+	-- local frames = {
+	-- 	-- {pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
+	-- 	{pose = "idle", yOffset = dy * -12, xOffset = dx * -12},
+	-- 	{pose = "idle", yOffset = dy * -9, xOffset = dx * -9},
+	-- 	{pose = "idle", yOffset = dy * -6, xOffset = dx * -6},
+	-- 	{pose = "idle", yOffset = dy * -3, xOffset = dx * -3},
+	-- 	{pose = "idle", yOffset = 0, xOffset = 0},
+	-- }
+
+	local frames = {
+		{pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
+		{pose = "idle", yOffset = dy * -10, xOffset = dx * -10},
+		{pose = "idle", yOffset = dy * -5, xOffset = dx * -5},
+		{pose = "idle", yOffset = 0, xOffset = 0},
+	}	
+
+	queueSet({
+		cellOpEvent(y + dy, x + dx, hero),
+		cellOpEvent(y, x, empty()),
+		poseEvent(y + dy, x + dx, frames)
+	})
+	
+	processNow()
 end
 
 --TODO clean up, maybe rename

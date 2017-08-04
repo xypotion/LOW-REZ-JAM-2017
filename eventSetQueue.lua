@@ -21,11 +21,23 @@ function actuationEvent(c, d)
 	return e
 end
 
+function poseEvent(y, x, f)
+	local e = {
+		class = "pose",
+		fieldY = y, --location of drawable entity (cell contents)
+		fieldX = x,	
+		frames = f	--frames = { {pose, yOffset, xOffset}s }
+	}
+	
+	return e
+end
+
 function animEvent()
 	local e = {
 		class = "anim",
-		--what drawable entity
-		--frames = { {pose, xOffset, yOffset}s }
+		--location of drawable entity (cell overlay)
+		--named effect (column of effects sheet)
+		--frames = { quads (row on effects sheet) }
 	}
 	
 	return e
@@ -55,21 +67,35 @@ end
 
 --------------------------------------------------------------------------
 
+function queue(event)
+	print("pushing event: ", event.class)
+	push(eventSetQueue, {event})
+end
+
+function queueSet(eventSet)
+	print("pushing eventSet with "..#eventSet.." members")
+	push(eventSetQueue, eventSet)
+end
+
+--------------------------------------------------------------------------
+
 function peek(q)
 	return q[1]
 end
 
 function pop(q)
+	print(table.getn(q))
 	local item = q[1]
 	
-	q[1] = nil
+	-- q[1] = nil
+	print(table.getn(q))
 	
-	for i = 1, #q do
+	for i = 1, table.getn(q) do
 		q[i - 1] = q[i]
 	end
 	
-	q[#q] = nil
-	
+	q[table.getn(q)] = nil
+	print(table.getn(q))
 	return item
 end
 
