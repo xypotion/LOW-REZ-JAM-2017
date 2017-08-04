@@ -82,9 +82,11 @@ end
 function love.keypressed(key)
 	--DEBUG
 	if key == "escape" then
+		--merry quitmas
 		love.event.quit()
 	end
 	if key == "return" then
+		--inspect grid
 		print("\nstuff:")
 		for y,r in ipairs(stage.field) do
 			for x,c in ipairs(r) do
@@ -93,6 +95,17 @@ function love.keypressed(key)
 			print()
 		end
 	end
+	if key == "p" then
+		--test spawn
+		-- spawnEnemy()
+		local xxx, yyy = math.random(3), math.random(3)
+		if stage.field[yyy][xxx].class == "clear" then
+			queue(cellOpEvent(yyy, xxx, enemy()))
+		else
+			print(yyy, xxx, "occupied!")
+		end
+	end
+	--END DEBUG
 
 	if inputLevel == "normal" then
 		--take directional input
@@ -318,11 +331,9 @@ function processActuationEvent(e)
 	if e.delta > 0 then
 		e.counter.shown = e.counter.shown + 1
 		e.delta = e.delta - 1
-		print("increment shown")
 	elseif e.delta < 0 then
 		e.counter.shown = e.counter.shown - 1
 		e.delta = e.delta + 1
-		print("decrement shown")
 	end
 	
 	--finished if delta is depleted
