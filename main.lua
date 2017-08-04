@@ -27,9 +27,11 @@ function love.load()
 	--find & load autosave
 	
 	--init mechanical variables
-	frame = 0
-	animFPS = 10
+	frame = 0 --for idle animations only? figure it out TODO
+	eventFrame = 0
+	eventFrameLength = 0.1
 	eventSetQueue = {}
+	inputLevel = "normal"
 	
 	--init game variables
 	stage = {}
@@ -43,7 +45,8 @@ function love.load()
 		sp = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
 		attack = 3,
 		powers = {}
-	}		
+	}	
+		
 	--display title
 	
 
@@ -52,11 +55,16 @@ function love.load()
 	stage.field[2][3] = enemy()
 end
 
-function love.update(dt)
-	processEventSets(dt)
-	
+function love.update(dt)	
 	frame = frame + dt * 2
 	frame = frame % 24
+	
+	--process events on a set interval
+	eventFrame = eventFrame + dt
+	if eventFrame >= eventFrameLength then
+		processEventSets(dt)
+		eventFrame = eventFrame % eventFrameLength
+	end
 end
 
 function love.draw()
@@ -80,24 +88,26 @@ function love.keypressed(key)
 		print("\nstuff:")
 		for y,r in ipairs(stage.field) do
 			for x,c in ipairs(r) do
-				print(y, x, c.class, c.hp)
+				print(y, x, c.class)
 			end
 			print()
 		end
 	end
 
-	--take directional input
-	if key == "w" or key == "up" then
-		heroImpetus(-1, 0)
-	end
-	if key == "s" or key == "down" then
-		heroImpetus(1, 0)
-	end
-	if key == "a" or key == "left" then
-		heroImpetus(0, -1)
-	end
-	if key == "d" or key == "right" then
-		heroImpetus(0, 1)
+	if inputLevel == "normal" then
+		--take directional input
+		if key == "w" or key == "up" then
+			heroImpetus(-1, 0)
+		end
+		if key == "s" or key == "down" then
+			heroImpetus(1, 0)
+		end
+		if key == "a" or key == "left" then
+			heroImpetus(0, -1)
+		end
+		if key == "d" or key == "right" then
+			heroImpetus(0, 1)
+		end
 	end
 	
 end
@@ -124,7 +134,7 @@ end
 function drawCellContents(obj, y, x)
 	
 	---VERY DEBUGGY
-	if obj.hp then love.graphics.print(obj.hp.actual, x * 15 - 5, y * 15 - 5) end
+	if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
 	
 	if obj.class == "hero" then
 		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
@@ -140,25 +150,49 @@ end
 --------------------------------------------------------------------------
 
 function queue(event)
-	queueSet(event)
+	print("pushing event: ", event.class)
+	push(eventSetQueue, {event})
 end
 
 function queueSet(eventSet)
-	print("pushing eventSet: ", eventSet[1].class)
+	print("pushing eventSet with "..#eventSet.." members")
 	push(eventSetQueue, eventSet)
 end
 
 function processEventSets(dt)
-	--stop if there are no events to process
-	if #eventSetQueue == 0 then return end
+	--stop and allow input if there are no events to process
+	if #eventSetQueue == 0 then 
+		inputLevel = "normal"
+		return
+	end
 	
-	-- local e = peek(eventSetQueue)
-	--
-	-- eventSetStep(e, dt)
-	--
-	-- if e.finished then
-	-- 	pop(eventSetQueue)
-	-- end
+	inputLevel = "none"
+	
+	local es = peek(eventSetQueue)
+	local numFinished = 0
+	
+	-- touch them all
+	for k, e in pairs(es) do
+		print("processing "..e.class)
+		
+		if e.class == "actuation" then
+			processActuationEvent(e)
+		end
+		
+		if e.class == "cellOp" then
+			processCellOpEvent(e)
+		end
+		
+		--tally finished events in set
+		if e.finished then
+			numFinished = numFinished + 1
+		end
+	end
+	
+	--pop event if all finished
+	if numFinished == #es then
+		pop(eventSetQueue)
+	end
 end
 
 function eventSetStep(e, dt)
@@ -212,11 +246,12 @@ end
 
 --------------------------------------------------------------------------
 
-function cellOpEvent()
+function cellOpEvent(y, x, thing)
 	local e = {
 		class = "cellOp",
-		--where
-		--put what
+		fieldY = y,
+		fieldX = x,
+		payload = thing
 	}
 	
 	return e
@@ -224,14 +259,12 @@ end
 
 ---counter = {actual, shown, posSound, negSound, quick}
 
-function actuationEvent()
+function actuationEvent(c, d)
 	local e = {
 		class = "actuation",
-		--what counter
-		--delta; decremented as counter.shown incremented (or vv)
+		counter = c,
+		delta = d
 	}
-	
-	-- print(e.class)
 	
 	return e
 end
@@ -270,10 +303,32 @@ end
 
 --------------------------------------------------------------------------
 
-function processCellOpEvent()
+--TODO sound? moving, enemy kills...
+function processCellOpEvent(e)
+	stage.field[e.fieldY][e.fieldX] = e.payload
+	
+	e.finished = true
 end
 
-function processActuationEvent()
+--TODO "quick" actuations
+--TODO regardless of delta, shown should never go over max or under 0; finish if you hit those
+--TODO pos/neg sounds
+function processActuationEvent(e)
+	--decrement shown and increment delta OR vice-versa
+	if e.delta > 0 then
+		e.counter.shown = e.counter.shown + 1
+		e.delta = e.delta - 1
+		print("increment shown")
+	elseif e.delta < 0 then
+		e.counter.shown = e.counter.shown - 1
+		e.delta = e.delta + 1
+		print("decrement shown")
+	end
+	
+	--finished if delta is depleted
+	if e.delta == 0 then
+		e.finished = true
+	end
 end
 
 function processAnimEvent()
@@ -310,7 +365,7 @@ function getAnimFrame()
 	return math.floor(frame % 2)
 end
 
-function heroImpetus(dy, dx)
+function heroImpetus(dy, dx) --TODO rename playerImpetus
 	local y, x = locateHero()
 	
 	--see what lies ahead TODO this can still be optimized
@@ -329,11 +384,13 @@ function heroImpetus(dy, dx)
 	end			
 end
 
+--TODO queueing for this, probably rename
 function heroMove(y, x, dy, dx)
 	stage.field[y + dy][x + dx] = stage.field[y][x]
 	stage.field[y][x] = empty()
 end
 
+--TODO clean up, maybe rename
 function heroFight(y, x, dy, dx)
 	local ty, tx = y + dy, x + dx
 	local target = stage.field[ty][tx]
@@ -342,21 +399,14 @@ function heroFight(y, x, dy, dx)
 	target.hp.actual = target.hp.actual - hero.attack
 	
 	--queue damage actuation
-	queue({actuationEvent(target.hp, -hero.attack)})
+	queue(actuationEvent(target.hp, -hero.attack))
 	
 	--dead? queue removal
 	if target.hp.actual <= 0 then
 		-- killEnemy(target, ty, tx)
 		
-		queue({cellOpEvent(ty, tx, empty())})
+		queue(cellOpEvent(ty, tx, empty()))
 	end
-end
-
-function killEnemy(t, ty, tx)
-	--play sound
-	
-	--queue enemy death animation
-	stage.field[ty][tx] = empty()
 end
 
 function locateHero()
