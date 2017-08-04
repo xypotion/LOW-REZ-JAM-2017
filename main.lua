@@ -67,8 +67,8 @@ function love.load()
 	hero = {
 		class = "hero",
 		hp = {max = 9, actual = 2, shown = 9, posSound = nil, negSound = nil, quick = false},
-		ap = {max = 3, actual = 1, shown = 3, posSound = nil, negSound = nil, quick = false},
-		sp = {max = 3, actual = 1, shown = 3, posSound = nil, negSound = nil, quick = false},
+		ap = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
+		sp = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
 		attack = 3,
 		powers = {},
 		pose = "idle",
@@ -137,7 +137,7 @@ function love.keypressed(key)
 	end
 	--END DEBUG
 
-	if inputLevel == "normal" then
+	if inputLevel == "normal" then --TODO input levels should be a stack!
 		--take directional input
 		if key == "w" or key == "up" then
 			heroImpetus(-1, 0)
@@ -153,6 +153,9 @@ function love.keypressed(key)
 		end
 	end
 	
+	if hero.ap.actual <= 0 then
+		queueEnemyTurn()
+	end
 end
 
 --------------------------------------------------------------------------
@@ -174,7 +177,7 @@ end
 
 function drawCellContents(obj, y, x)
 	---VERY DEBUGGY
-	if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
+	-- if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
 	
 	if obj.class == "hero" then
 		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
@@ -207,8 +210,8 @@ function drawUI()
 
 	--SP
 	love.graphics.draw(ui, quads_ui.sp, 33, 50)
-	for i = 1, hero.ap.max do
-		if i <= hero.ap.actual then
+	for i = 1, hero.sp.max do
+		if i <= hero.sp.actual then
 			love.graphics.draw(ui, quads_ui.spT1, 37 + i * 6, 50)
 		else
 			love.graphics.draw(ui, quads_ui.spF1, 37 + i * 6, 50)
@@ -251,7 +254,14 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 	local destClass = nil
 	if stage.field[y + dy] and stage.field[y + dy][x + dx] then
 		destClass = stage.field[y + dy][x + dx].class
+	else
+		--seems like you're trying to move off the grid; end
+		return
 	end
+	
+	--AP reduction
+	hero.ap.actual = hero.ap.actual - 1
+	queue(actuationEvent(hero.ap, -1))
 	
 	--move or fight
 	if destClass == "clear" then
@@ -326,4 +336,11 @@ function locateHero()
 			end
 		end
 	end
+end
+
+function queueEnemyTurn()
+	--DEBUG
+	hero.sp.actual = hero.sp.actual - 1
+	queue(actuationEvent(hero.sp, -1))
+	hero.ap.actual = 3
 end

@@ -80,7 +80,7 @@ function processPoseEvent(e)
 	stage.field[e.fieldY][e.fieldX].xOffset = f.xOffset
 	
 	if not peek(e.frames) then
-		print("finished")
+		-- print("finished")
 		e.finished = true
 	end
 end
