@@ -39,6 +39,8 @@ enemies...
 	  - 3 HP, 1 attack, 2 dmg for self-destruct
 - drop rewards when defeated ("purified"), either HP bubbles or items (if flashing)
 
+enemy syncs, if doing: any 3 in a row -> all get attack + 1? or something more elaborate? :/
+
 bosses... 1 for each stage?
 - all:
   - only appear when all other enemies defeated, after minor fanfare
@@ -90,6 +92,8 @@ pick up power-ups that passively enhance stats
 ? heal more HP during the day (+1 on top of 3)
 ? HP bubbles heal 2x HP
 ? heal 3 HP after killing enemy
+
+power syncs, if doing: yellow-outlined ones -> AP+1 (and no nessie), pink-outlined ones -> SP+1, blue -> regen 1 per turn
 
 * picking up a 10th power-up when you already have 9 forces you to dump the oldest one? or opens a menu?
   * i think do if time, otherwise you just keep all powerups you find

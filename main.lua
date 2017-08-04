@@ -196,7 +196,7 @@ end
 
 function drawCellContents(obj, y, x)
 	---VERY DEBUGGY
-	-- if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
+	if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
 	
 	if obj.class == "hero" then
 		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
@@ -348,6 +348,48 @@ function heroFight(y, x, dy, dx)
 end
 
 function heroSpecialAttack()
+	if hero.sp.actual <= 0 then
+		--TODO some kind of error feedback? or is silence OK?
+		return
+	end
+	
+	--TODO don't allow casting if no enemies present? or do? :o maybe if all of stage's enemies are dead?
+	
+	--reduce SP and AP
+	hero.sp.actual = hero.sp.actual - 1
+	hero.ap.actual = hero.ap.actual - 1
+	queueSet({
+		actuationEvent(hero.sp, -1),
+		actuationEvent(hero.ap, -1),
+	})
+	
+	--and do stuff!
+	
+	--DEBUG
+	attacky = {}
+	for y,r in ipairs(stage.field) do
+		for x,c in ipairs(r) do
+			if c and c.class and c.class == "enemy" then
+				c.hp.actual = c.hp.actual - 1
+				push(attacky, actuationEvent(c.hp, -1))
+			end
+		end
+	end
+	queueSet(attacky)
+	killy = {}
+	for y,r in ipairs(stage.field) do
+		for x,c in ipairs(r) do
+			if c and c.class and c.class == "enemy" then
+				if c.hp.actual <= 0 then
+					push(killy, cellOpEvent(y, x, empty()))
+				end
+			end
+		end
+	end
+	queueSet(killy)
+	--END DEBUG
+	
+	processNow()
 end
 
 function locateHero()
