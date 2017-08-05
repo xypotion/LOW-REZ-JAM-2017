@@ -49,12 +49,10 @@ function spawnEnemies(l)
 	if not list then return end --...or after. TODO eh
 	
 	local es = {}
-	local empties = allEmptiesNotReserved()
+	local empties = allEmptyOrVacatingNotReservedCellsShuffled()
 	
 	--if there's space, spawn all enemies in list
-	if table.getn(list) <= table.getn(empties) then
-		shuffle(empties)
-		
+	if table.getn(list) <= table.getn(empties) then		
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
 			push(es, cellOpEvent(cell.fieldY, cell.fieldX, enemy(en)))

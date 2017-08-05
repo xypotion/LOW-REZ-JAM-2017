@@ -86,6 +86,7 @@ function love.load()
 		{"algy"},
 		{"algy"},
 	}
+	stage.enemyList = shuffle(stage.enemyList)
 	-- stage.boss = "invasive species"
 	
 	--init hero
@@ -282,9 +283,15 @@ function white()
 	love.graphics.setColor(255, 255, 255, 255)
 end
 
+--mutates the input, so ONLY use this in the form foo = shuffle(foo)
 function shuffle(arr)
-	--TODO
-	return arr
+	local new = {}
+	
+	for i = 1, table.getn(arr) do
+		new[i] = table.remove(arr, math.random(table.getn(arr)))
+	end
+	
+	return new
 end
 
 function clear()
@@ -441,7 +448,7 @@ function locateHero()
 	end
 end
 
-function allEmptiesNotReserved()
+function allEmptyOrVacatingNotReservedCellsShuffled()
 	local empties = {}
 
 	for y, r in ipairs(stage.field) do
@@ -455,12 +462,9 @@ function allEmptiesNotReserved()
 	end
 	print("spawning in those places")
 	
-	return empties
+	return shuffle(empties)
 end
 
 --TODO. enemies should spawn in empty spaces first, then replace powerups if there's nowhere else
--- function allEmptiesShuffled()
--- end
---
 -- function allEmptiesThenPowerups()
 -- end
