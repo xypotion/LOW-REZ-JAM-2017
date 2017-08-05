@@ -83,7 +83,8 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	stage.startingEnemyList = {"algy", "algy"}
+	stage.startingEnemyList = {"toxy", "toxy"}
+	-- stage.startingEnemyList = {"algy", "algy"}
 	stage.enemyList = {
 		{"toxy"},
 		{"algy", "algy"},
@@ -132,12 +133,14 @@ function love.update(dt)
 	if game.state == "night" then
 		--if event queue is empty...?
 		if not peek(eventSetQueue) then
-			local cellCoordSetsWithWaitingEnemies = allEnemiesWithAP()--shuffle(allEnemiesWithAP())
+			--currently not shuffling here so that such as mercuris can take their turns consecutively, but this is lazy. can also break if they change rows
+			--TODO a much better solution is to do it in order of distance from hero. left-to-right is not equivalent to right-to-left if you go in order
+			local en = locationsOfAllEnemiesWithAP()[1]
 			
 			-- if there was at least one with AP...
-			if cellCoordSetsWithWaitingEnemies[1] then --? something else?
+			if en then --? something else?
 				--...queue a turn!
-				queueFullEnemyTurn(cellCoordSetsWithWaitingEnemies[1])
+				queueFullEnemyTurn(en.y, en.x)
 			else
 				--otherwise, no enemies found that have AP, so back to player
 				startHeroTurn()

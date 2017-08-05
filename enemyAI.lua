@@ -49,17 +49,21 @@ function queueEnemyTurn()
 	startHeroTurn()
 end
 
-function queueFullEnemyTurn(c)
+function queueFullEnemyTurn(ey, ex)
 	--DEBUG
-	print("queueing full enemy turn at", c.y, c.x)
+	print("queueing full enemy turn at", ey, ex)
 	-- queue(animEvent(c.y, c.x, sparkAnimFrames()))
-	meleeTurnAt(c.y, c.x)
-	stage.field[c.y][c.x].contents.ap.actual = stage.field[c.y][c.x].contents.ap.actual - 1
+	meleeTurnAt(ey, ex)
+	
+	--reduce AP; this will happen whether they actually take an action or not, which is good
+	stage.field[ey][ex].contents.ap.actual = stage.field[ey][ex].contents.ap.actual - 1
+	-- print("attacker's AP:", stage.field[ey][ex].contents.ap.actual)
+	
 	-- queue(waitEvent(0.25)) --tempting to put this here, but no-ops just cause pointless waits, which is yucky
 	--END DEBUG
 end
 
-function allEnemiesWithAP()
+function locationsOfAllEnemiesWithAP()
 	local arr = {}
 	
 	for y, r in ipairs(stage.field) do
@@ -102,10 +106,6 @@ function meleeTurnAt(ey, ex)
 		-- print(ey, ex, "wants to move closer")
 		enemyApproachHero(ey, ex, hy, hx, ac)
 	end
-
-	--reduce AP; this will happen whether they actually take an action or not, which is good
-	stage.field[ey][ex].contents.ap.actual = stage.field[ey][ex].contents.ap.actual - 1
-	-- print("attacker's AP:", stage.field[ey][ex].contents.ap.actual)
 end
 
 function rangerTurn()
