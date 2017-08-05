@@ -254,7 +254,7 @@ end
 
 function drawCellContents(obj, y, x)
 	---DEBUG FOR HP
-	if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
+	-- if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
 	
 	--draw hero or enemy --TODO optimize/clean up
 	if obj.class == "hero" then
@@ -262,9 +262,9 @@ function drawCellContents(obj, y, x)
 	end
 	if obj.class == "enemy" then
 		if obj.species == "algy" then
-			love.graphics.draw(sheet_algy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13, cellD * y - 13)
+			love.graphics.draw(sheet_algy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		elseif obj.species == "toxy" then
-			love.graphics.draw(sheet_toxy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13, cellD * y - 13)
+			love.graphics.draw(sheet_toxy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		end
 	end
 end
@@ -345,11 +345,11 @@ function allEmptyOrVacatingNotReservedCellsShuffled() --TODO is this name accura
 			--"empty and not reserved or vacating and not reserved"
 			if c and c.contents and c.contents.class and c.contents.class == "clear" then-- and not c.reserved or c.vacating and not c.reserved then
 				push(empties, {fieldY = y, fieldX = x})
-				print(y, x, "is clear")
+				-- print(y, x, "is clear")
 			end
 		end
 	end
-	print("spawning in those places")
+	-- print("spawning in those places")
 	
 	return shuffle(empties)
 end

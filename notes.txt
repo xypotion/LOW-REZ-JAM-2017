@@ -23,6 +23,7 @@ enemies...
 - come in a few varieties, but not many
   - garby: basic attacks & moves
 	  - 6 HP, 1 attack
+		* haha, maybe the only enemy type that eats your powerups? others won't?
 	- mercuri: acts twice but has low HP
 	  - 4 HP, 1 attack
 	- sewy: can't do special attack if adjacent

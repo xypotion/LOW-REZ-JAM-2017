@@ -52,9 +52,10 @@ end
 function queueFullEnemyTurn(c)
 	--DEBUG
 	print("queueing full enemy turn at", c.y, c.x)
+	-- queue(animEvent(c.y, c.x, sparkAnimFrames()))
 	meleeTurnAt(c.y, c.x)
 	stage.field[c.y][c.x].contents.ap.actual = stage.field[c.y][c.x].contents.ap.actual - 1
-	queue(animEvent(c.y, c.x, sparkAnimFrames()))
+	-- queue(waitEvent(0.25)) --tempting to put this here, but no-ops just cause pointless waits, which is yucky
 	--END DEBUG
 end
 
@@ -95,11 +96,16 @@ function meleeTurnAt(ey, ex)
 	
 	if heroAdjacent then
 		enemyAttackHero(ey, ex, hy, hx)
-		return
+		-- return
+	else
+		--otherwise, where's hero? move closer (vertically first).
+		-- print(ey, ex, "wants to move closer")
+		enemyApproachHero(ey, ex, hy, hx, ac)
 	end
-	
-	--otherwise, where's hero? move closer (vertically first). check reservation/vacancy status, too
-	print(ey, ex, "wants to move closer")
+
+	--reduce AP; this will happen whether they actually take an action or not, which is good
+	stage.field[ey][ex].contents.ap.actual = stage.field[ey][ex].contents.ap.actual - 1
+	-- print("attacker's AP:", stage.field[ey][ex].contents.ap.actual)
 end
 
 function rangerTurn()
@@ -113,8 +119,8 @@ function enemyAttackHero(ey, ex, hy, hx)
 	local attacker = stage.field[ey][ex].contents
 	
 	--first of all, reduce attacker AP
-	attacker.ap.actual = attacker.ap.actual - 1
-	print("attacker's AP:", stage.field[ey][ex].contents.ap.actual)
+	-- attacker.ap.actual = attacker.ap.actual - 1
+	-- print("attacker's AP:", stage.field[ey][ex].contents.ap.actual)
 	
 	--reduce hero HP
 	hero.hp.actual = hero.hp.actual - attacker.attack
@@ -128,13 +134,70 @@ function enemyAttackHero(ey, ex, hy, hx)
 			{pose = "idle", yOffset = dy * 1, xOffset = dx * 1},
 			{pose = "idle", yOffset = 0, xOffset = 0},
 		}),
-		actuationEvent(hero.hp, -attacker.attack)
+		actuationEvent(hero.hp, -attacker.attack),
+		waitEvent(0.25)
 	})
 	
 	--hero defeated? TODO game over implementation
 end
 
-function enemyMove()
+--there are a bunch of print()s in here because it took me a million years to make it work. all because i flipped xs and ys. wow.
+--real talk: TODO you gotta implement a* or something because this algo is awkward. hiding behind your friend is not the same as approaching your target
+function enemyApproachHero(ey, ex, hy, hx, ac)
+	-- local dy, dx = hy - ey, hx - ex
+	local currentDistance = math.abs(ey - hy) + math.abs(ex - hx)
+	local attacker = stage.field[ey][ex].contents
+	
+	--filter ac (adjacent cells) for clear cells
+	local candidateCells = {}
+	
+	for k, c in ipairs(ac) do
+		if stage.field[c.y][c.x].contents.class == "clear" then
+			push(candidateCells, c)
+		end
+	end
+	
+	-- print("current distance from hero:", currentDistance)
+	-- print("found this many clear adjacent cells:", table.getn(candidateCells))
+	
+	--ditto for powerups? or should enemies never move over these? TODO decide, i guess. leaning no, but maybe too easy to make a "wall" of powerups
+	--this was kind of the reason for doing candidateCells at all, so TODO optimize this function if you're
+	
+	--find which cell, if any, will move the enemy closer. should always move vertically first
+	local dest = nil
+	for k, c in ipairs(shuffle(candidateCells)) do
+		local distance = math.abs(c.y - hy) + math.abs(c.x - hx)
+		-- print("...calculating distance... abs("..c.y.."-"..hy..") + abs("..c.x.."-"..hy..") = "..distance)
+		-- print(c.y, c.x, "would be this far from hero: ", distance)
+		if distance < currentDistance and not dest then
+			dest = c
+			-- print("that's closer! i'll go there.")
+		end
+	end
+	
+	--find a cell that's closer? 
+	if dest then
+		local dy, dx = dest.y - ey, dest.x - ex
+		-- print(dy, dx)
+	
+		local moveFrames = { --TODO this should be consolidated with similar heroMove() code
+			{pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
+			{pose = "idle", yOffset = dy * -10, xOffset = dx * -10},
+			{pose = "idle", yOffset = dy * -5, xOffset = dx * -5},
+			{pose = "idle", yOffset = 0, xOffset = 0},
+		}
+		-- print(ey, ex, "moving to", dest.y, dest.x)
+
+		--queue cell ops
+		queueSet({
+			cellOpEvent(dest.y, dest.x, stage.field[ey][ex].contents), --enemy -> destination
+			cellOpEvent(ey, ex, clear()), --current cell -> clear
+			poseEvent(dest.y, dest.x, moveFrames),
+			waitEvent(0.25)
+		})
+	else
+		-- print(ey, ex, "didn't find a closer cell within reach")
+	end
 end
 
 --this feels messy, but might be the best way? hm
@@ -157,6 +220,8 @@ end of each night:
 	if less space than required for spawn-set, spawn part and mash remainder into next set
   	...but please balance so this doesn't happen. 2 per turn = enough? 3 at most, on endgame stages, and only some sets?
 ]]
+
+--could easily see moving enemy creating/spawning to another separate file TODO
 
 function spawnEnemies(l)
 	local list = l or pop(stage.enemyList) --TODO check this before popping
@@ -187,7 +252,9 @@ function enemy(species)
 			ai = "melee", --or ranged or healer
 			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
 			ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
-			attack = 1
+			attack = 1,
+			yOffset = 0,
+			xOffset = 0
 		}
 	elseif species == "toxy" then
 		return {
@@ -197,7 +264,9 @@ function enemy(species)
 			ai = "ranged", --or ranged or healer
 			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
 			ap = {max = 2, actual = 2, shown = 2, posSound = nil, negSound = nil, quick = false},
-			attack = 1
+			attack = 1,
+			yOffset = 0,
+			xOffset = 0
 		}
 	end
 end

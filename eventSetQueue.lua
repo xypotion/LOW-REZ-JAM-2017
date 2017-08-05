@@ -89,6 +89,16 @@ function bgEvent(bg, time)
 	return e
 end
 
+--for changing backgrounds
+function waitEvent(time)
+	local e = {
+		class = "wait",
+		time = time or 0.5 --seconds to draw out fade
+	}
+	
+	return e
+end
+
 --------------------------------------------------------------------------
 
 function queue(event)

@@ -12,7 +12,8 @@ function processEventSets(dt)
 	
 	--process them all
 	for k, e in pairs(es) do
-		--if not already finished, process this event
+		--if not already finished, process this event 
+		--TODO this stack of ifs is just awfs. DO SOMETHIIING EEHHHH
 		if not e.finished then
 			-- print("processing "..e.class)
 		
@@ -39,6 +40,10 @@ function processEventSets(dt)
 			if e.class == "bg" then
 				processBgEvent(e)
 			end
+			
+			if e.class == "wait" then
+				processWaitEvent(e)
+			end
 		end
 				
 		--tally finished events in set
@@ -64,6 +69,7 @@ end
 --TODO sound? moving, enemy kills...
 function processCellOpEvent(e)
 	stage.field[e.fieldY][e.fieldX].contents = e.payload
+	-- print("put a ", e.payload.class, "into", e.fieldY, e.fieldX)
 	
 	-- stage.field[e.fieldY][e.fieldX].reserved = nil
 	-- stage.field[e.fieldY][e.fieldX].vacating = nil
@@ -136,6 +142,14 @@ function processBgEvent(e)
 	if bgNext.alpha >= 255 then
 		bgMain = bgNext
 		bgNext = nil
+		e.finished = true
+	end
+end
+
+function processWaitEvent(e)	
+	if e.time >= 0 then
+		e.time = e.time - eventFrameLength
+	else
 		e.finished = true
 	end
 end
