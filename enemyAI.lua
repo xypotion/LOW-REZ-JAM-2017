@@ -1,6 +1,25 @@
+function startEnemyTurn()
+	print("queueing night")
+	
+	--reset all enemies APs
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do
+			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
+				c.contents.ap.actual = c.contents.ap.max
+			end
+		end
+	end
+	
+	--transition to night
+	queueSet({
+		gameStateEvent("state", "night"),
+		bgEvent("night1", 0.5)
+	})
+end
+
 function queueEnemyTurn()
 	--fade to night
-	queue(bgEvent("night1", 0.5))
+	-- queue(bgEvent("night1", 0.5))
 	
 	--all enemies take their turns
 	local cells = shuffledCellList()
@@ -22,11 +41,35 @@ function queueEnemyTurn()
 	spawnEnemies()
 	
 	--reset hero AP & fade back to day
-	hero.ap.actual = hero.ap.max --ap reset
-	queueSet({
-		bgEvent("day1", 0.5),
-		actuationEvent(hero.ap, 3)
-	})
+	-- hero.ap.actual = hero.ap.max --ap reset
+	-- queueSet({
+	-- 	bgEvent("day1", 0.5),
+	-- 	actuationEvent(hero.ap, 3)
+	-- })
+	startHeroTurn()
+end
+
+function queueFullEnemyTurn(c)
+	--DEBUG
+	print("queueing full enemy turn at", c.y, c.x)
+	meleeTurnAt(c.y, c.x)
+	stage.field[c.y][c.x].contents.ap.actual = stage.field[c.y][c.x].contents.ap.actual - 1
+	queue(animEvent(c.y, c.x, sparkAnimFrames()))
+	--END DEBUG
+end
+
+function allEnemiesWithAP()
+	local arr = {}
+	
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do
+			if c and c.contents and c.contents.class and c.contents.class == "enemy" and c.contents.ap.actual > 0 then
+				push(arr, {y = y, x = x})
+			end
+		end
+	end
+	
+	return arr
 end
 
 --[[
@@ -139,7 +182,7 @@ function enemy(species)
 	if species == "algy" then
 		return {
 			class = "enemy",
-			species = "algy", --will be used for graphics TODO
+			species = "algy",
 			pose = "idle",
 			ai = "melee", --or ranged or healer
 			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
@@ -149,11 +192,11 @@ function enemy(species)
 	elseif species == "toxy" then
 		return {
 			class = "enemy",
-			species = "toxy", --will be used for graphics TODO
+			species = "toxy",
 			pose = "idle",
 			ai = "ranged", --or ranged or healer
 			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
-			ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
+			ap = {max = 2, actual = 2, shown = 2, posSound = nil, negSound = nil, quick = false},
 			attack = 1
 		}
 	end

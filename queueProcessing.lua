@@ -16,12 +16,16 @@ function processEventSets(dt)
 		if not e.finished then
 			-- print("processing "..e.class)
 		
-			if e.class == "actuation" then
-				processActuationEvent(e)
+			if e.class == "gameState" then
+				processGameStateEvent(e)
 			end
 		
 			if e.class == "cellOp" then
 				processCellOpEvent(e)
+			end
+		
+			if e.class == "actuation" then
+				processActuationEvent(e)
 			end
 			
 			if e.class == "pose" then
@@ -51,12 +55,18 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
+function processGameStateEvent(e)
+	print(e.variable, e.value)
+	game[e.variable] = e.value
+	e.finished = true
+end
+
 --TODO sound? moving, enemy kills...
 function processCellOpEvent(e)
 	stage.field[e.fieldY][e.fieldX].contents = e.payload
 	
-	stage.field[e.fieldY][e.fieldX].reserved = nil
-	stage.field[e.fieldY][e.fieldX].vacating = nil
+	-- stage.field[e.fieldY][e.fieldX].reserved = nil
+	-- stage.field[e.fieldY][e.fieldX].vacating = nil
 	
 	e.finished = true
 end

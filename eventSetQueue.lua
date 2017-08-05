@@ -1,3 +1,13 @@
+function gameStateEvent(v, to)
+	local e = {
+		class = "gameState",
+		variable = v,
+		value = to
+	}
+	
+	return e
+end
+
 function cellOpEvent(y, x, thing)
 	local e = {
 		class = "cellOp",
