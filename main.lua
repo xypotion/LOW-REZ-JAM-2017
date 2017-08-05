@@ -17,8 +17,11 @@ function love.load()
 	grid = love.graphics.newImage("grid.png")
 	sheet_player = love.graphics.newImage("sheet_player.png")
 	-- sheet_enemy = love.graphics.newImage("sheet_enemy.png")
-	sheet_toxy = love.graphics.newImage("sheet_toxy.png")
-	sheet_algy = love.graphics.newImage("sheet_algy.png")
+	enemySheets = {
+		toxy = love.graphics.newImage("sheet_toxy.png"),
+		algy = love.graphics.newImage("sheet_algy.png"),
+		mercuri = love.graphics.newImage("sheet_mercuri.png")
+	}
 	sheet_effects = love.graphics.newImage("effects.png")
 	ui = love.graphics.newImage("ui.png")
 	
@@ -28,14 +31,21 @@ function love.load()
 	}
 	
 	--init quads
-	quads_idle = {} --TODO probably quads_poses or something would be better, and put them all in here
-	quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
-	quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
+	quads_idle = {
+		love.graphics.newQuad(0, 0, 16, 16, 64, 64),
+		love.graphics.newQuad(0, 16, 16, 16, 64, 64),
+		love.graphics.newQuad(0, 32, 16, 16, 64, 64),
+		love.graphics.newQuad(0, 48, 16, 16, 64, 64)
+	} --TODO probably quads_poses or something would be better, and put them all in here
+	-- quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
+	-- quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
 	
 	enemyQuads = {
 		idle = {
 			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
-			love.graphics.newQuad(0, 16, 16, 16, 64, 64)
+			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 48, 16, 16, 64, 64)
 		}
 	}
 	
@@ -83,7 +93,7 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	stage.startingEnemyList = {"toxy", "toxy"}
+	stage.startingEnemyList = {"mercuri", "toxy"}
 	-- stage.startingEnemyList = {"algy", "algy"}
 	stage.enemyList = {
 		{"toxy"},
@@ -117,7 +127,7 @@ function love.load()
 end
 
 function love.update(dt)	
-	frame = frame + dt * 2
+	frame = frame + dt * 3
 	frame = frame % 24
 	
 	--process events on a set interval
@@ -261,14 +271,14 @@ function drawCellContents(obj, y, x)
 	
 	--draw hero or enemy --TODO optimize/clean up
 	if obj.class == "hero" then
-		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+		love.graphics.draw(sheet_player, quads_idle[getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 	end
 	if obj.class == "enemy" then
-		if obj.species == "algy" then
-			love.graphics.draw(sheet_algy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
-		elseif obj.species == "toxy" then
-			love.graphics.draw(sheet_toxy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
-		end
+		-- if obj.species == "algy" then
+			-- love.graphics.draw(sheet_algy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+		-- elseif obj.species == "toxy" then
+			love.graphics.draw(enemySheets[obj.species], enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+		-- end
 	end
 end
 
@@ -337,7 +347,8 @@ function empty()
 end
 
 function getAnimFrame()
-	return math.floor(frame % 2)
+	-- return math.floor(frame % 2)
+	return math.floor(frame % 4)
 end
 
 function allEmptyOrVacatingNotReservedCellsShuffled() --TODO is this name accurate? also TODO why shuffle here?

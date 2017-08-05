@@ -109,9 +109,13 @@ function meleeTurnAt(ey, ex)
 end
 
 function rangerTurn()
+	--if hero is adjacent, try to move away
+	--if hero is not adjacent (or enemy couldn't move away), attack
 end
 
 function healerTurn()
+	--if any enemies are below max HP, heal all by 1
+	--if not healing, act as melee
 end
 
 function enemyAttackHero(ey, ex, hy, hx)
@@ -262,6 +266,18 @@ function enemy(species)
 			species = "toxy",
 			pose = "idle",
 			ai = "ranged", --or ranged or healer
+			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
+			ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
+			attack = 1,
+			yOffset = 0,
+			xOffset = 0
+		}
+	elseif species == "mercuri" then
+		return {
+			class = "enemy",
+			species = "mercuri",
+			pose = "idle",
+			ai = "melee", --or ranged or healer
 			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
 			ap = {max = 2, actual = 2, shown = 2, posSound = nil, negSound = nil, quick = false},
 			attack = 1,
