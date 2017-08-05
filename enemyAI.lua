@@ -11,7 +11,7 @@ function queueEnemyTurn()
 			if c.contents.ai == "melee" then
 				meleeTurnAt(coords[1], coords[2])
 			elseif c.contents.ai == "ranged" then
-				rangedTurn(c.contents)
+				rangerTurnAt(c.contents)
 			elseif c.contents.ai == "healer" then
 				healerTurn(c.contents)
 			end
