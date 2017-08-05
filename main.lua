@@ -15,7 +15,9 @@ function love.load()
 	--load graphics
 	grid = love.graphics.newImage("grid.png")
 	sheet_player = love.graphics.newImage("sheet_player.png")
-	sheet_enemy = love.graphics.newImage("sheet_enemy.png")
+	-- sheet_enemy = love.graphics.newImage("sheet_enemy.png")
+	sheet_toxy = love.graphics.newImage("sheet_toxy.png")
+	sheet_algy = love.graphics.newImage("sheet_algy.png")
 	sheet_effects = love.graphics.newImage("effects.png")
 	ui = love.graphics.newImage("ui.png")
 	
@@ -29,12 +31,10 @@ function love.load()
 	quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
 	quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
 	
-	quads_animation = {
-		spark = {
-			love.graphics.newQuad(0, 0, 16, 16, 128, 64),
-			love.graphics.newQuad(0, 16, 16, 16, 128, 64),
-			love.graphics.newQuad(0, 32, 16, 16, 128, 64),
-			love.graphics.newQuad(0, 48, 16, 16, 128, 64),
+	enemyQuads = {
+		idle = {
+			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 16, 16, 16, 64, 64)
 		}
 	}
 	
@@ -54,11 +54,14 @@ function love.load()
 		spF2 = love.graphics.newQuad(27, 12, 4, 5, 64, 64),
 	}
 	
+	initAnimFrames()
+	
 	--load sounds
 	
-	--init canvas stuff
+	--init canvas & other graphics stuff
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
+	bgMain = {graphic = "day1", alpha = 255}
 
 	--find & load autosave for hi scores. also info panels that have been seen? AND maybe change title screen if game beaten?
 	
@@ -69,15 +72,21 @@ function love.load()
 	eventSetQueue = {}
 	inputLevel = "normal" --TODO should be a stack, not a string
 	
-	--init game variables
+	--init stage variables (KINDA DEBUG)
 	stage = {}
 	stage.field = {
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	bgMain = {graphic = "day1", alpha = 255}
-	bgNext = nil
+	stage.startingEnemyList = {"algy", "algy"}
+	stage.enemyList = {
+		{"toxy"},
+		{"algy", "algy"},
+		{"algy"},
+		{"algy"},
+	}
+	-- stage.boss = "invasive species"
 	
 	--init hero
 	hero = {
@@ -96,8 +105,9 @@ function love.load()
 	
 
 	--DEBUG
-	stage.field[2][1] = hero
-	stage.field[2][3] = enemy()
+	stage.field[2][2].contents = hero
+	-- stage.field[2][3].contents = enemy("algy")
+	spawnEnemies(stage.startingEnemyList)
 end
 
 function love.update(dt)	
@@ -136,7 +146,7 @@ function love.keypressed(key)
 		print("\nstuff:")
 		for y,r in ipairs(stage.field) do
 			for x,c in ipairs(r) do
-				print(y, x, c.class)
+				print(y, x, c.contents.class)
 			end
 			print()
 		end
@@ -151,8 +161,8 @@ function love.keypressed(key)
 		--test spawn
 		-- spawnEnemy()
 		local xxx, yyy = math.random(3), math.random(3)
-		if stage.field[yyy][xxx].class == "clear" then
-			queue(cellOpEvent(yyy, xxx, enemy()))
+		if stage.field[yyy][xxx].contents.class == "clear" then
+			queue(cellOpEvent(yyy, xxx, enemy("algy")))
 		else
 			print(yyy, xxx, "occupied!")
 		end
@@ -204,7 +214,7 @@ function drawStage()
 	--draw cells' contents
 	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do			
-			drawCellContents(c, y, x)
+			drawCellContents(c.contents, y, x)
 		end
 	end
 end
@@ -218,7 +228,11 @@ function drawCellContents(obj, y, x)
 		love.graphics.draw(sheet_player, quads_idle[getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 	end
 	if obj.class == "enemy" then
-		love.graphics.draw(sheet_enemy, quads_idle[getAnimFrame()], cellD * x - 13, cellD * y - 13)
+		if obj.species == "algy" then
+			love.graphics.draw(sheet_algy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13, cellD * y - 13)
+		elseif obj.species == "toxy" then
+			love.graphics.draw(sheet_toxy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13, cellD * y - 13)
+		end
 	end
 	
 	--draw overlay if present
@@ -268,19 +282,17 @@ function white()
 	love.graphics.setColor(255, 255, 255, 255)
 end
 
-function empty()
+function shuffle(arr)
+	--TODO
+	return arr
+end
+
+function clear()
 	return {class = "clear"}
 end
 
-function enemy()
-	return {
-		class = "enemy",
-		species = "garby", --will be used for graphics TODO
-		ai = "melee", --or ranged or healer
-		hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
-		ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
-		attack = 1
-	}
+function empty()
+	return {contents = clear()}
 end
 
 function getAnimFrame()
@@ -293,7 +305,7 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 	--see what lies ahead TODO this can still be optimized
 	local destClass = nil
 	if stage.field[y + dy] and stage.field[y + dy][x + dx] then
-		destClass = stage.field[y + dy][x + dx].class
+		destClass = stage.field[y + dy][x + dx].contents.class
 	else
 		--seems like you're trying to move off the grid, so...
 		return
@@ -315,7 +327,9 @@ end
 
 --TODO probably rename
 function heroMove(y, x, dy, dx)
-	-- local frames = {
+	local ty, tx = y + dy, x + dx
+	
+	-- local moveFrames = {
 	-- 	-- {pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
 	-- 	{pose = "idle", yOffset = dy * -12, xOffset = dx * -12},
 	-- 	{pose = "idle", yOffset = dy * -9, xOffset = dx * -9},
@@ -324,17 +338,20 @@ function heroMove(y, x, dy, dx)
 	-- 	{pose = "idle", yOffset = 0, xOffset = 0},
 	-- }
 
-	local frames = {
+	local moveFrames = {
 		{pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
 		{pose = "idle", yOffset = dy * -10, xOffset = dx * -10},
 		{pose = "idle", yOffset = dy * -5, xOffset = dx * -5},
 		{pose = "idle", yOffset = 0, xOffset = 0},
 	}	
 
+	--reserve target, set vacating, and queue cell ops
+	stage.field[ty][tx].reserved = true
+	stage.field[y][x].vacating = true
 	queueSet({
-		cellOpEvent(y + dy, x + dx, hero),
-		cellOpEvent(y, x, empty()),
-		poseEvent(y + dy, x + dx, frames)
+		cellOpEvent(ty, tx, hero),
+		cellOpEvent(y, x, clear()),
+		poseEvent(ty, tx, moveFrames)
 	})
 	
 	processNow()
@@ -344,7 +361,7 @@ end
 function heroFight(y, x, dy, dx)
 	local hy, hx = locateHero()
 	local ty, tx = y + dy, x + dx
-	local target = stage.field[ty][tx]
+	local target = stage.field[ty][tx].contents
 	
 	target.hp.actual = target.hp.actual - hero.attack
 	
@@ -362,7 +379,7 @@ function heroFight(y, x, dy, dx)
 	
 	--dead? queue removal
 	if target.hp.actual <= 0 then
-		queue(cellOpEvent(ty, tx, empty()))
+		queue(cellOpEvent(ty, tx, clear()))
 	end
 	
 	processNow()
@@ -388,22 +405,22 @@ function heroSpecialAttack()
 	
 	--DEBUG
 	attacky = {}
-	for y,r in ipairs(stage.field) do
-		for x,c in ipairs(r) do
-			if c and c.class and c.class == "enemy" then
-				c.hp.actual = c.hp.actual - 1
-				push(attacky, actuationEvent(c.hp, -1))
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do
+			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
+				c.contents.hp.actual = c.contents.hp.actual - 1
+				push(attacky, actuationEvent(c.contents.hp, -1))
 				push(attacky, animEvent(y, x, sparkAnimFrames()))
 			end
 		end
 	end
 	queueSet(attacky)
 	killy = {}
-	for y,r in ipairs(stage.field) do
-		for x,c in ipairs(r) do
-			if c and c.class and c.class == "enemy" then
-				if c.hp.actual <= 0 then
-					push(killy, cellOpEvent(y, x, empty()))
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do
+			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
+				if c.contents.hp.actual <= 0 then
+					push(killy, cellOpEvent(y, x, clear()))
 				end
 			end
 		end
@@ -417,9 +434,33 @@ end
 function locateHero()
 	for y,r in ipairs(stage.field) do
 		for x,c in ipairs(r) do
-			if c and c.class and c.class == "hero" then
+			if c and c.contents and c.contents.class and c.contents.class == "hero" then
 				return y, x
 			end
 		end
 	end
 end
+
+function allEmptiesNotReserved()
+	local empties = {}
+
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do
+			--"empty and not reserved or vacating and not reserved"
+			if c and c.contents and c.contents.class and c.contents.class == "clear" and not c.reserved or c.vacating and not c.reserved then
+				push(empties, {fieldY = y, fieldX = x})
+				print(y, x, "is clear")
+			end
+		end
+	end
+	print("spawning in those places")
+	
+	return empties
+end
+
+--TODO. enemies should spawn in empty spaces first, then replace powerups if there's nowhere else
+-- function allEmptiesShuffled()
+-- end
+--
+-- function allEmptiesThenPowerups()
+-- end

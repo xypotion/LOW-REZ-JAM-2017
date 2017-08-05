@@ -53,7 +53,10 @@ end
 
 --TODO sound? moving, enemy kills...
 function processCellOpEvent(e)
-	stage.field[e.fieldY][e.fieldX] = e.payload
+	stage.field[e.fieldY][e.fieldX].contents = e.payload
+	
+	stage.field[e.fieldY][e.fieldX].reserved = nil
+	stage.field[e.fieldY][e.fieldX].vacating = nil
 	
 	e.finished = true
 end
@@ -82,9 +85,9 @@ function processPoseEvent(e)
 	local f = pop(e.frames)
 	-- print(table.getn(e.frames))
 	
-	stage.field[e.fieldY][e.fieldX].pose = f.pose
-	stage.field[e.fieldY][e.fieldX].yOffset = f.yOffset
-	stage.field[e.fieldY][e.fieldX].xOffset = f.xOffset
+	stage.field[e.fieldY][e.fieldX].contents.pose = f.pose
+	stage.field[e.fieldY][e.fieldX].contents.yOffset = f.yOffset
+	stage.field[e.fieldY][e.fieldX].contents.xOffset = f.xOffset
 	
 	if not peek(e.frames) then
 		-- print("finished")
