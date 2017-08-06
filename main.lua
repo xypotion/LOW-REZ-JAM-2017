@@ -350,24 +350,3 @@ function getAnimFrame()
 	-- return math.floor(frame % 2)
 	return math.floor(frame % 4)
 end
-
-function allEmptyOrVacatingNotReservedCellsShuffled() --TODO is this name accurate? also TODO why shuffle here?
-	local empties = {}
-
-	for y, r in ipairs(stage.field) do
-		for x, c in ipairs(r) do
-			--"empty and not reserved or vacating and not reserved"
-			if c and c.contents and c.contents.class and c.contents.class == "clear" then-- and not c.reserved or c.vacating and not c.reserved then
-				push(empties, {fieldY = y, fieldX = x})
-				-- print(y, x, "is clear")
-			end
-		end
-	end
-	-- print("spawning in those places")
-	
-	return shuffle(empties)
-end
-
---TODO. enemies should spawn in empty spaces first, then replace powerups if there's nowhere else
--- function allEmptiesThenPowerups()
--- end

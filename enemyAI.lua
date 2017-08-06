@@ -85,26 +85,14 @@ for each enemy:
 	before moving, must check destination cell to see if it's already reserved.
 ]]
 
-function meleeTurnAt(ey, ex)
-	--get adjacent cells
-	local ac = getAdjacentCells(ey, ex)
-	
-	--if hero is adjacent, attack (reducing AP)
-	local heroAdjacent = false
-	local hy, hx = locateHero()
-	for i, c in pairs(ac) do
-		if c.y == hy and c.x == hx then
-			heroAdjacent = true
-		end
-	end
-	
-	if heroAdjacent then
-		enemyAttackHero(ey, ex, hy, hx)
-		-- return
+function meleeTurnAt(ey, ex)	
+	--if hero is adjacent, attack, otherwise approach
+	if heroAdjacentToEnemy(ey, ex) then
+		enemyAttackHero(ey, ex)
 	else
 		--otherwise, where's hero? move closer (vertically first).
 		-- print(ey, ex, "wants to move closer")
-		enemyApproachHero(ey, ex, hy, hx, ac)
+		enemyApproachHero(ey, ex, ac)
 	end
 end
 
@@ -118,7 +106,23 @@ function healerTurn()
 	--if not healing, act as melee
 end
 
-function enemyAttackHero(ey, ex, hy, hx)
+function heroAdjacentToEnemy(ey, ex)
+	local hy, hx = locateHero()
+	local ac = getAdjacentCells(ey, ex)
+	local heroAdjacent = false
+	
+	--check all adjacent cells for heroic presence. TODO might there be a better way?
+	for i, c in pairs(ac) do
+		if c.fieldY == hy and c.fieldX == hx then
+			heroAdjacent = true
+		end
+	end
+
+	return heroAdjacent
+end
+
+function enemyAttackHero(ey, ex)
+	local hy, hx = locateHero()
 	local dy, dx = hy - ey, hx - ex
 	local attacker = stage.field[ey][ex].contents
 	
@@ -147,8 +151,9 @@ end
 
 --there are a bunch of print()s in here because it took me a million years to make it work. all because i flipped xs and ys. wow.
 --real talk: TODO you gotta implement a* or something because this algo is awkward. hiding behind your friend is not the same as approaching your target
-function enemyApproachHero(ey, ex, hy, hx, ac)
-	-- local dy, dx = hy - ey, hx - ex
+function enemyApproachHero(ey, ex, ac)
+	local ac = getAdjacentCells(ey, ex)
+	local hy, hx = locateHero()
 	local currentDistance = math.abs(ey - hy) + math.abs(ex - hx)
 	local attacker = stage.field[ey][ex].contents
 	
@@ -156,7 +161,7 @@ function enemyApproachHero(ey, ex, hy, hx, ac)
 	local candidateCells = {}
 	
 	for k, c in ipairs(ac) do
-		if stage.field[c.y][c.x].contents.class == "clear" then
+		if stage.field[c.fieldY][c.fieldX].contents.class == "clear" then
 			push(candidateCells, c)
 		end
 	end
@@ -170,7 +175,7 @@ function enemyApproachHero(ey, ex, hy, hx, ac)
 	--find which cell, if any, will move the enemy closer. should always move vertically first
 	local dest = nil
 	for k, c in ipairs(shuffle(candidateCells)) do
-		local distance = math.abs(c.y - hy) + math.abs(c.x - hx)
+		local distance = math.abs(c.fieldY - hy) + math.abs(c.fieldX - hx)
 		-- print("...calculating distance... abs("..c.y.."-"..hy..") + abs("..c.x.."-"..hy..") = "..distance)
 		-- print(c.y, c.x, "would be this far from hero: ", distance)
 		if distance < currentDistance and not dest then
@@ -181,7 +186,7 @@ function enemyApproachHero(ey, ex, hy, hx, ac)
 	
 	--find a cell that's closer? 
 	if dest then
-		local dy, dx = dest.y - ey, dest.x - ex
+		local dy, dx = dest.fieldY - ey, dest.fieldX - ex
 		-- print(dy, dx)
 	
 		local moveFrames = { --TODO this should be consolidated with similar heroMove() code
@@ -194,9 +199,9 @@ function enemyApproachHero(ey, ex, hy, hx, ac)
 
 		--queue cell ops
 		queueSet({
-			cellOpEvent(dest.y, dest.x, stage.field[ey][ex].contents), --enemy -> destination
+			cellOpEvent(dest.fieldY, dest.fieldX, stage.field[ey][ex].contents), --enemy -> destination
 			cellOpEvent(ey, ex, clear()), --current cell -> clear
-			poseEvent(dest.y, dest.x, moveFrames),
+			poseEvent(dest.fieldY, dest.fieldX, moveFrames),
 			waitEvent(0.25)
 		})
 	else
@@ -204,19 +209,58 @@ function enemyApproachHero(ey, ex, hy, hx, ac)
 	end
 end
 
---this feels messy, but might be the best way? hm
-function getAdjacentCells(y, x)
+-- function getAdjacentCells(y, x)
+-- 	local cells = {}
+--
+-- 	if y + 1 <= 3 then push(cells, {y = y + 1, x = x}) end
+-- 	if y - 1 >= 1 then push(cells, {y = y - 1, x = x}) end
+-- 	if x + 1 <= 3 then push(cells, {y = y, x = x + 1}) end
+-- 	if x - 1 >= 1 then push(cells, {y = y, x = x - 1}) end
+--
+-- 	return cells
+-- end
+
+function getAdjacentCells(ly, lx)
+	return cellsAtDistance(ly, lx, 1)
+end
+
+--there is probably a more elegant way, but a double-loop over a set this tiny is hardly gonna strain the processor
+function cellsAtDistance(ly, lx, dist) --l as in 'locus'
 	local cells = {}
 	
-	if y + 1 <= 3 then push(cells, {y = y + 1, x = x}) end
-	if y - 1 >= 1 then push(cells, {y = y - 1, x = x}) end
-	if x + 1 <= 3 then push(cells, {y = y, x = x + 1}) end
-	if x - 1 >= 1 then push(cells, {y = y, x = x - 1}) end
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do
+			if math.abs(y - ly) + math.abs(x - lx) == dist then
+				push(cells, {fieldY = y, fieldX = x})
+			end
+		end
+	end
 	
 	return cells
 end
 
---might as well put spawning here, too?
+function allClearCells()
+	local empties = {}
+
+	for y, r in ipairs(stage.field) do
+		for x, c in ipairs(r) do
+			--"empty and not reserved or vacating and not reserved"
+			if c and c.contents and c.contents.class and c.contents.class == "clear" then-- and not c.reserved or c.vacating and not c.reserved then
+				push(empties, {fieldY = y, fieldX = x})
+				-- print(y, x, "is clear")
+			end
+		end
+	end
+	-- print("spawning in those places")
+	
+	return empties
+end
+
+--TODO. enemies should *spawn* in empty spaces first, then replace powerups if there's nowhere else
+-- function allEmptiesThenPowerups()
+-- end
+
+--could easily see moving enemy creating/spawning to another separate file TODO
 --[[
 init: take stage's list of enemies and shuffle
 end of each night: 
@@ -225,15 +269,13 @@ end of each night:
   	...but please balance so this doesn't happen. 2 per turn = enough? 3 at most, on endgame stages, and only some sets?
 ]]
 
---could easily see moving enemy creating/spawning to another separate file TODO
-
 function spawnEnemies(l)
 	local list = l or pop(stage.enemyList) --TODO check this before popping
 	
 	if not list then return end --...or after. TODO eh
 	
 	local es = {}
-	local empties = allEmptyOrVacatingNotReservedCellsShuffled()
+	local empties = shuffle(allClearCells())
 	
 	--if there's space, spawn all enemies in list
 	if table.getn(list) <= table.getn(empties) then		
