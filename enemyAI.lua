@@ -17,38 +17,6 @@ function startEnemyTurn()
 	})
 end
 
-function queueEnemyTurn()
-	--fade to night
-	-- queue(bgEvent("night1", 0.5))
-	
-	--all enemies take their turns
-	local cells = shuffledCellList()
-	for i, coords in ipairs(cells) do
-		local c = stage.field[coords[1]][coords[2]]
-		--TODO what if enemy has >1 AP? gotta loop again here (maybe just a "while")
-		if c and c.contents and c.contents.class and c.contents.class == "enemy" then
-			if c.contents.ai == "melee" then
-				meleeTurnAt(coords[1], coords[2])
-			elseif c.contents.ai == "ranged" then
-				rangerTurnAt(c.contents)
-			elseif c.contents.ai == "healer" then
-				healerTurn(c.contents)
-			end
-		end
-	end
-	
-	--pull from stage.enemylist to spawn new enemies
-	spawnEnemies()
-	
-	--reset hero AP & fade back to day
-	-- hero.ap.actual = hero.ap.max --ap reset
-	-- queueSet({
-	-- 	bgEvent("day1", 0.5),
-	-- 	actuationEvent(hero.ap, 3)
-	-- })
-	startHeroTurn()
-end
-
 function queueFullEnemyTurn(ey, ex)
 	--DEBUG
 	print("queueing full enemy turn at", ey, ex)
@@ -66,6 +34,7 @@ end
 function locationsOfAllEnemiesWithAP()
 	local arr = {}
 	
+	--TODO use getAdjacentCells here, i think
 	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" and c.contents.ap.actual > 0 then
@@ -73,6 +42,9 @@ function locationsOfAllEnemiesWithAP()
 			end
 		end
 	end
+	
+	-- getAdjacentCells(ey, ex, "enemy")
+	--TODO COULD optimize this, or not since it won't be used soon
 	
 	return arr
 end
@@ -90,8 +62,6 @@ function meleeTurnAt(ey, ex)
 	if heroAdjacentToEnemy(ey, ex) then
 		enemyAttackHero(ey, ex)
 	else
-		--otherwise, where's hero? move closer (vertically first).
-		-- print(ey, ex, "wants to move closer")
 		enemyApproachHero(ey, ex, ac)
 	end
 end
@@ -106,30 +76,16 @@ function healerTurn()
 	--if not healing, act as melee
 end
 
+--"is there at least one adjacent cell containing a hero?"
 function heroAdjacentToEnemy(ey, ex)
-	local hy, hx = locateHero()
-	local ac = getAdjacentCells(ey, ex)
-	local heroAdjacent = false
-	
-	--check all adjacent cells for heroic presence. TODO might there be a better way?
-	for i, c in pairs(ac) do
-		if c.fieldY == hy and c.fieldX == hx then
-			heroAdjacent = true
-		end
-	end
-
-	return heroAdjacent
+	return table.getn(getAdjacentCells(ey, ex, "hero")) > 0
 end
 
 function enemyAttackHero(ey, ex)
 	local hy, hx = locateHero()
 	local dy, dx = hy - ey, hx - ex
 	local attacker = stage.field[ey][ex].contents
-	
-	--first of all, reduce attacker AP
-	-- attacker.ap.actual = attacker.ap.actual - 1
-	-- print("attacker's AP:", stage.field[ey][ex].contents.ap.actual)
-	
+		
 	--reduce hero HP
 	hero.hp.actual = hero.hp.actual - attacker.attack
 
@@ -149,45 +105,28 @@ function enemyAttackHero(ey, ex)
 	--hero defeated? TODO game over implementation
 end
 
---there are a bunch of print()s in here because it took me a million years to make it work. all because i flipped xs and ys. wow.
 --real talk: TODO you gotta implement a* or something because this algo is awkward. hiding behind your friend is not the same as approaching your target
 function enemyApproachHero(ey, ex, ac)
-	local ac = getAdjacentCells(ey, ex)
+	local emptyNeighbors = getAdjacentCells(ey, ex, "clear")
 	local hy, hx = locateHero()
 	local currentDistance = math.abs(ey - hy) + math.abs(ex - hx)
-	local attacker = stage.field[ey][ex].contents
-	
-	--filter ac (adjacent cells) for clear cells
-	local candidateCells = {}
-	
-	for k, c in ipairs(ac) do
-		if stage.field[c.fieldY][c.fieldX].contents.class == "clear" then
-			push(candidateCells, c)
-		end
-	end
-	
-	-- print("current distance from hero:", currentDistance)
-	-- print("found this many clear adjacent cells:", table.getn(candidateCells))
 	
 	--ditto for powerups? or should enemies never move over these? TODO decide, i guess. leaning no, but maybe too easy to make a "wall" of powerups
 	--this was kind of the reason for doing candidateCells at all, so TODO optimize this function if you're
 	
 	--find which cell, if any, will move the enemy closer. should always move vertically first
 	local dest = nil
-	for k, c in ipairs(shuffle(candidateCells)) do
+	for k, c in ipairs(shuffle(emptyNeighbors)) do
 		local distance = math.abs(c.fieldY - hy) + math.abs(c.fieldX - hx)
-		-- print("...calculating distance... abs("..c.y.."-"..hy..") + abs("..c.x.."-"..hy..") = "..distance)
-		-- print(c.y, c.x, "would be this far from hero: ", distance)
 		if distance < currentDistance and not dest then
 			dest = c
-			-- print("that's closer! i'll go there.")
 		end
 	end
+	--could optimize ^ a little, but i think i'd rather just implement something else. baby's first pathing algorithm?
 	
-	--find a cell that's closer? 
+	--if a cell closer than currentDistance was found, move there
 	if dest then
 		local dy, dx = dest.fieldY - ey, dest.fieldX - ex
-		-- print(dy, dx)
 	
 		local moveFrames = { --TODO this should be consolidated with similar heroMove() code
 			{pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
@@ -195,43 +134,34 @@ function enemyApproachHero(ey, ex, ac)
 			{pose = "idle", yOffset = dy * -5, xOffset = dx * -5},
 			{pose = "idle", yOffset = 0, xOffset = 0},
 		}
-		-- print(ey, ex, "moving to", dest.y, dest.x)
 
-		--queue cell ops
+		--queue cell ops & wait
 		queueSet({
 			cellOpEvent(dest.fieldY, dest.fieldX, stage.field[ey][ex].contents), --enemy -> destination
 			cellOpEvent(ey, ex, clear()), --current cell -> clear
 			poseEvent(dest.fieldY, dest.fieldX, moveFrames),
 			waitEvent(0.25)
 		})
-	else
-		-- print(ey, ex, "didn't find a closer cell within reach")
 	end
 end
 
--- function getAdjacentCells(y, x)
--- 	local cells = {}
---
--- 	if y + 1 <= 3 then push(cells, {y = y + 1, x = x}) end
--- 	if y - 1 >= 1 then push(cells, {y = y - 1, x = x}) end
--- 	if x + 1 <= 3 then push(cells, {y = y, x = x + 1}) end
--- 	if x - 1 >= 1 then push(cells, {y = y, x = x - 1}) end
---
--- 	return cells
--- end
-
-function getAdjacentCells(ly, lx)
-	return cellsAtDistance(ly, lx, 1)
-end
-
---there is probably a more elegant way, but a double-loop over a set this tiny is hardly gonna strain the processor
-function cellsAtDistance(ly, lx, dist) --l as in 'locus'
+--search whole grid for cells at least min away and up to max away, optionally matching class
+function cellsInDistanceRange(ly, lx, min, max, class) --l as in 'locus'
 	local cells = {}
 	
 	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do
-			if math.abs(y - ly) + math.abs(x - lx) == dist then
-				push(cells, {fieldY = y, fieldX = x})
+			if math.abs(y - ly) + math.abs(x - lx) >= min and math.abs(y - ly) + math.abs(x - lx) <= max then
+				--y-x is within specified distance range of ly-lx
+				if class then
+					if c.contents.class and c.contents.class == class then
+						--we do care about class & it matches, so push
+						push(cells, {fieldY = y, fieldX = x})
+					end
+				else
+					--we don't care about class, just push
+					push(cells, {fieldY = y, fieldX = x})
+				end
 			end
 		end
 	end
@@ -239,21 +169,13 @@ function cellsAtDistance(ly, lx, dist) --l as in 'locus'
 	return cells
 end
 
+--all clear cells 0 to 2 cells from 2,2 = the whole grid. filter for clear cells
 function allClearCells()
-	local empties = {}
+	return cellsInDistanceRange(2, 2, 0, 2, "clear")
+end
 
-	for y, r in ipairs(stage.field) do
-		for x, c in ipairs(r) do
-			--"empty and not reserved or vacating and not reserved"
-			if c and c.contents and c.contents.class and c.contents.class == "clear" then-- and not c.reserved or c.vacating and not c.reserved then
-				push(empties, {fieldY = y, fieldX = x})
-				-- print(y, x, "is clear")
-			end
-		end
-	end
-	-- print("spawning in those places")
-	
-	return empties
+function getAdjacentCells(ly, lx, class)
+	return cellsInDistanceRange(ly, lx, 1, 1, class)
 end
 
 --TODO. enemies should *spawn* in empty spaces first, then replace powerups if there's nowhere else
@@ -327,19 +249,4 @@ function enemy(species)
 			xOffset = 0
 		}
 	end
-end
-
---TODO you know there's a nicer way to do this, lazy bones
-function shuffledCellList()
-	return shuffle({
-		{1, 1},
-		{1, 2},
-		{1, 3},
-		{2, 1},
-		{2, 2},
-		{2, 3},
-		{3, 1},
-		{3, 2},
-		{3, 3},		
-	})
 end
