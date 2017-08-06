@@ -31,6 +31,18 @@ function actuationEvent(c, d)
 	return e
 end
 
+--basically just for applying and removing sticks
+function statusEvent(ey, ex, s)
+	local e = {
+		class = "status",
+		fieldY = ey,
+		fieldX = ex,
+		status = s
+	}
+	
+	return e
+end
+
 --for making battle entities change poses and/or move around
 function poseEvent(y, x, f)
 	local e = {

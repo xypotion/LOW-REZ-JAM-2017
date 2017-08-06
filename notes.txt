@@ -1,3 +1,25 @@
+high-level to do & time estimates as of 8/7, 1AM
+- enemies (art, ai, special fx) - 1-2 more days
+- sound (sfx, music, implementation ) - 2-3 days
+- powerups (implementation, art, syncs, management) - 4 days
+  - way of simplifying = cut syncs, just let player have 1 of each (including would-be sync effects) over course of game, shuffled
+	  * maybe the really good ones are dropped by bosses! AP up, SP up, wish improvers
+	- vastly simplified: just +hp and +sp fish. ~ 1 day. do this first, i think! see what you have time for later
+	  - would also reduce the need for info popups? maybe?
+- stage mechanics (scoring, UI, boss mechanics) - 2 days?
+  - easy to cut stage-title art. simplify by just saying "stage 1", "stage 2", etc
+- info popups - 1 day i hope
+- title screen (art, credits) & ending - 1 day
+- hi scores & autosaves - 1 day
+- playtesting & balancing - 1 day?
+* total: another 13-15 days of work. damn. only 10 actual days left in the jam. assess again in a few days, then...
+  - probably cut scoring & autosaves first
+	- simplify powerups (i.e. cut syncs & mgmt)
+	x keep sound very basic? no music? :(
+	- cut bosses? i hope not... maybe cut boss UI? would save a tiny bit of time
+	- cut info popups? could, i guess... or just simplify as 1 static graphic + 1 subject graphic + just printed text!
+* also, wow, there are almost 700 entrants already. frig.
+
 Heart's Desire: Black Lake
 
 5 levels? or 4?

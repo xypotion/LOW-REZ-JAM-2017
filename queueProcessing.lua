@@ -28,6 +28,10 @@ function processEventSets(dt)
 			if e.class == "actuation" then
 				processActuationEvent(e)
 			end
+		
+			if e.class == "status" then
+				processStatusEvent(e)
+			end
 			
 			if e.class == "pose" then
 				processPoseEvent(e)
@@ -95,6 +99,15 @@ function processActuationEvent(e)
 	end
 end
 
+function processStatusEvent(e)
+	local id = e.fieldY * 10 + e.fieldX --hacky, but... it's a game jam!
+	
+	hero.statusAfflictors[id] = e.status
+	
+	print("statuses: set "..id.." as "..e.status)
+	
+	e.finished = true
+end
 
 function processPoseEvent(e)
 	-- print(table.getn(e.frames))

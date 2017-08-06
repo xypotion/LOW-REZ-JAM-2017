@@ -116,8 +116,20 @@ function love.load()
 		powers = {},
 		pose = "idle",
 		yOffset = 0,
-		xOffset = 0
-	}	
+		xOffset = 0,
+		statusAfflictors = {}
+	}
+	
+	--who's afflicting the hero? no one! yes, this is hacky, and yes, i should be using getters and setters. don't care right now, though
+	hero.statusAfflictors[11] = "none"
+	hero.statusAfflictors[12] = "none"
+	hero.statusAfflictors[13] = "none"
+	hero.statusAfflictors[21] = "none"
+	hero.statusAfflictors[22] = "none"
+	hero.statusAfflictors[23] = "none"
+	hero.statusAfflictors[31] = "none"
+	hero.statusAfflictors[32] = "none"
+	hero.statusAfflictors[33] = "none"
 		
 	--display title
 	
