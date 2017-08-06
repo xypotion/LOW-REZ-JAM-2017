@@ -145,6 +145,7 @@ function love.update(dt)
 		if not peek(eventSetQueue) then
 			--currently not shuffling here so that such as mercuris can take their turns consecutively, but this is lazy. can also break if they change rows
 			--TODO a much better solution is to do it in order of distance from hero. left-to-right is not equivalent to right-to-left if you go in order
+				--something something cellsInDistanceRange. loop through 1-2-3-4, break when you find one with AP?
 			local en = locationsOfAllEnemiesWithAP()[1]
 			
 			-- if there was at least one with AP...

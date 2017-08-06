@@ -21,7 +21,11 @@ function queueFullEnemyTurn(ey, ex)
 	--DEBUG
 	print("queueing full enemy turn at", ey, ex)
 	-- queue(animEvent(c.y, c.x, sparkAnimFrames()))
-	meleeTurnAt(ey, ex)
+	if stage.field[ey][ex].contents.ai == "melee" then
+		meleeTurnAt(ey, ex)
+	else
+		rangerTurnAt(ey, ex)
+	end
 	
 	--reduce AP; this will happen whether they actually take an action or not, which is good
 	stage.field[ey][ex].contents.ap.actual = stage.field[ey][ex].contents.ap.actual - 1
@@ -44,7 +48,7 @@ function locationsOfAllEnemiesWithAP()
 	end
 	
 	-- getAdjacentCells(ey, ex, "enemy")
-	--TODO COULD optimize this, or not since it won't be used soon
+	--TODO COULD optimize this, or not since it will be obsolete when you change enemy turn order code
 	
 	return arr
 end
@@ -66,12 +70,20 @@ function meleeTurnAt(ey, ex)
 	end
 end
 
-function rangerTurn()
-	--if hero is adjacent, try to move away
-	--if hero is not adjacent (or enemy couldn't move away), attack
+function rangerTurnAt(ey, ex)
+	local heroAdjacent = heroAdjacentToEnemy(ey, ex)
+	local emptyNeighbors = getAdjacentCells(ey, ex, "clear") --slightly inefficient, but clean
+	
+	--if hero is adjacent and there's at least one clear neighbor, run away
+	if heroAdjacent and table.getn(emptyNeighbors) >= 1 then
+		enemyFleeHero(ey, ex)
+	else
+		--otherwise attack (either not next to hero or there was nowhere to flee to)
+		enemyAttackHero(ey, ex)
+	end
 end
 
-function healerTurn()
+function healerTurnAt()
 	--if any enemies are below max HP, heal all by 1
 	--if not healing, act as melee
 end
@@ -106,15 +118,14 @@ function enemyAttackHero(ey, ex)
 end
 
 --real talk: TODO you gotta implement a* or something because this algo is awkward. hiding behind your friend is not the same as approaching your target
-function enemyApproachHero(ey, ex, ac)
+function enemyApproachHero(ey, ex)
 	local emptyNeighbors = getAdjacentCells(ey, ex, "clear")
 	local hy, hx = locateHero()
 	local currentDistance = math.abs(ey - hy) + math.abs(ex - hx)
 	
 	--ditto for powerups? or should enemies never move over these? TODO decide, i guess. leaning no, but maybe too easy to make a "wall" of powerups
-	--this was kind of the reason for doing candidateCells at all, so TODO optimize this function if you're
 	
-	--find which cell, if any, will move the enemy closer. should always move vertically first
+	--find which cell, if any, will move the enemy closer
 	local dest = nil
 	for k, c in ipairs(shuffle(emptyNeighbors)) do
 		local distance = math.abs(c.fieldY - hy) + math.abs(c.fieldX - hx)
@@ -126,26 +137,52 @@ function enemyApproachHero(ey, ex, ac)
 	
 	--if a cell closer than currentDistance was found, move there
 	if dest then
-		local dy, dx = dest.fieldY - ey, dest.fieldX - ex
-	
-		local moveFrames = { --TODO this should be consolidated with similar heroMove() code
-			{pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
-			{pose = "idle", yOffset = dy * -10, xOffset = dx * -10},
-			{pose = "idle", yOffset = dy * -5, xOffset = dx * -5},
-			{pose = "idle", yOffset = 0, xOffset = 0},
-		}
-
-		--queue cell ops & wait
-		queueSet({
-			cellOpEvent(dest.fieldY, dest.fieldX, stage.field[ey][ex].contents), --enemy -> destination
-			cellOpEvent(ey, ex, clear()), --current cell -> clear
-			poseEvent(dest.fieldY, dest.fieldX, moveFrames),
-			waitEvent(0.25)
-		})
+		enemyMoveTo(ey, ex, dest.fieldY, dest.fieldX)
 	end
 end
 
+function enemyFleeHero(ey, ex)
+	local emptyNeighbors = getAdjacentCells(ey, ex, "clear")
+	local hy, hx = locateHero()
+	local currentDistance = math.abs(ey - hy) + math.abs(ex - hx)
+		
+	--find which cell, if any, will move the enemy further from hero
+	local dest = nil
+	for k, c in ipairs(shuffle(emptyNeighbors)) do
+		local distance = math.abs(c.fieldY - hy) + math.abs(c.fieldX - hx)
+		if distance > currentDistance and not dest then
+			dest = c
+		end
+	end
+	
+	--if a cell further than currentDistance was found, move there
+	if dest then
+		enemyMoveTo(ey, ex, dest.fieldY, dest.fieldX)
+	end
+end
+
+--TODO this should be consolidated with very similar heroMove() code
+function enemyMoveTo(ey, ex, ty, tx)
+	local dy, dx = ty - ey, tx - ex
+
+	local moveFrames = { 
+		{pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
+		{pose = "idle", yOffset = dy * -10, xOffset = dx * -10},
+		{pose = "idle", yOffset = dy * -5, xOffset = dx * -5},
+		{pose = "idle", yOffset = 0, xOffset = 0},
+	}
+
+	--queue cell ops & wait
+	queueSet({
+		cellOpEvent(ty, tx, stage.field[ey][ex].contents), --enemy -> destination
+		cellOpEvent(ey, ex, clear()), --current cell -> clear
+		poseEvent(ty, tx, moveFrames),
+		waitEvent(0.25) --if you move this somewhere higher in the call stack, you can probably merge enemyMoveTo and heroMove entirely! TODO
+	})
+end
+
 --search whole grid for cells at least min away and up to max away, optionally matching class
+--this can still be optimized, methinks TODO something mathy, not just looping over whole grid. low priority, though
 function cellsInDistanceRange(ly, lx, min, max, class) --l as in 'locus'
 	local cells = {}
 	
