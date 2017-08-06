@@ -102,12 +102,8 @@ function heroFight(y, x, dy, dx)
 		actuationEvent(target.hp, -hero.attack)
 	})
 	
-	--figure out if something else should happen: stuck, explode, or just plain defeated
-	-- if target.reaction then
 	--stick (unless defeated)
 	if target.reaction == "stick" and target.hp.actual > 0 then
-		print("shouldn't have touched me!!!", ty, tx)
-		-- push(hero.sticks, {ty, tx})--nope, this has to be queued TODO new event type, i guess. but test removal by death first; may affect overall impl.
 		queue(statusEvent(ty, tx, "stick"))
 	end
 	
@@ -117,27 +113,20 @@ function heroFight(y, x, dy, dx)
 		target.hp.actual = 0
 	end
 	
-	--and kill if at 0 HP
+	--kill if at 0 HP
 	if target.hp.actual <= 0 then
 		--dead; queue removal from grid
 		queue(cellOpEvent(ty, tx, clear()))
 		
-		--TODO remove sticks
+		--remove stick status "pointer"
 		queue(statusEvent(ty, tx, "none"))
 	end
-	
-	-- --dead? queue removal
-	-- if target.hp.actual <= 0 then
-	-- 	queue(cellOpEvent(ty, tx, clear()))
-	-- 	--will this automatically remove stucks?
-	-- else then
-	-- 	if target.reaction ==
-	
+
 	processNow()
 end
 
 function heroSpecialAttack()
-	if hero.sp.actual <= 0 then
+	if hero.sp.actual <= 0 or hero.sewyAdjacent then
 		--TODO some kind of error feedback? or is silence OK?
 		return
 	end

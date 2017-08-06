@@ -71,6 +71,12 @@ function love.load()
 		spF1 = love.graphics.newQuad(16, 12, 5, 5, 64, 64),
 		spT2 = love.graphics.newQuad(22, 12, 4, 5, 64, 64),
 		spF2 = love.graphics.newQuad(27, 12, 4, 5, 64, 64),
+		stink = {
+			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
+			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
+			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
+			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
+		}
 	}
 	
 	initAnimFrames()
@@ -123,7 +129,8 @@ function love.load()
 		pose = "idle",
 		yOffset = 0,
 		xOffset = 0,
-		statusAfflictors = {}
+		statusAfflictors = {},
+		sewyAdjacent = false
 	}
 	
 	--who's afflicting the hero? no one! yes, this is hacky, and yes, i should be using getters and setters. don't care right now, though
@@ -172,6 +179,9 @@ function love.update(dt)
 	-- 	hero.stuck = false
 	-- end
 	--on second thought, this is messier. draw() won't suffer that much
+	
+	--i WILL do this here, however. checking cells in draw() is yucky
+	hero.sewyAdjacent = sewyAdjacent() 
 	
 	--queue enemy turns one by one
 	--yes, q-p-q-p-q-p is less elegant than q-q-q-p-p-p, but there's no gameplay difference & grid logic is WAY cleaner than with the reserved/vacating stuff
@@ -347,6 +357,11 @@ function drawUI()
 			love.graphics.draw(ui, quads_ui.apF1, 6 + i * 6, 50)
 		end
 	end
+	
+	--sewy adjacent?
+	if hero.sewyAdjacent then
+		love.graphics.setColor(255, 255, 255, 127)
+	end
 
 	--SP
 	love.graphics.draw(ui, quads_ui.sp, 33, 50)
@@ -356,6 +371,13 @@ function drawUI()
 		else
 			love.graphics.draw(ui, quads_ui.spF1, 37 + i * 6, 50)
 		end
+	end
+	
+	white()
+	
+	--sewy adjacent?
+	if hero.sewyAdjacent then
+		love.graphics.draw(ui, quads_ui.stink[getAnimFrame() + 1], 33, 50)
 	end
 end
 
@@ -389,7 +411,7 @@ end
 
 function getAnimFrame()
 	-- return math.floor(frame % 2)
-	return math.floor(frame % 4)
+	return math.floor(frame % 4) --TODO you should be adding the 1 here
 end
 
 function heroStuck()
@@ -406,4 +428,17 @@ function heroStuck()
 	else
 		return false
 	end
+end
+
+function sewyAdjacent()
+	local hy, hx = locateHero()
+	local enemyNeighbors = getAdjacentCells(hy, hx, "enemy")
+	
+	for i, c in pairs(enemyNeighbors) do
+		if stage.field[c.fieldY][c.fieldX].contents.species == "sewy" then
+			return true
+		end
+	end
+	
+	return false
 end

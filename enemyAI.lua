@@ -116,8 +116,6 @@ function enemyAttackHero(ey, ex)
 	})
 	
 	if attacker.reaction == "stick" then
-		print("i'm gonna make you stick!")
-		--TODO unify code with the heroAttack version, if possible
 		queue(statusEvent(ey, ex, "stick"))
 	end
 	
@@ -273,23 +271,30 @@ function enemy(species)
 	if species == "garby" then
 		enemy.hp.max = 6
 		enemy.ai = "glutton"
+		
 	elseif species == "plasty" then
 		enemy.hp.max = 10
+		
 	elseif species == "algy" then
 		enemy.hp.max = 8
 		enemy.effect = "stick" --just draw a different sprite for the hero
 		enemy.reaction = "stick" 
+		
 	elseif species == "toxy" then
 		enemy.hp.max = 6
 		enemy.ai = "ranged"
+		
 	elseif species == "mercuri" then
 		enemy.hp.max = 4
 		enemy.ap.max = 2
+		
 	elseif species == "sewy" then
 		enemy.hp.max = 6
+		
 	elseif species == "nukey" then
 		enemy.hp.max = 3
 		enemy.reaction = "explode"
+		
 	elseif species == "pharma" then
 		enemy.hp.max = 8
 		enemy.ai = "healer"
