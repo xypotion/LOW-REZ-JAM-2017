@@ -42,12 +42,18 @@ function love.load()
 	-- quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
 	-- quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
 	
-	enemyQuads = {
+	characterQuads = {
 		idle = {
 			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
 			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
 			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
 			love.graphics.newQuad(0, 48, 16, 16, 64, 64)
+		},
+		stuck = {
+			love.graphics.newQuad(32, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(32, 16, 16, 16, 64, 64),
+			love.graphics.newQuad(32, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(32, 48, 16, 16, 64, 64)
 		}
 	}
 	
@@ -150,6 +156,22 @@ function love.update(dt)
 		processEventSets(dt)
 		eventFrame = eventFrame % eventFrameLength
 	end
+	
+	--figure out if stuck now, to save a little draw efficiency
+	-- if hero.statusAfflictors[11] == "stick"
+	-- or hero.statusAfflictors[12] == "stick"
+	-- or hero.statusAfflictors[13] == "stick"
+	-- or hero.statusAfflictors[21] == "stick"
+	-- or hero.statusAfflictors[22] == "stick"
+	-- or hero.statusAfflictors[23] == "stick"
+	-- or hero.statusAfflictors[31] == "stick"
+	-- or hero.statusAfflictors[32] == "stick"
+	-- or hero.statusAfflictors[33] == "stick" then
+	-- 	hero.stuck = true
+	-- else
+	-- 	hero.stuck = false
+	-- end
+	--on second thought, this is messier. draw() won't suffer that much
 	
 	--queue enemy turns one by one
 	--yes, q-p-q-p-q-p is less elegant than q-q-q-p-p-p, but there's no gameplay difference & grid logic is WAY cleaner than with the reserved/vacating stuff
@@ -286,13 +308,17 @@ function drawCellContents(obj, y, x)
 	
 	--draw hero or enemy --TODO optimize/clean up
 	if obj.class == "hero" then
-		love.graphics.draw(sheet_player, quads_idle[getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+		if heroStuck() then
+			love.graphics.draw(sheet_player, characterQuads["stuck"][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+		else
+			love.graphics.draw(sheet_player, characterQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+		end
 	end
 	if obj.class == "enemy" then
 		-- if obj.species == "algy" then
 			-- love.graphics.draw(sheet_algy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		-- elseif obj.species == "toxy" then
-			love.graphics.draw(enemySheets[obj.species], enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+			love.graphics.draw(enemySheets[obj.species], characterQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		-- end
 	end
 end
@@ -364,4 +390,20 @@ end
 function getAnimFrame()
 	-- return math.floor(frame % 2)
 	return math.floor(frame % 4)
+end
+
+function heroStuck()
+	if hero.statusAfflictors[11] == "stick"
+	or hero.statusAfflictors[12] == "stick"
+	or hero.statusAfflictors[13] == "stick"
+	or hero.statusAfflictors[21] == "stick"
+	or hero.statusAfflictors[22] == "stick"
+	or hero.statusAfflictors[23] == "stick"
+	or hero.statusAfflictors[31] == "stick"
+	or hero.statusAfflictors[32] == "stick"
+	or hero.statusAfflictors[33] == "stick" then
+		return true
+	else
+		return false
+	end
 end

@@ -13,6 +13,11 @@ function startHeroTurn()
 	})
 end
 
+function reduceHeroAP()
+	hero.ap.actual = hero.ap.actual - 1
+	queue(actuationEvent(hero.ap, -1))
+end
+
 function heroImpetus(dy, dx) --TODO rename playerImpetus
 	local y, x = locateHero()
 	
@@ -25,18 +30,24 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 		return
 	end
 	
-	--AP reduction
-	hero.ap.actual = hero.ap.actual - 1
-	queue(actuationEvent(hero.ap, -1))
+	-- --AP reduction
+	-- hero.ap.actual = hero.ap.actual - 1
+	-- queue(actuationEvent(hero.ap, -1))
 	
 	--move or fight
 	if destClass == "clear" then
-		heroMove(y, x, dy, dx)
+		if heroStuck() then
+			heroStuckMove(y, x, dy, dx)
+		else
+			reduceHeroAP()
+			heroMove(y, x, dy, dx)
+		end
 	end
 	
 	if destClass == "enemy" then
+		reduceHeroAP()
 		heroFight(y, x, dy, dx)
-	end			
+	end
 end
 
 --TODO probably rename
@@ -74,7 +85,7 @@ end
 --TODO clean up, maybe rename
 function heroFight(y, x, dy, dx)
 	local hy, hx = locateHero()
-	local ty, tx = y + dy, x + dx
+	local ty, tx = y + dy, x + dx --TODO you have two sets of hero coordinates...
 	local target = stage.field[ty][tx].contents
 	
 	target.hp.actual = target.hp.actual - hero.attack
@@ -169,6 +180,20 @@ function heroSpecialAttack()
 	--END DEBUG
 	
 	processNow()
+end
+
+function heroStuckMove(y, x, dy, dx)
+	--queue failed-move animation
+	queueSet({
+		poseEvent(y, x, {
+			{pose = "idle", yOffset = dy * 4, xOffset = dx * 4},
+			{pose = "idle", yOffset = dy * 5, xOffset = dx * 5},
+			{pose = "idle", yOffset = dy * 2, xOffset = dx * 2},
+			{pose = "idle", yOffset = dy * 1, xOffset = dx * 1},
+			{pose = "idle", yOffset = 0, xOffset = 0},
+		}),
+		--that's it! unless you want a sound or something
+	})
 end
 
 function locateHero()
