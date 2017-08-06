@@ -21,9 +21,8 @@ enemies...
 - spawn semi-frequently, sometimes multiples at once. almost every night adds a new enemy
   - different thresholds for different lakes? e.g. at most 3 enemies for lv1, at most 4 for lv2, etc
 - come in a few varieties, but not many
-  - garby: basic attacks & moves
+  - garby: basic attacks & moves, but will eat powerups if adjacent!
 	  - 6 HP, 1 attack
-		* haha, maybe the only enemy type that eats your powerups? others won't?
 	- mercuri: acts twice but has low HP
 	  - 4 HP, 1 attack
 	- sewy: can't do special attack if adjacent

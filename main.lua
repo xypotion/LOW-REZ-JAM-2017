@@ -19,8 +19,10 @@ function love.load()
 	-- sheet_enemy = love.graphics.newImage("sheet_enemy.png")
 	enemySheets = {
 		toxy = love.graphics.newImage("sheet_toxy.png"),
+		mercuri = love.graphics.newImage("sheet_mercuri.png"),
 		algy = love.graphics.newImage("sheet_algy.png"),
-		mercuri = love.graphics.newImage("sheet_mercuri.png")
+		sewy = love.graphics.newImage("sheet_sewy.png"),
+		garby = love.graphics.newImage("sheet_garby.png")
 	}
 	sheet_effects = love.graphics.newImage("effects.png")
 	ui = love.graphics.newImage("ui.png")
@@ -93,12 +95,12 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	stage.startingEnemyList = {"mercuri", "toxy"}
+	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy"}
 	-- stage.startingEnemyList = {"algy", "algy"}
 	stage.enemyList = {
 		{"toxy"},
 		{"algy", "algy"},
-		{"algy"},
+		{"sewy", "sewy"}, 
 		{"algy"},
 	}
 	stage.enemyList = shuffle(stage.enemyList)

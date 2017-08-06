@@ -70,6 +70,7 @@ function meleeTurnAt(ey, ex)
 	end
 end
 
+--TODO attacking should look like a cast, not a melee hit
 function rangerTurnAt(ey, ex)
 	local heroAdjacent = heroAdjacentToEnemy(ey, ex)
 	local emptyNeighbors = getAdjacentCells(ey, ex, "clear") --slightly inefficient, but clean
@@ -249,41 +250,48 @@ function spawnEnemies(l)
 end
 
 function enemy(species)
-	if species == "algy" then
-		return {
-			class = "enemy",
-			species = "algy",
-			pose = "idle",
-			ai = "melee", --or ranged or healer
-			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
-			ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
-			attack = 1,
-			yOffset = 0,
-			xOffset = 0
-		}
+	--base enemy
+	local enemy = {
+		class = "enemy",
+		species = species,
+		pose = "idle",
+		ai = "melee",
+		hp = {max = 5, actual = 0, shown = 0, posSound = nil, negSound = nil, quick = true},
+		ap = {max = 1, actual = 0, shown = 0, posSound = nil, negSound = nil, quick = false},
+		attack = 1,
+		yOffset = 0,
+		xOffset = 0
+	}
+	
+	--hp and other species-specific stuff
+	if species == "garby" then
+		enemy.hp.max = 6
+		enemy.ai = "glutton"
+	elseif species == "plasty" then
+		enemy.hp.max = 10
+	elseif species == "algy" then
+		enemy.hp.max = 8
+		enemy.reaction = "stick"
 	elseif species == "toxy" then
-		return {
-			class = "enemy",
-			species = "toxy",
-			pose = "idle",
-			ai = "ranged", --or ranged or healer
-			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
-			ap = {max = 1, actual = 1, shown = 1, posSound = nil, negSound = nil, quick = false},
-			attack = 1,
-			yOffset = 0,
-			xOffset = 0
-		}
+		enemy.hp.max = 6
+		enemy.ai = "ranged"
 	elseif species == "mercuri" then
-		return {
-			class = "enemy",
-			species = "mercuri",
-			pose = "idle",
-			ai = "melee", --or ranged or healer
-			hp = {max = 5, actual = 5, shown = 5, posSound = nil, negSound = nil, quick = true},
-			ap = {max = 2, actual = 2, shown = 2, posSound = nil, negSound = nil, quick = false},
-			attack = 1,
-			yOffset = 0,
-			xOffset = 0
-		}
+		enemy.hp.max = 4
+		enemy.ap.max = 2
+	elseif species == "sewy" then
+		enemy.hp.max = 6
+	elseif species == "nukey" then
+		enemy.hp.max = 3
+		enemy.reaction = "explode"
+	elseif species == "pharma" then
+		enemy.hp.max = 8
+		enemy.ai = "healer"
 	end
+	
+	enemy.hp.actual = enemy.hp.max
+	enemy.hp.shown = enemy.hp.max
+	enemy.ap.actual = enemy.ap.max
+	enemy.ap.shown = enemy.ap.max
+	
+	return enemy
 end
