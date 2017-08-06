@@ -23,7 +23,8 @@ function love.load()
 		algy = love.graphics.newImage("sheet_algy.png"),
 		sewy = love.graphics.newImage("sheet_sewy.png"),
 		garby = love.graphics.newImage("sheet_garby.png"),
-		plasty = love.graphics.newImage("sheet_plasty.png")
+		plasty = love.graphics.newImage("sheet_plasty.png"),
+		pharma = love.graphics.newImage("sheet_pharma.png")
 	}
 	sheet_effects = love.graphics.newImage("effects.png")
 	ui = love.graphics.newImage("ui.png")
@@ -108,7 +109,7 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty"}
+	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma"}
 	-- stage.startingEnemyList = {"algy", "algy"}
 	stage.enemyList = {
 		{"toxy"},

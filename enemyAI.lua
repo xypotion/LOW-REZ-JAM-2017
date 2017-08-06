@@ -19,7 +19,7 @@ end
 
 function queueFullEnemyTurn(ey, ex)
 	--DEBUG
-	print("queueing full enemy turn at", ey, ex)
+	-- print("queueing full enemy turn at", ey, ex)
 	-- queue(animEvent(c.y, c.x, sparkAnimFrames()))
 	if stage.field[ey][ex].contents.ai == "melee" then
 		meleeTurnAt(ey, ex)
@@ -269,11 +269,11 @@ function enemy(species)
 	
 	--hp and other species-specific stuff
 	if species == "garby" then
-		enemy.hp.max = 6
+		enemy.hp.max = 5
 		enemy.ai = "glutton"
 		
 	elseif species == "plasty" then
-		enemy.hp.max = 10
+		enemy.hp.max = 10 --4 if atk 3, 3 if atk 4, 2 if atk 5 (rare). this seems good
 		
 	elseif species == "algy" then
 		enemy.hp.max = 8
@@ -281,7 +281,7 @@ function enemy(species)
 		enemy.reaction = "stick" 
 		
 	elseif species == "toxy" then
-		enemy.hp.max = 6
+		enemy.hp.max = 5
 		enemy.ai = "ranged"
 		
 	elseif species == "mercuri" then
@@ -289,7 +289,7 @@ function enemy(species)
 		enemy.ap.max = 2
 		
 	elseif species == "sewy" then
-		enemy.hp.max = 6
+		enemy.hp.max = 5
 		
 	elseif species == "nukey" then
 		enemy.hp.max = 3
