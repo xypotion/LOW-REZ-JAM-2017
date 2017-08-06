@@ -76,8 +76,8 @@ function love.load()
 		spF2 = love.graphics.newQuad(27, 12, 4, 5, 64, 64),
 		stink = {
 			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
-			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
 			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
+			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
 			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
 		}
 	}
@@ -154,6 +154,7 @@ function love.load()
 	stage.field[2][2].contents = hero
 	-- stage.field[2][3].contents = enemy("algy")
 	spawnEnemies(stage.startingEnemyList)
+	love.graphics.setFont(love.graphics.newFont(7))
 end
 
 function love.update(dt)	
@@ -216,6 +217,9 @@ function love.draw()
 	white()
 	
 	drawStage()
+	
+	--DEBUG
+	-- love.graphics.printf("The quick brown fox jumps over the lazy dog.", 0, 0, 64)
 	
 	--draw gameCanvas
 	love.graphics.setCanvas()

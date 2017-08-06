@@ -229,8 +229,7 @@ end
 init: take stage's list of enemies and shuffle
 end of each night: 
   if there's enough open space, pop the next set of enemies and insert randomly
-	if less space than required for spawn-set, spawn part and mash remainder into next set
-  	...but please balance so this doesn't happen. 2 per turn = enough? 3 at most, on endgame stages, and only some sets?
+	if less space than required for spawn-set, spawn NEXT set. maybe pop big one off the stack and push back on the end. careful of infinite loops here
 ]]
 
 function spawnEnemies(l)

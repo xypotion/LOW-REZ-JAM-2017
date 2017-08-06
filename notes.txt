@@ -12,6 +12,7 @@ high-level to do & time estimates as of 8/7, 1AM
 - title screen (art, credits) & ending - 1 day
 - hi scores & autosaves - 1 day
 - playtesting & balancing - 1 day?
+- window resizing - <1 day
 * total: another 13-15 days of work. damn. only 10 actual days left in the jam. assess again in a few days, then...
   - probably cut scoring & autosaves first
 	- simplify powerups (i.e. cut syncs & mgmt)
@@ -51,6 +52,7 @@ enemies...
 	  - 6 HP, 1 attack
 	- plasty: high HP
 	  - 10 HP
+		- alternate name: petty? polly?
 	- toxy: attacks at range
 	  - 6 HP, 2 attack melee, 1 ranged?
 	- algy: holds you in place if melee attack connects either way ("don't touch it!")
