@@ -110,13 +110,17 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
+	-- stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
 	-- stage.startingEnemyList = {"algy", "algy"}
+	stage.startingEnemyList = {"garby"}
 	stage.enemyList = {
-		{"toxy"},
+		{"toxy", "toxy"},
 		{"algy", "algy"},
 		{"sewy", "sewy"}, 
-		{"algy"},
+		{"nukey", "nukey"},
+		{"plasty", "plasty"},
+		{"pharma", "pharma"},
+		{"mercuri", "mercuri"},
 	}
 	stage.enemyList = shuffle(stage.enemyList)
 	-- stage.boss = "invasive species"

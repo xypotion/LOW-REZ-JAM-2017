@@ -99,9 +99,7 @@ function processStatusEvent(e)
 	local id = e.y * 10 + e.x --hacky, but... it's a game jam!
 	
 	hero.statusAfflictors[id] = e.status
-	
-	print("statuses: set "..id.." as "..e.status)
-	
+		
 	e.finished = true
 end
 

@@ -90,19 +90,26 @@ function healerTurnAt(ey, ex)
 	local hurt = false
 	
 	for i, c in pairs(enemyCells) do
-		if cellAt(ey, ex).contents.hp.actual < cellAt(ey, ex).contents.hp.max then
+		if cellAt(c.y, c.x).contents.hp.actual < cellAt(c.y, c.x).contents.hp.max then
 			hurt = true
 		end
 	end
 	
 	--heal all if any are hurt, otherwise act like melee
 	if hurt then
-		print(ey, ex, "healing all ~")
+		-- print(ey, ex, "healing all ~")
+		--TODO casting pose for the healer
 		
 		local es = {}
 		for i, c in pairs(enemyCells) do
-			cellAt(ey, ex).contents.hp.actual = cellAt(ey, ex).contents.hp.actual + 3
-			push(es, actuationEvent(cellAt(ey, ex).contents.hp, 3))
+			--get difference; can heal a max of 3 HP
+			local need = cellAt(c.y, c.x).contents.hp.max - cellAt(c.y, c.x).contents.hp.actual
+			if need > 3 then need = 3 end
+			
+			cellAt(c.y, c.x).contents.hp.actual = cellAt(c.y, c.x).contents.hp.actual + need
+			
+			--push animation & HP actuation
+			push(es, actuationEvent(cellAt(c.y, c.x).contents.hp, need))
 			push(es, animEvent(c.y, c.x, sparkAnimFrames()))
 		end
 		
@@ -208,6 +215,35 @@ function enemyMoveTo(ey, ex, ty, tx)
 		waitEvent(0.25) --if you move this somewhere higher in the call stack, you can probably merge enemyMoveTo and heroMove entirely! TODO
 	})
 end
+
+function explosionAt(ey, ex)
+	local nukey = cellAt(ey, ex).contents
+	
+	--set hp to 0
+	nukey.hp.actual = 0
+	
+	--events: explosion animation on self...
+	local es = {animEvent(ey, ex, sparkAnimFrames())}
+	
+	--...explosion animation on neighbors TODO sort of misleading since it doesn't damage other enemies...? depends on how you display enemy HP
+	for i, c in pairs(getAdjacentCells(ey, ex)) do
+		push(es, animEvent(c.y, c.x, sparkAnimFrames()))
+	end
+	
+	--...damage to hero if adjacent
+	if heroAdjacentToEnemy(ey, ex) then
+		hero.hp.actual = hero.hp.actual - 2
+		push(es, actuationEvent(hero.hp, -2))
+	end
+	
+	--...nukey removal
+	push(es, cellOpEvent(ey, ex, clear()))
+	
+	--then queue them!
+	queueSet(es)
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 --search whole grid for cells at least min away and up to max away, optionally matching class
 --this can still be optimized, methinks TODO something mathy, not just looping over whole grid. low priority, though

@@ -110,7 +110,7 @@ function heroFight(y, x, dy, dx)
 	--explode; damage hero (with effect) & queue removal
 	if target.reaction == "explode" then
 		print("i'm exploding!!!", ty, tx)
-		target.hp.actual = 0
+		explosionAt(ty, tx)
 	end
 	
 	--kill if at 0 HP
@@ -167,6 +167,7 @@ function heroSpecialAttack()
 	end
 	queueSet(killy)
 	--END DEBUG
+	--also refer to heroFight for all the things that have to happen. probably refactor & condense a lot of it
 	
 	processNow()
 end
