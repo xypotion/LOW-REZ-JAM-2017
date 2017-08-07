@@ -151,7 +151,7 @@ function love.load()
 	
 
 	--DEBUG
-	stage.field[2][2].contents = hero
+	cellAt(2,2).contents = hero
 	-- stage.field[2][3].contents = enemy("algy")
 	spawnEnemies(stage.startingEnemyList)
 	love.graphics.setFont(love.graphics.newFont(7))
@@ -252,7 +252,7 @@ function love.keypressed(key)
 		--test spawn
 		-- spawnEnemy()
 		local xxx, yyy = math.random(3), math.random(3)
-		if stage.field[yyy][xxx].contents.class == "clear" then
+		if cellAt(yyy, xxx).contents.class == "clear" then
 			queue(cellOpEvent(yyy, xxx, enemy("algy")))
 		else
 			print(yyy, xxx, "occupied!")
@@ -442,7 +442,7 @@ function sewyAdjacent()
 	local enemyNeighbors = getAdjacentCells(hy, hx, "enemy")
 	
 	for i, c in pairs(enemyNeighbors) do
-		if stage.field[c.y][c.x].contents.species == "sewy" then
+		if cellAt(c.y, c.x).contents.species == "sewy" then
 			return true
 		end
 	end
@@ -450,10 +450,7 @@ function sewyAdjacent()
 	return false
 end
 
+--i'm honestly a little freaked out that you can use this to SET cell attributes, but i guess that's what "pass by reference" is all about. ok! i guess!!
 function cellAt(y, x)
 	return stage.field[y][x]
-end
-
-function cellContentsAt(y, x)
-	return cellAt(y, x).contents
 end

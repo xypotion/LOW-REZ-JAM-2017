@@ -24,7 +24,7 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 	--see what lies ahead TODO this can still be optimized
 	local destClass = nil
 	if stage.field[y + dy] and stage.field[y + dy][x + dx] then
-		destClass = stage.field[y + dy][x + dx].contents.class
+		destClass = cellAt(y + dy, x + dx).contents.class
 	else
 		--seems like you're trying to move off the grid, so...
 		return
@@ -86,7 +86,7 @@ end
 function heroFight(y, x, dy, dx)
 	local hy, hx = locateHero()
 	local ty, tx = y + dy, x + dx --TODO you have two sets of hero coordinates...
-	local target = stage.field[ty][tx].contents
+	local target = cellAt(ty, tx).contents
 	
 	target.hp.actual = target.hp.actual - hero.attack
 	
@@ -145,7 +145,7 @@ function heroSpecialAttack()
 	
 	--DEBUG
 	attacky = {}
-	for y, r in ipairs(stage.field) do
+	for y, r in ipairs(stage.field) do --TODO optimize these things before canonizing
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
 				c.contents.hp.actual = c.contents.hp.actual - 1
@@ -186,11 +186,6 @@ function heroStuckMove(y, x, dy, dx)
 end
 
 function locateHero()
-	for y,r in ipairs(stage.field) do
-		for x,c in ipairs(r) do
-			if c and c.contents and c.contents.class and c.contents.class == "hero" then
-				return y, x
-			end
-		end
-	end
+	local h = getAllCells("hero")[1]
+	return h.y, h.x
 end

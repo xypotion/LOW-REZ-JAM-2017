@@ -72,7 +72,7 @@ end
 
 --TODO sound? moving, enemy kills...
 function processCellOpEvent(e)
-	stage.field[e.y][e.x].contents = e.payload
+	cellAt(e.y, e.x).contents = e.payload
 		
 	e.finished = true
 end
@@ -110,9 +110,9 @@ function processPoseEvent(e)
 	local f = pop(e.frames)
 	-- print(table.getn(e.frames))
 	
-	stage.field[e.y][e.x].contents.pose = f.pose
-	stage.field[e.y][e.x].contents.yOffset = f.yOffset
-	stage.field[e.y][e.x].contents.xOffset = f.xOffset
+	cellAt(e.y, e.x).contents.pose = f.pose
+	cellAt(e.y, e.x).contents.yOffset = f.yOffset
+	cellAt(e.y, e.x).contents.xOffset = f.xOffset
 	
 	if not peek(e.frames) then
 		-- print("finished")
@@ -123,9 +123,9 @@ end
 
 function processAnimEvent(e)
 	if peek(e.frames) then
-		stage.field[e.y][e.x].overlayQuad = pop(e.frames)
+		cellAt(e.y, e.x).overlayQuad = pop(e.frames)
 	else
-		stage.field[e.y][e.x].overlayQuad = nil
+		cellAt(e.y, e.x).overlayQuad = nil
 		e.finished = true
 	end
 end

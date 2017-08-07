@@ -18,7 +18,7 @@ function startEnemyTurn()
 end
 
 function queueFullEnemyTurn(ey, ex)
-	local enemy = stage.field[ey][ex].contents
+	local enemy = cellAt(ey, ex).contents
 	
 	if enemy.ai == "melee" then
 		meleeTurnAt(ey, ex)
@@ -31,8 +31,8 @@ function queueFullEnemyTurn(ey, ex)
 	end
 	
 	--reduce AP; this will happen whether they actually take an action or not, which is good
-	stage.field[ey][ex].contents.ap.actual = stage.field[ey][ex].contents.ap.actual - 1
-	-- print("attacker's AP:", stage.field[ey][ex].contents.ap.actual)
+	cellAt(ey, ex).contents.ap.actual = cellAt(ey, ex).contents.ap.actual - 1
+	-- print("attacker's AP:", cellAt(ey, ex).contents.ap.actual)
 	
 	-- queue(waitEvent(0.25)) --tempting to put this here, but no-ops just cause pointless waits, which is yucky
 	--END DEBUG
@@ -90,7 +90,7 @@ function healerTurnAt(ey, ex)
 	local hurt = false
 	
 	for i, c in pairs(enemyCells) do
-		if stage.field[c.y][c.x].contents.hp.actual < stage.field[c.y][c.x].contents.hp.max then
+		if cellAt(ey, ex).contents.hp.actual < cellAt(ey, ex).contents.hp.max then
 			hurt = true
 		end
 	end
@@ -101,8 +101,8 @@ function healerTurnAt(ey, ex)
 		
 		local es = {}
 		for i, c in pairs(enemyCells) do
-			stage.field[c.y][c.x].contents.hp.actual = stage.field[c.y][c.x].contents.hp.actual + 3
-			push(es, actuationEvent(stage.field[c.y][c.x].contents.hp, 3))
+			cellAt(ey, ex).contents.hp.actual = cellAt(ey, ex).contents.hp.actual + 3
+			push(es, actuationEvent(cellAt(ey, ex).contents.hp, 3))
 			push(es, animEvent(c.y, c.x, sparkAnimFrames()))
 		end
 		
@@ -120,7 +120,7 @@ end
 function enemyAttackHero(ey, ex)
 	local hy, hx = locateHero()
 	local dy, dx = hy - ey, hx - ex
-	local attacker = stage.field[ey][ex].contents
+	local attacker = cellAt(ey, ex).contents
 		
 	--reduce hero HP
 	hero.hp.actual = hero.hp.actual - attacker.attack
@@ -202,7 +202,7 @@ function enemyMoveTo(ey, ex, ty, tx)
 
 	--queue cell ops & wait
 	queueSet({
-		cellOpEvent(ty, tx, stage.field[ey][ex].contents), --enemy -> destination
+		cellOpEvent(ty, tx, cellAt(ey, ex).contents), --enemy -> destination
 		cellOpEvent(ey, ex, clear()), --current cell -> clear
 		poseEvent(ty, tx, moveFrames),
 		waitEvent(0.25) --if you move this somewhere higher in the call stack, you can probably merge enemyMoveTo and heroMove entirely! TODO
