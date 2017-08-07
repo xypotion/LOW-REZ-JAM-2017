@@ -32,10 +32,6 @@ function queueFullEnemyTurn(ey, ex)
 	
 	--reduce AP; this will happen whether they actually take an action or not, which is good
 	cellAt(ey, ex).contents.ap.actual = cellAt(ey, ex).contents.ap.actual - 1
-	-- print("attacker's AP:", cellAt(ey, ex).contents.ap.actual)
-	
-	-- queue(waitEvent(0.25)) --tempting to put this here, but no-ops just cause pointless waits, which is yucky
-	--END DEBUG
 end
 
 function locationsOfAllEnemiesWithAP()
@@ -50,19 +46,10 @@ function locationsOfAllEnemiesWithAP()
 		end
 	end
 	
-	-- getAdjacentCells(ey, ex, "enemy")
 	--TODO COULD optimize this, or not since it will be obsolete when you change enemy turn order code
 	
 	return arr
 end
-
---[[
-take list of all cells and shuffle; iterate through that set
-for each enemy:
-	loop while enemy has AP
-	weigh available options: approach hero, escape hero, attack, heal (if applicable) -> do favorite
-	before moving, must check destination cell to see if it's already reserved.
-]]
 
 function meleeTurnAt(ey, ex)	
 	--if hero is adjacent, attack, otherwise approach
@@ -97,7 +84,6 @@ function healerTurnAt(ey, ex)
 	
 	--heal all if any are hurt, otherwise act like melee
 	if hurt then
-		-- print(ey, ex, "healing all ~")
 		--TODO casting pose for the healer
 		
 		local es = {}
@@ -157,9 +143,7 @@ function enemyApproachHero(ey, ex)
 	local emptyNeighbors = getAdjacentCells(ey, ex, "clear")
 	local hy, hx = locateHero()
 	local currentDistance = math.abs(ey - hy) + math.abs(ex - hx)
-	
-	--ditto for powerups? or should enemies never move over these? TODO decide, i guess. leaning no, but maybe too easy to make a "wall" of powerups
-	
+		
 	--find which cell, if any, will move the enemy closer
 	local dest = nil
 	for k, c in ipairs(shuffle(emptyNeighbors)) do
@@ -225,7 +209,7 @@ function explosionAt(ey, ex)
 	--events: explosion animation on self...
 	local es = {animEvent(ey, ex, sparkAnimFrames())}
 	
-	--...explosion animation on neighbors TODO sort of misleading since it doesn't damage other enemies...? depends on how you display enemy HP
+	--...explosion animation on neighbors TODO sort of misleading since it doesn't damage other enemies
 	for i, c in pairs(getAdjacentCells(ey, ex)) do
 		push(es, animEvent(c.y, c.x, sparkAnimFrames()))
 	end
@@ -270,13 +254,13 @@ function cellsInDistanceRange(ly, lx, min, max, class) --l as in 'locus'
 	return cells
 end
 
---all clear cells 0 to 2 cells from 2,2 = the whole grid. filter for clear cells
-function allClearCells()
-	return getAllCells("clear")
-end
-
+--cells 0 to 2 cells from 2,2 = the whole grid
 function getAllCells(class)
 	return cellsInDistanceRange(2, 2, 0, 2, class)
+end
+
+function allClearCells()
+	return getAllCells("clear")
 end
 
 function getAdjacentCells(ly, lx, class)

@@ -104,16 +104,13 @@ function processStatusEvent(e)
 end
 
 function processPoseEvent(e)
-	-- print(table.getn(e.frames))
 	local f = pop(e.frames)
-	-- print(table.getn(e.frames))
 	
 	cellAt(e.y, e.x).contents.pose = f.pose
 	cellAt(e.y, e.x).contents.yOffset = f.yOffset
 	cellAt(e.y, e.x).contents.xOffset = f.xOffset
 	
 	if not peek(e.frames) then
-		-- print("finished")
 		e.finished = true
 	end
 end

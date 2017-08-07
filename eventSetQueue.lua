@@ -61,7 +61,6 @@ function animEvent(y, x, f)--fx, f)
 		class = "anim",
 		y = y,		--location of drawable entity (cell overlay)
 		x = x,
-		-- effect = fx,	--named effect (column of effects sheet) --actually don't need if overlay.quad points to column and row
 		frames = f		--frames = { quad pointers (row on effects sheet) }
 	}
 	
@@ -114,12 +113,10 @@ end
 --------------------------------------------------------------------------
 
 function queue(event)
-	-- print("pushing event: ", event.class)
 	push(eventSetQueue, {event})
 end
 
 function queueSet(eventSet)
-	-- print("pushing eventSet with "..#eventSet.." members")
 	push(eventSetQueue, eventSet)
 end
 

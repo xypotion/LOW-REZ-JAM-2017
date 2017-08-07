@@ -30,10 +30,6 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 		return
 	end
 	
-	-- --AP reduction
-	-- hero.ap.actual = hero.ap.actual - 1
-	-- queue(actuationEvent(hero.ap, -1))
-	
 	--move or fight
 	if destClass == "clear" then
 		if heroStuck() then
@@ -70,9 +66,7 @@ function heroMove(y, x, dy, dx)
 		{pose = "idle", yOffset = 0, xOffset = 0},
 	}	
 
-	--reserve target, set vacating, and queue cell ops
-	-- stage.field[ty][tx].reserved = true
-	-- stage.field[y][x].vacating = true
+	--queue pose and cell ops
 	queueSet({
 		cellOpEvent(ty, tx, hero),
 		cellOpEvent(y, x, clear()),
@@ -84,15 +78,14 @@ end
 
 --TODO clean up, maybe rename
 function heroFight(y, x, dy, dx)
-	local hy, hx = locateHero()
-	local ty, tx = y + dy, x + dx --TODO you have two sets of hero coordinates...
+	local ty, tx = y + dy, x + dx
 	local target = cellAt(ty, tx).contents
 	
 	target.hp.actual = target.hp.actual - hero.attack
 	
 	--queue attack animation & damage actuation
 	queueSet({
-		poseEvent(hy, hx, {
+		poseEvent(y, x, {
 			{pose = "idle", yOffset = dy * 4, xOffset = dx * 4},
 			{pose = "idle", yOffset = dy * 5, xOffset = dx * 5},
 			{pose = "idle", yOffset = dy * 2, xOffset = dx * 2},

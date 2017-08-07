@@ -16,7 +16,6 @@ function love.load()
 	--load graphics
 	grid = love.graphics.newImage("grid.png")
 	sheet_player = love.graphics.newImage("sheet_player.png")
-	-- sheet_enemy = love.graphics.newImage("sheet_enemy.png")
 	enemySheets = {
 		toxy = love.graphics.newImage("sheet_toxy.png"),
 		mercuri = love.graphics.newImage("sheet_mercuri.png"),
@@ -42,8 +41,6 @@ function love.load()
 		love.graphics.newQuad(0, 32, 16, 16, 64, 64),
 		love.graphics.newQuad(0, 48, 16, 16, 64, 64)
 	} --TODO probably quads_poses or something would be better, and put them all in here
-	-- quads_idle[0] = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
-	-- quads_idle[1] = love.graphics.newQuad(0, 16, 16, 16, 64, 64)
 	
 	characterQuads = {
 		idle = {
@@ -90,13 +87,11 @@ function love.load()
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
 	bgMain = {graphic = "day1", alpha = 255}
-	-- love.graphics.setLineWidth(0.5)
 
 	--find & load autosave for hi scores. also info panels that have been seen? AND maybe change title screen if game beaten?
 	
 	--init mechanical variables
 	frame = 0 --for idle animations only? figure it out TODO
-	-- fuzzFrame = 0
 	eventFrame = 0
 	eventFrameLength = 0.05
 	eventSetQueue = {}
@@ -159,12 +154,12 @@ function love.load()
 
 	--DEBUG
 	cellAt(2,2).contents = hero
-	-- stage.field[2][3].contents = enemy("algy")
 	spawnEnemies(stage.startingEnemyList)
 	love.graphics.setFont(love.graphics.newFont(7))
 end
 
-function love.update(dt)	
+function love.update(dt)
+	frame = (frame + dt * 4)
 	
 	--process events on a set interval
 	eventFrame = eventFrame + dt
@@ -172,33 +167,8 @@ function love.update(dt)
 		processEventSets(dt)
 		eventFrame = eventFrame % eventFrameLength
 	end
-
-	frame = (frame + dt * 4)
 	
-	-- fuzzFrame = fuzzFrame + dt
-	-- if fuzzFrame >= 0.25 then
-	-- 	fuzzFrame = fuzzFrame % 0.25
-	--
-	-- 	generateHPFuzzForAllEnemies()
-	-- end
-	
-	--figure out if stuck now, to save a little draw efficiency
-	-- if hero.statusAfflictors[11] == "stick"
-	-- or hero.statusAfflictors[12] == "stick"
-	-- or hero.statusAfflictors[13] == "stick"
-	-- or hero.statusAfflictors[21] == "stick"
-	-- or hero.statusAfflictors[22] == "stick"
-	-- or hero.statusAfflictors[23] == "stick"
-	-- or hero.statusAfflictors[31] == "stick"
-	-- or hero.statusAfflictors[32] == "stick"
-	-- or hero.statusAfflictors[33] == "stick" then
-	-- 	hero.stuck = true
-	-- else
-	-- 	hero.stuck = false
-	-- end
-	--on second thought, this is messier. draw() won't suffer that much
-	
-	--i WILL do this here, however. checking cells in draw() is yucky
+	--checking sewy adjacency here instead of in draw()
 	hero.sewyAdjacent = sewyAdjacent() 
 	
 	--queue enemy turns one by one
@@ -326,7 +296,7 @@ function drawStage()
 			drawCellContents(c.contents, y, x)
 			
 			--draw enemy HP bars
-			if cellAt(y, x).contents.class == "enemy" then --and cellAt(y, x).enemyFuzz then 
+			if cellAt(y, x).contents.class == "enemy" then
 				drawEnemyHP(y, x) 
 			end
 
@@ -339,32 +309,18 @@ function drawStage()
 end
 
 function drawCellContents(obj, y, x)
-	---DEBUG FOR HP
-	-- if obj.hp then love.graphics.print(obj.hp.shown, x * 15 - 5, y * 15 - 5) end
-	
 	--draw hero or enemy --TODO optimize/clean up
 	if obj.class == "hero" then
 		if heroStuck() then
-			love.graphics.draw(sheet_player, characterQuads["stuck"][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+			love.graphics.draw(sheet_player, characterQuads["stuck"][getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		else
-			love.graphics.draw(sheet_player, characterQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+			love.graphics.draw(sheet_player, characterQuads[obj.pose][getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		end
 	end
 	if obj.class == "enemy" then
-		-- if obj.species == "algy" then
-			-- love.graphics.draw(sheet_algy, enemyQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
-		-- elseif obj.species == "toxy" then
-			love.graphics.draw(enemySheets[obj.species], characterQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
-		-- end
+		love.graphics.draw(enemySheets[obj.species], characterQuads[obj.pose][getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 	end
 end
-
---the "fuzz" version
--- function drawEnemyHP(ey, ex)
--- 	love.graphics.setColor(30, 37, 108)
--- 	love.graphics.points(cellAt(ey, ex).enemyFuzz)
--- 	white()
--- end
 
 function drawEnemyHP(ey, ex)
 	love.graphics.setColor(0, 0, 0, 127)
@@ -424,7 +380,7 @@ function drawUI()
 	
 	--sewy adjacent?
 	if hero.sewyAdjacent then
-		love.graphics.draw(ui, quads_ui.stink[getAnimFrame() + 1], 33, 50)
+		love.graphics.draw(ui, quads_ui.stink[getAnimFrame()], 33, 50)
 	end
 end
 
@@ -457,8 +413,7 @@ function empty()
 end
 
 function getAnimFrame()
-	-- return math.floor(frame % 2)
-	return math.floor(frame % 4) --TODO you should be adding the 1 here
+	return math.floor(frame % 4 + 1)
 end
 
 function heroStuck()
@@ -494,21 +449,3 @@ end
 function cellAt(y, x)
 	return stage.field[y][x]
 end
-
--- function generateHPFuzzForAllEnemies()
--- 	for i, c in pairs(getAllCells("enemy")) do
--- 		local enemy = cellAt(c.y, c.x).contents
--- 		if enemy.hp.actual < enemy.hp.max then
--- 			local ratio = math.floor((enemy.hp.max - enemy.hp.shown) * 144 / enemy.hp.max)
--- 			cellAt(c.y, c.x).enemyFuzz = {}
---
--- 			--place up to 144 random fuzz points in enemy's cell
--- 			for j = 1, ratio * 2, 2 do
--- 				cellAt(c.y, c.x).enemyFuzz[j] = math.random(12) + (c.x - 1) * 15 + 3
--- 				cellAt(c.y, c.x).enemyFuzz[j + 1] = math.random(12) + (c.y - 1) * 15 + 4
--- 			end
--- 		else
--- 			cellAt(c.y, c.x).enemyFuzz = {}
--- 		end
--- 	end
--- end
