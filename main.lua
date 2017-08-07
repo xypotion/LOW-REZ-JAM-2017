@@ -90,11 +90,13 @@ function love.load()
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
 	bgMain = {graphic = "day1", alpha = 255}
+	-- love.graphics.setLineWidth(0.5)
 
 	--find & load autosave for hi scores. also info panels that have been seen? AND maybe change title screen if game beaten?
 	
 	--init mechanical variables
 	frame = 0 --for idle animations only? figure it out TODO
+	-- fuzzFrame = 0
 	eventFrame = 0
 	eventFrameLength = 0.05
 	eventSetQueue = {}
@@ -110,10 +112,11 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	-- stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
+	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
 	-- stage.startingEnemyList = {"algy", "algy"}
-	stage.startingEnemyList = {"garby"}
+	-- stage.startingEnemyList = {"nukey"}
 	stage.enemyList = {
+		{"garby", "garby"},
 		{"toxy", "toxy"},
 		{"algy", "algy"},
 		{"sewy", "sewy"}, 
@@ -162,8 +165,6 @@ function love.load()
 end
 
 function love.update(dt)	
-	frame = frame + dt * 3
-	frame = frame % 24
 	
 	--process events on a set interval
 	eventFrame = eventFrame + dt
@@ -171,6 +172,15 @@ function love.update(dt)
 		processEventSets(dt)
 		eventFrame = eventFrame % eventFrameLength
 	end
+
+	frame = (frame + dt * 4)
+	
+	-- fuzzFrame = fuzzFrame + dt
+	-- if fuzzFrame >= 0.25 then
+	-- 	fuzzFrame = fuzzFrame % 0.25
+	--
+	-- 	generateHPFuzzForAllEnemies()
+	-- end
 	
 	--figure out if stuck now, to save a little draw efficiency
 	-- if hero.statusAfflictors[11] == "stick"
@@ -314,6 +324,11 @@ function drawStage()
 	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do			
 			drawCellContents(c.contents, y, x)
+			
+			--draw enemy HP bars
+			if cellAt(y, x).contents.class == "enemy" then --and cellAt(y, x).enemyFuzz then 
+				drawEnemyHP(y, x) 
+			end
 
 			--draw overlay if present
 			if c.overlayQuad then
@@ -342,6 +357,27 @@ function drawCellContents(obj, y, x)
 			love.graphics.draw(enemySheets[obj.species], characterQuads[obj.pose][getAnimFrame() + 1], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		-- end
 	end
+end
+
+--the "fuzz" version
+-- function drawEnemyHP(ey, ex)
+-- 	love.graphics.setColor(30, 37, 108)
+-- 	love.graphics.points(cellAt(ey, ex).enemyFuzz)
+-- 	white()
+-- end
+
+function drawEnemyHP(ey, ex)
+	love.graphics.setColor(0, 0, 0, 127)
+	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + cellAt(ey, ex).contents.hp.max do
+		love.graphics.points(x, (ey - 1) * 15 + 18)
+	end
+	
+	love.graphics.setColor(255, 0, 0, 127)
+	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + cellAt(ey, ex).contents.hp.shown do
+		love.graphics.points(x, (ey - 1) * 15 + 18)
+	end
+	
+	white()
 end
 
 function drawCellOverlay(cell, y, x)
@@ -458,3 +494,21 @@ end
 function cellAt(y, x)
 	return stage.field[y][x]
 end
+
+-- function generateHPFuzzForAllEnemies()
+-- 	for i, c in pairs(getAllCells("enemy")) do
+-- 		local enemy = cellAt(c.y, c.x).contents
+-- 		if enemy.hp.actual < enemy.hp.max then
+-- 			local ratio = math.floor((enemy.hp.max - enemy.hp.shown) * 144 / enemy.hp.max)
+-- 			cellAt(c.y, c.x).enemyFuzz = {}
+--
+-- 			--place up to 144 random fuzz points in enemy's cell
+-- 			for j = 1, ratio * 2, 2 do
+-- 				cellAt(c.y, c.x).enemyFuzz[j] = math.random(12) + (c.x - 1) * 15 + 3
+-- 				cellAt(c.y, c.x).enemyFuzz[j + 1] = math.random(12) + (c.y - 1) * 15 + 4
+-- 			end
+-- 		else
+-- 			cellAt(c.y, c.x).enemyFuzz = {}
+-- 		end
+-- 	end
+-- end

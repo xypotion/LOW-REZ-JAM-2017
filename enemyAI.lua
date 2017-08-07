@@ -338,7 +338,7 @@ function enemy(species)
 		enemy.hp.max = 10 --4 if atk 3, 3 if atk 4, 2 if atk 5 (rare). this seems good
 		
 	elseif species == "algy" then
-		enemy.hp.max = 8
+		enemy.hp.max = 7
 		enemy.effect = "stick" --just draw a different sprite for the hero
 		enemy.reaction = "stick" 
 		
