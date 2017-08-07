@@ -72,7 +72,7 @@ end
 
 --TODO sound? moving, enemy kills...
 function processCellOpEvent(e)
-	stage.field[e.fieldY][e.fieldX].contents = e.payload
+	stage.field[e.y][e.x].contents = e.payload
 		
 	e.finished = true
 end
@@ -96,7 +96,7 @@ function processActuationEvent(e)
 end
 
 function processStatusEvent(e)
-	local id = e.fieldY * 10 + e.fieldX --hacky, but... it's a game jam!
+	local id = e.y * 10 + e.x --hacky, but... it's a game jam!
 	
 	hero.statusAfflictors[id] = e.status
 	
@@ -110,9 +110,9 @@ function processPoseEvent(e)
 	local f = pop(e.frames)
 	-- print(table.getn(e.frames))
 	
-	stage.field[e.fieldY][e.fieldX].contents.pose = f.pose
-	stage.field[e.fieldY][e.fieldX].contents.yOffset = f.yOffset
-	stage.field[e.fieldY][e.fieldX].contents.xOffset = f.xOffset
+	stage.field[e.y][e.x].contents.pose = f.pose
+	stage.field[e.y][e.x].contents.yOffset = f.yOffset
+	stage.field[e.y][e.x].contents.xOffset = f.xOffset
 	
 	if not peek(e.frames) then
 		-- print("finished")
@@ -123,9 +123,9 @@ end
 
 function processAnimEvent(e)
 	if peek(e.frames) then
-		stage.field[e.fieldY][e.fieldX].overlayQuad = pop(e.frames)
+		stage.field[e.y][e.x].overlayQuad = pop(e.frames)
 	else
-		stage.field[e.fieldY][e.fieldX].overlayQuad = nil
+		stage.field[e.y][e.x].overlayQuad = nil
 		e.finished = true
 	end
 end

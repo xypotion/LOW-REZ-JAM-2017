@@ -11,8 +11,8 @@ end
 function cellOpEvent(y, x, thing)
 	local e = {
 		class = "cellOp",
-		fieldY = y,
-		fieldX = x,
+		y = y,
+		x = x,
 		payload = thing
 	}
 	
@@ -35,8 +35,8 @@ end
 function statusEvent(ey, ex, s)
 	local e = {
 		class = "status",
-		fieldY = ey,
-		fieldX = ex,
+		y = ey,
+		x = ex,
 		status = s
 	}
 	
@@ -47,8 +47,8 @@ end
 function poseEvent(y, x, f)
 	local e = {
 		class = "pose",
-		fieldY = y, --location of drawable entity (cell contents)
-		fieldX = x,	
+		y = y, --location of drawable entity (cell contents)
+		x = x,	
 		frames = f	--frames = { {pose, yOffset, xOffset}s }
 	}
 	
@@ -59,8 +59,8 @@ end
 function animEvent(y, x, f)--fx, f)
 	local e = {
 		class = "anim",
-		fieldY = y,		--location of drawable entity (cell overlay)
-		fieldX = x,
+		y = y,		--location of drawable entity (cell overlay)
+		x = x,
 		-- effect = fx,	--named effect (column of effects sheet) --actually don't need if overlay.quad points to column and row
 		frames = f		--frames = { quad pointers (row on effects sheet) }
 	}

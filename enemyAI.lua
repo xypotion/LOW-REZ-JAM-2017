@@ -90,7 +90,7 @@ function healerTurnAt(ey, ex)
 	local hurt = false
 	
 	for i, c in pairs(enemyCells) do
-		if stage.field[c.fieldY][c.fieldX].contents.hp.actual < stage.field[c.fieldY][c.fieldX].contents.hp.max then
+		if stage.field[c.y][c.x].contents.hp.actual < stage.field[c.y][c.x].contents.hp.max then
 			hurt = true
 		end
 	end
@@ -101,9 +101,9 @@ function healerTurnAt(ey, ex)
 		
 		local es = {}
 		for i, c in pairs(enemyCells) do
-			stage.field[c.fieldY][c.fieldX].contents.hp.actual = stage.field[c.fieldY][c.fieldX].contents.hp.actual + 3
-			push(es, actuationEvent(stage.field[c.fieldY][c.fieldX].contents.hp, 3))
-			push(es, animEvent(c.fieldY, c.fieldX, sparkAnimFrames()))
+			stage.field[c.y][c.x].contents.hp.actual = stage.field[c.y][c.x].contents.hp.actual + 3
+			push(es, actuationEvent(stage.field[c.y][c.x].contents.hp, 3))
+			push(es, animEvent(c.y, c.x, sparkAnimFrames()))
 		end
 		
 		queueSet(es)
@@ -156,7 +156,7 @@ function enemyApproachHero(ey, ex)
 	--find which cell, if any, will move the enemy closer
 	local dest = nil
 	for k, c in ipairs(shuffle(emptyNeighbors)) do
-		local distance = math.abs(c.fieldY - hy) + math.abs(c.fieldX - hx)
+		local distance = math.abs(c.y - hy) + math.abs(c.x - hx)
 		if distance < currentDistance and not dest then
 			dest = c
 		end
@@ -165,7 +165,7 @@ function enemyApproachHero(ey, ex)
 	
 	--if a cell closer than currentDistance was found, move there
 	if dest then
-		enemyMoveTo(ey, ex, dest.fieldY, dest.fieldX)
+		enemyMoveTo(ey, ex, dest.y, dest.x)
 	end
 end
 
@@ -177,7 +177,7 @@ function enemyFleeHero(ey, ex)
 	--find which cell, if any, will move the enemy further from hero
 	local dest = nil
 	for k, c in ipairs(shuffle(emptyNeighbors)) do
-		local distance = math.abs(c.fieldY - hy) + math.abs(c.fieldX - hx)
+		local distance = math.abs(c.y - hy) + math.abs(c.x - hx)
 		if distance > currentDistance and not dest then
 			dest = c
 		end
@@ -185,7 +185,7 @@ function enemyFleeHero(ey, ex)
 	
 	--if a cell further than currentDistance was found, move there
 	if dest then
-		enemyMoveTo(ey, ex, dest.fieldY, dest.fieldX)
+		enemyMoveTo(ey, ex, dest.y, dest.x)
 	end
 end
 
@@ -221,11 +221,11 @@ function cellsInDistanceRange(ly, lx, min, max, class) --l as in 'locus'
 				if class then
 					if c.contents.class and c.contents.class == class then
 						--we do care about class & it matches, so push
-						push(cells, {fieldY = y, fieldX = x})
+						push(cells, {y = y, x = x})
 					end
 				else
 					--we don't care about class, just push
-					push(cells, {fieldY = y, fieldX = x})
+					push(cells, {y = y, x = x})
 				end
 			end
 		end
@@ -271,7 +271,7 @@ function spawnEnemies(l)
 	if table.getn(list) <= table.getn(empties) then		
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
-			push(es, cellOpEvent(cell.fieldY, cell.fieldX, enemy(en)))
+			push(es, cellOpEvent(cell.y, cell.x, enemy(en)))
 		end
 	end
 	

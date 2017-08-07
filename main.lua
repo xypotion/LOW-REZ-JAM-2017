@@ -442,7 +442,7 @@ function sewyAdjacent()
 	local enemyNeighbors = getAdjacentCells(hy, hx, "enemy")
 	
 	for i, c in pairs(enemyNeighbors) do
-		if stage.field[c.fieldY][c.fieldX].contents.species == "sewy" then
+		if stage.field[c.y][c.x].contents.species == "sewy" then
 			return true
 		end
 	end
@@ -455,5 +455,5 @@ function cellAt(y, x)
 end
 
 function cellContentsAt(y, x)
-	return cellAt().contents
+	return cellAt(y, x).contents
 end
