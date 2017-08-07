@@ -319,11 +319,11 @@ function enemy(species)
 		enemy.ai = "glutton"
 		
 	elseif species == "plasty" then
-		enemy.hp.max = 10 --4 if atk 3, 3 if atk 4, 2 if atk 5 (rare). this seems good
+		enemy.hp.max = 10 --4 hits if atk 3, 3 if atk 4, 2 if atk 5 (rare). this seems good
 		
 	elseif species == "algy" then
 		enemy.hp.max = 7
-		enemy.effect = "stick" --just draw a different sprite for the hero
+		enemy.effect = "stick"
 		enemy.reaction = "stick" 
 		
 	elseif species == "toxy" then
@@ -342,7 +342,7 @@ function enemy(species)
 		enemy.reaction = "explode"
 		
 	elseif species == "pharma" then
-		enemy.hp.max = 8
+		enemy.hp.max = 7
 		enemy.ai = "healer"
 	end
 	
