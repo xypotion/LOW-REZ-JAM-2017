@@ -18,13 +18,16 @@ function startEnemyTurn()
 end
 
 function queueFullEnemyTurn(ey, ex)
-	--DEBUG
-	-- print("queueing full enemy turn at", ey, ex)
-	-- queue(animEvent(c.y, c.x, sparkAnimFrames()))
-	if stage.field[ey][ex].contents.ai == "melee" then
+	local enemy = stage.field[ey][ex].contents
+	
+	if enemy.ai == "melee" then
 		meleeTurnAt(ey, ex)
-	else
+	elseif enemy.ai == "ranger" then
 		rangerTurnAt(ey, ex)
+	elseif enemy.ai == "healer" then
+		healerTurnAt(ey, ex)
+	elseif enemy.ai == "glutton" then
+		meleeTurnAt(ey, ex) --TODO
 	end
 	
 	--reduce AP; this will happen whether they actually take an action or not, which is good
@@ -72,11 +75,8 @@ end
 
 --TODO attacking should look like a cast, not a melee hit
 function rangerTurnAt(ey, ex)
-	local heroAdjacent = heroAdjacentToEnemy(ey, ex)
-	local emptyNeighbors = getAdjacentCells(ey, ex, "clear") --slightly inefficient, but clean
-	
 	--if hero is adjacent and there's at least one clear neighbor, run away
-	if heroAdjacent and table.getn(emptyNeighbors) >= 1 then
+	if heroAdjacentToEnemy(ey, ex) and table.getn(getAdjacentCells(ey, ex, "clear")) >= 1 then
 		enemyFleeHero(ey, ex)
 	else
 		--otherwise attack (either not next to hero or there was nowhere to flee to)
@@ -84,9 +84,32 @@ function rangerTurnAt(ey, ex)
 	end
 end
 
-function healerTurnAt()
-	--if any enemies are below max HP, heal all by 1
-	--if not healing, act as melee
+function healerTurnAt(ey, ex)
+	--see if any enemies are below max HP
+	local enemyCells = getAllCells("enemy")
+	local hurt = false
+	
+	for i, c in pairs(enemyCells) do
+		if stage.field[c.fieldY][c.fieldX].contents.hp.actual < stage.field[c.fieldY][c.fieldX].contents.hp.max then
+			hurt = true
+		end
+	end
+	
+	--heal all if any are hurt, otherwise act like melee
+	if hurt then
+		print(ey, ex, "healing all ~")
+		
+		local es = {}
+		for i, c in pairs(enemyCells) do
+			stage.field[c.fieldY][c.fieldX].contents.hp.actual = stage.field[c.fieldY][c.fieldX].contents.hp.actual + 3
+			push(es, actuationEvent(stage.field[c.fieldY][c.fieldX].contents.hp, 3))
+			push(es, animEvent(c.fieldY, c.fieldX, sparkAnimFrames()))
+		end
+		
+		queueSet(es)
+	else
+		meleeTurnAt(ey, ex)
+	end
 end
 
 --"is there at least one adjacent cell containing a hero?"
@@ -213,7 +236,11 @@ end
 
 --all clear cells 0 to 2 cells from 2,2 = the whole grid. filter for clear cells
 function allClearCells()
-	return cellsInDistanceRange(2, 2, 0, 2, "clear")
+	return getAllCells("clear")
+end
+
+function getAllCells(class)
+	return cellsInDistanceRange(2, 2, 0, 2, class)
 end
 
 function getAdjacentCells(ly, lx, class)
@@ -281,7 +308,7 @@ function enemy(species)
 		
 	elseif species == "toxy" then
 		enemy.hp.max = 5
-		enemy.ai = "ranged"
+		enemy.ai = "ranger"
 		
 	elseif species == "mercuri" then
 		enemy.hp.max = 4

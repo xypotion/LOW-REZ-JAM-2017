@@ -449,3 +449,11 @@ function sewyAdjacent()
 	
 	return false
 end
+
+function cellAt(y, x)
+	return stage.field[y][x]
+end
+
+function cellContentsAt(y, x)
+	return cellAt().contents
+end

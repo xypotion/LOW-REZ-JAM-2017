@@ -73,11 +73,7 @@ end
 --TODO sound? moving, enemy kills...
 function processCellOpEvent(e)
 	stage.field[e.fieldY][e.fieldX].contents = e.payload
-	-- print("put a ", e.payload.class, "into", e.fieldY, e.fieldX)
-	
-	-- stage.field[e.fieldY][e.fieldX].reserved = nil
-	-- stage.field[e.fieldY][e.fieldX].vacating = nil
-	
+		
 	e.finished = true
 end
 
