@@ -352,6 +352,9 @@ end of each night:
 	if less space than required for spawn-set, spawn NEXT set. maybe pop big one off the stack and push back on the end. careful of infinite loops here
 ]]
 
+--spawning bosses: go ahead and use the same algo as above, for the wild case that all other cells contain powers & there's nowhere to spawn at first TODO
+--...but when do you announce the boss & change the UI?
+
 function spawnEnemies(l)
 	--if not provided, get list of enemy species by popping off the stage's enemy list
 	local list = l or pop(stage.enemyList) --TODO check this before popping

@@ -4,6 +4,7 @@ require "heroActions"
 require "enemyAI"
 require "animScripts"
 require "powers"
+require "sounds"
 
 function love.load()
 	--initial setup stuff & constants
@@ -99,6 +100,7 @@ function love.load()
 	initAnimFrames()
 	
 	--load sounds
+	loadSounds()
 	
 	--init canvas & other graphics stuff
 	gameCanvas = love.graphics.newCanvas(64, 64)
@@ -125,9 +127,10 @@ function love.load()
 		{empty(), empty(), empty()}
 	}
 	-- stage.startingEnemyList = {"garby", "garby", "garby", "garby", "nukey"}
-	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
+	-- stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
 	-- stage.startingEnemyList = {"algy", "algy"}
 	-- stage.startingEnemyList = {"nukey"}
+	stage.startingEnemyList = {"garby", "garby"}
 	stage.enemyList = {
 		{"garby", "garby"},
 		{"toxy", "toxy"},
@@ -138,13 +141,15 @@ function love.load()
 		{"pharma", "pharma"},
 		{"mercuri", "mercuri"},
 	}
+	stage.enemyList = {{"garby"}, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}}
 	stage.enemyList = shuffle(stage.enemyList)
 	-- stage.boss = "invasive species"
-	local powers = {}
+	
+	stage.powers = {} --DEBUG
 	for i = 1, 10 do
-		push(powers, "blueFish")
-		push(powers, "blueFish")
-		push(powers, "redFish")
+		push(stage.powers, "blueFish")
+		push(stage.powers, "blueFish")
+		push(stage.powers, "redFish")
 	end
 	stage.powers = powers
 	
@@ -266,6 +271,9 @@ function love.keypressed(key)
 		else
 			print(yyy, xxx, "occupied!")
 		end
+	end
+	if key == "h" then
+		sfx.hpHeal:play()
 	end
 	--END DEBUG
 

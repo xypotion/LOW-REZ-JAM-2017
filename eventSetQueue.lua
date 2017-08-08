@@ -68,15 +68,20 @@ function animEvent(y, x, f)--fx, f)
 end
 
 --for starting or stopping (? TODO) sounds
-function soundEvent()
+function soundEvent(name)
 	local e = {
 		class = "sound",
-		--what sound to start
+		soundName = name
+		--next sound
+		--repeatTimes
 		--TODO what if you're fading music in or out?
 	}
 	
 	return e
 end
+
+-- function soundFadeEvent()
+-- end
 
 --for info popups, stage intros, boss intros, etc
 function screenEvent()

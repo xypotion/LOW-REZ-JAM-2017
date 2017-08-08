@@ -41,6 +41,10 @@ function processEventSets(dt)
 				processAnimEvent(e)
 			end
 			
+			if e.class == "sound" then
+				processSoundEvent(e)
+			end
+			
 			if e.class == "bg" then
 				processBgEvent(e)
 			end
@@ -126,7 +130,10 @@ function processAnimEvent(e)
 end
 
 
-function processSoundEvent()
+function processSoundEvent(e)
+	sfx[e.soundName]:play()
+	
+	e.finished = true
 end
 
 

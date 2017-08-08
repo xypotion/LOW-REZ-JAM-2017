@@ -140,7 +140,8 @@ function heroFight(y, x, dy, dx)
 			{pose = "idle", yOffset = dy * 1, xOffset = dx * 1},
 			{pose = "idle", yOffset = 0, xOffset = 0},
 		}),
-		actuationEvent(target.hp, -hero.attack)
+		actuationEvent(target.hp, -hero.attack),
+		soundEvent("hpHeal")
 	})
 	
 	--stick (unless defeated)
