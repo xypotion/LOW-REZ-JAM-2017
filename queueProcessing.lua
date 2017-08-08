@@ -84,6 +84,13 @@ end
 --TODO "quick" actuations
 --TODO pos/neg sounds
 function processActuationEvent(e)
+	--play sound
+	if e.delta > 0 and e.counter.posSound then
+		sfx[e.counter.posSound]:play()
+	elseif e.delta < 1 and e.counter.negSound then
+		sfx[e.counter.negSound]:play()
+	end
+	
 	--decrement shown and increment delta OR vice-versa, as long as shown is not already at max or 0
 	if e.delta > 0 and e.counter.shown < e.counter.max then
 		e.counter.shown = e.counter.shown + 1

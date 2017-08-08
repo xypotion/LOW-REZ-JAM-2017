@@ -68,6 +68,7 @@ function rangerTurnAt(ey, ex)
 	else
 		--otherwise attack (either not next to hero or there was nowhere to flee to)
 		enemyAttackHero(ey, ex)
+		--TODO ranged attack must look different
 	end
 end
 
@@ -104,6 +105,7 @@ function healerTurnAt(ey, ex)
 
 		push(es, poseEvent(ey, ex, {{pose = "casting", yOffset = 0, xOffset = 0}}))
 		push(es, animEvent(ey, ex, glowAnimFrames()))
+		push(es, soundEvent("pharma"))
 		queueSet(es)
 		
 		-- queueSet({
@@ -126,7 +128,8 @@ function gluttonTurnAt(ey, ex)
 		local glutton = cellAt(ey, ex).contents
 		local dy, dx = target.y - ey, target.x - ex
 		
-		--queue pose stuff
+		--queue sound & pose stuff
+		queue(soundEvent("gluttony"))
 		queue(poseEvent(ey, ex, { --TODO move elsewhere
 			{pose = "casting", yOffset = dy * 1, xOffset = dx * 1},
 			{pose = "casting", yOffset = dy * 1, xOffset = dx * 1},
@@ -203,6 +206,7 @@ function enemyAttackHero(ey, ex)
 			{pose = "idle", yOffset = 0, xOffset = 0},
 		}),
 		actuationEvent(hero.hp, -attacker.attack),
+		soundEvent("attack"),
 		waitEvent(0.25)
 	})
 	
@@ -282,7 +286,10 @@ function explosionAt(ey, ex)
 	nukey.hp.actual = 0
 	
 	--events: explosion animation on self...
-	local es = {animEvent(ey, ex, sparkAnimFrames())}
+	local es = {
+		animEvent(ey, ex, sparkAnimFrames()),
+		soundEvent("nukey")
+	}
 	
 	--...explosion animation on neighbors TODO sort of misleading since it doesn't damage other enemies
 	for i, c in pairs(getAdjacentCells(ey, ex)) do
@@ -371,6 +378,7 @@ function spawnEnemies(l)
 			local newEnemy = enemy(en)
 			newEnemy.drop = pop(stage.powers)
 			push(events, cellOpEvent(cell.y, cell.x, newEnemy))
+			-- push(soundEvent("pop"))
 		end
 	end
 	

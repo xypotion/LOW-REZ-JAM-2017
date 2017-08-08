@@ -141,7 +141,7 @@ function love.load()
 		{"pharma", "pharma"},
 		{"mercuri", "mercuri"},
 	}
-	stage.enemyList = {{"garby"}, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}}
+	-- stage.enemyList = {{"garby"}, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}}
 	stage.enemyList = shuffle(stage.enemyList)
 	-- stage.boss = "invasive species"
 	
@@ -156,9 +156,9 @@ function love.load()
 	--init hero
 	hero = {
 		class = "hero",
-		hp = {max = 9, actual = 2, shown = 9, posSound = nil, negSound = nil, quick = false},
+		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil, quick = false},
 		ap = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
-		sp = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
+		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
 		attack = 3,
 		powers = {},
 		pose = "idle",

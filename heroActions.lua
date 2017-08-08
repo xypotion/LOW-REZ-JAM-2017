@@ -141,7 +141,7 @@ function heroFight(y, x, dy, dx)
 			{pose = "idle", yOffset = 0, xOffset = 0},
 		}),
 		actuationEvent(target.hp, -hero.attack),
-		soundEvent("hpHeal")
+		soundEvent("attack")
 	})
 	
 	--stick (unless defeated)
@@ -161,7 +161,8 @@ function heroFight(y, x, dy, dx)
 		if target.drop then
 			queueSet({
 				cellOpEvent(ty, tx, clear()), --probably unnecessary? TODO
-				cellOpEvent(ty, tx, newPower(target.drop))
+				cellOpEvent(ty, tx, newPower(target.drop)),
+				soundEvent("kill")
 			})
 		else
 			queue(cellOpEvent(ty, tx, clear()))
@@ -193,7 +194,7 @@ function heroSpecialAttack()
 	--and do stuff!
 	
 	--DEBUG
-	attacky = {}
+	attacky = {soundEvent("wish")}
 	for y, r in ipairs(stage.field) do --TODO optimize these things before canonizing
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
