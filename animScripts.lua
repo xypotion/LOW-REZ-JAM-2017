@@ -5,6 +5,12 @@ function initAnimFrames()
 			love.graphics.newQuad(0, 16, 16, 16, 128, 64),
 			love.graphics.newQuad(0, 32, 16, 16, 128, 64),
 			love.graphics.newQuad(0, 48, 16, 16, 128, 64),
+		},
+		glow = {
+			love.graphics.newQuad(16, 0, 16, 16, 128, 64),
+			love.graphics.newQuad(16, 16, 16, 16, 128, 64),
+			love.graphics.newQuad(16, 32, 16, 16, 128, 64),
+			love.graphics.newQuad(16, 48, 16, 16, 128, 64),
 		}
 	}
 end
@@ -21,3 +27,17 @@ function sparkAnimFrames()
 		quads_animation.spark[4],
 	}
 end
+
+function glowAnimFrames()
+	return {
+		quads_animation.glow[1],
+		quads_animation.glow[2],
+		quads_animation.glow[3],
+		quads_animation.glow[4],
+		quads_animation.glow[1],
+		quads_animation.glow[2],
+		quads_animation.glow[3],
+		quads_animation.glow[4],
+	}
+end
+		

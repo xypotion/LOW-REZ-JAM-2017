@@ -124,8 +124,8 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	stage.startingEnemyList = {"garby", "garby", "garby", "garby", "nukey"}
-	-- stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
+	-- stage.startingEnemyList = {"garby", "garby", "garby", "garby", "nukey"}
+	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
 	-- stage.startingEnemyList = {"algy", "algy"}
 	-- stage.startingEnemyList = {"nukey"}
 	stage.enemyList = {

@@ -92,14 +92,26 @@ function healerTurnAt(ey, ex)
 			local need = cellAt(c.y, c.x).contents.hp.max - cellAt(c.y, c.x).contents.hp.actual
 			if need > 3 then need = 3 end
 			
-			cellAt(c.y, c.x).contents.hp.actual = cellAt(c.y, c.x).contents.hp.actual + need
+			--only heal & animate for enemies that need it
+			if need > 0 then
+				cellAt(c.y, c.x).contents.hp.actual = cellAt(c.y, c.x).contents.hp.actual + need
 			
-			--push animation & HP actuation
-			push(es, actuationEvent(cellAt(c.y, c.x).contents.hp, need))
-			push(es, animEvent(c.y, c.x, sparkAnimFrames()))
+				--push animation & HP actuation
+				push(es, actuationEvent(cellAt(c.y, c.x).contents.hp, need))
+				push(es, animEvent(c.y, c.x, sparkAnimFrames()))
+			end
 		end
-		
+
+		push(es, poseEvent(ey, ex, {{pose = "casting", yOffset = 0, xOffset = 0}}))
+		push(es, animEvent(ey, ex, glowAnimFrames()))
 		queueSet(es)
+		
+		-- queueSet({
+		-- 	waitEvent(0.25),
+		-- 	poseEvent(ey, ex, {{pose = "idle", yOffset = 0, xOffset = 0}})
+		-- })
+		queue(waitEvent(0.25))
+		queue(poseEvent(ey, ex, {{pose = "idle", yOffset = 0, xOffset = 0}}))
 	else
 		meleeTurnAt(ey, ex)
 	end
