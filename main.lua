@@ -51,6 +51,12 @@ function love.load()
 			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
 			love.graphics.newQuad(0, 48, 16, 16, 64, 64)
 		},
+		casting = {
+			love.graphics.newQuad(16, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(16, 16, 16, 16, 64, 64),
+			love.graphics.newQuad(16, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(16, 48, 16, 16, 64, 64)
+		},
 		stuck = {
 			love.graphics.newQuad(32, 0, 16, 16, 64, 64),
 			love.graphics.newQuad(32, 16, 16, 16, 64, 64),
@@ -118,7 +124,8 @@ function love.load()
 		{empty(), empty(), empty()}, 
 		{empty(), empty(), empty()}
 	}
-	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
+	stage.startingEnemyList = {"garby", "garby", "garby", "garby", "nukey"}
+	-- stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
 	-- stage.startingEnemyList = {"algy", "algy"}
 	-- stage.startingEnemyList = {"nukey"}
 	stage.enemyList = {
@@ -335,7 +342,11 @@ function drawCellContents(obj, y, x)
 			love.graphics.draw(sheet_player, characterQuads[obj.pose][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		end
 	elseif obj.class == "enemy" then
-		love.graphics.draw(enemySheets[obj.species], characterQuads[obj.pose][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset) --TODO maybe refactor the mathy parts here...
+		if obj.pose == "idle" then
+			love.graphics.draw(enemySheets[obj.species], characterQuads["idle"][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset) --TODO maybe refactor the mathy parts here...
+		elseif obj.pose == "casting" then
+			love.graphics.draw(enemySheets[obj.species], characterQuads["casting"][getCharacterCastingFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset) --TODO maybe refactor the mathy parts here...
+		end
 	elseif obj.class == "power" then
 		love.graphics.draw(powerSheet, powerQuads[obj.type][getNonCharacterAnimFrame()], cellD * x - 13, cellD * y - 13)
 	end
@@ -433,6 +444,10 @@ end
 
 function getCharacterAnimFrame()
 	return math.floor(frame % 4 + 1)
+end
+
+function getCharacterCastingFrame()
+	return math.floor((4 * frame) % 4 + 1)
 end
 
 function getNonCharacterAnimFrame()

@@ -27,7 +27,7 @@ function queueFullEnemyTurn(ey, ex)
 	elseif enemy.ai == "healer" then
 		healerTurnAt(ey, ex)
 	elseif enemy.ai == "glutton" then
-		meleeTurnAt(ey, ex) --TODO
+		gluttonTurnAt(ey, ex)
 	end
 	
 	--reduce AP; this will happen whether they actually take an action or not, which is good
@@ -101,6 +101,70 @@ function healerTurnAt(ey, ex)
 		
 		queueSet(es)
 	else
+		meleeTurnAt(ey, ex)
+	end
+end
+
+function gluttonTurnAt(ey, ex)
+	local powerNeighbors = shuffle(getAdjacentCells(ey, ex, "power"))
+	
+	--any neighbors have powerups?
+	if peek(powerNeighbors) then
+		local target = peek(powerNeighbors)
+		local glutton = cellAt(ey, ex).contents
+		local dy, dx = target.y - ey, target.x - ex
+		
+		--queue pose stuff
+		queue(poseEvent(ey, ex, { --TODO move elsewhere
+			{pose = "casting", yOffset = dy * 1, xOffset = dx * 1},
+			{pose = "casting", yOffset = dy * 1, xOffset = dx * 1},
+			{pose = "casting", yOffset = dy * 2, xOffset = dx * 2},
+			{pose = "casting", yOffset = dy * 2, xOffset = dx * 2},
+			{pose = "casting", yOffset = dy * 3, xOffset = dx * 3},
+			{pose = "casting", yOffset = dy * 3, xOffset = dx * 3},
+			{pose = "casting", yOffset = dy * 4, xOffset = dx * 4},
+			{pose = "casting", yOffset = dy * 4, xOffset = dx * 4},
+			{pose = "casting", yOffset = dy * 5, xOffset = dx * 5},
+			{pose = "casting", yOffset = dy * 5, xOffset = dx * 5},
+			{pose = "casting", yOffset = dy * 6, xOffset = dx * 6},
+			{pose = "casting", yOffset = dy * 6, xOffset = dx * 6},
+			{pose = "casting", yOffset = dy * 7, xOffset = dx * 7},
+			{pose = "casting", yOffset = dy * 7, xOffset = dx * 7},
+			{pose = "casting", yOffset = dy * 8, xOffset = dx * 8},
+			{pose = "casting", yOffset = dy * 8, xOffset = dx * 8},
+			{pose = "casting", yOffset = dy * 9, xOffset = dx * 9},
+			{pose = "casting", yOffset = dy * 9, xOffset = dx * 9},
+			{pose = "casting", yOffset = dy * 10, xOffset = dx * 10},
+			{pose = "casting", yOffset = dy * 10, xOffset = dx * 10},
+			{pose = "casting", yOffset = dy * 11, xOffset = dx * 11},
+			{pose = "casting", yOffset = dy * 11, xOffset = dx * 11},
+			{pose = "casting", yOffset = dy * 12, xOffset = dx * 12},
+			{pose = "casting", yOffset = dy * 12, xOffset = dx * 12},
+			{pose = "casting", yOffset = dy * 13, xOffset = dx * 13},
+			{pose = "casting", yOffset = dy * 13, xOffset = dx * 13},
+			{pose = "casting", yOffset = dy * 14, xOffset = dx * 14},
+			{pose = "casting", yOffset = dy * 14, xOffset = dx * 14},
+			{pose = "casting", yOffset = dy * 15, xOffset = dx * 15},
+			{pose = "casting", yOffset = dy * 15, xOffset = dx * 15},
+		}))
+
+		--THEN queue resulting move (powerup consumption/removal implied) & enemy HP recovery
+		local events = {}
+		
+		push(events, cellOpEvent(target.y, target.x, glutton))
+		push(events, cellOpEvent(ey, ex, clear()))
+		push(events, poseEvent(target.y, target.x, {{pose = "idle", yOffset = 0, xOffset = 0}}))
+		
+		local need = glutton.hp.max - glutton.hp.actual
+		push(events, actuationEvent(glutton.hp, need))
+		
+		print(ey, ex, "recovering "..need.." HP")
+		
+		queueSet(events)
+		
+		--reduce AP
+		-- glutton.ap.actual = glutton.hp.actual - 1 --wait, no, this happens already
+	else 
 		meleeTurnAt(ey, ex)
 	end
 end
