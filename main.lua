@@ -3,6 +3,7 @@ require "eventSetQueue"
 require "heroActions"
 require "enemyAI"
 require "animScripts"
+require "powers"
 
 function love.load()
 	--initial setup stuff & constants
@@ -28,6 +29,7 @@ function love.load()
 	}
 	sheet_effects = love.graphics.newImage("effects.png")
 	ui = love.graphics.newImage("ui.png")
+	powerSheet = love.graphics.newImage("powers.png")
 	
 	backgrounds = {
 		day1 = love.graphics.newImage("bg_day1.png"),
@@ -57,6 +59,13 @@ function love.load()
 		}
 	}
 	
+	powerQuads = {
+		blueFish = {
+			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
+		}
+	}
+	
 	quads_ui = {
 		hp = love.graphics.newQuad(0, 0, 9, 5, 64, 64),
 		hpT = love.graphics.newQuad(10, 0, 3, 5, 64, 64),
@@ -72,8 +81,6 @@ function love.load()
 		spT2 = love.graphics.newQuad(22, 12, 4, 5, 64, 64),
 		spF2 = love.graphics.newQuad(27, 12, 4, 5, 64, 64),
 		stink = {
-			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
-			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
 			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
 			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
 		}
@@ -312,13 +319,14 @@ function drawCellContents(obj, y, x)
 	--draw hero or enemy --TODO optimize/clean up
 	if obj.class == "hero" then
 		if heroStuck() then
-			love.graphics.draw(sheet_player, characterQuads["stuck"][getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+			love.graphics.draw(sheet_player, characterQuads["stuck"][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		else
-			love.graphics.draw(sheet_player, characterQuads[obj.pose][getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+			love.graphics.draw(sheet_player, characterQuads[obj.pose][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		end
-	end
-	if obj.class == "enemy" then
-		love.graphics.draw(enemySheets[obj.species], characterQuads[obj.pose][getAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
+	elseif obj.class == "enemy" then
+		love.graphics.draw(enemySheets[obj.species], characterQuads[obj.pose][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset) --TODO maybe refactor the mathy parts here...
+	elseif obj.class == "power" then
+		love.graphics.draw(powerSheet, powerQuads[obj.type][getNonCharacterAnimFrame()], cellD * x - 13, cellD * y - 13)
 	end
 end
 
@@ -380,7 +388,7 @@ function drawUI()
 	
 	--sewy adjacent?
 	if hero.sewyAdjacent then
-		love.graphics.draw(ui, quads_ui.stink[getAnimFrame()], 33, 50)
+		love.graphics.draw(ui, quads_ui.stink[getNonCharacterAnimFrame()], 33, 50)
 	end
 end
 
@@ -412,8 +420,12 @@ function empty()
 	return {contents = clear()}
 end
 
-function getAnimFrame()
+function getCharacterAnimFrame()
 	return math.floor(frame % 4 + 1)
+end
+
+function getNonCharacterAnimFrame()
+	return math.floor(frame % 2 + 1)
 end
 
 function heroStuck()

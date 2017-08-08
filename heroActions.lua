@@ -30,7 +30,7 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 		return
 	end
 	
-	--move or fight
+	--move
 	if destClass == "clear" then
 		if heroStuck() then
 			heroStuckMove(y, x, dy, dx)
@@ -40,6 +40,17 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 		end
 	end
 	
+	--get powerup
+	if destClass == "power" then
+		if heroStuck() then
+			heroStuckMove(y, x, dy, dx)
+		else
+			reduceHeroAP()
+			heroGetPowerUp(y, x, dy, dx)
+		end
+	end
+	
+	--fight
 	if destClass == "enemy" then
 		reduceHeroAP()
 		heroFight(y, x, dy, dx)
@@ -72,6 +83,43 @@ function heroMove(y, x, dy, dx)
 		cellOpEvent(y, x, clear()),
 		poseEvent(ty, tx, moveFrames)
 	})
+	
+	processNow()
+end
+
+--TODO probably rename
+function heroGetPowerUp(y, x, dy, dx)
+	local ty, tx = y + dy, x + dx
+	
+	local moveFrames = {
+		{pose = "idle", yOffset = dy * -15, xOffset = dx * -15},
+		{pose = "idle", yOffset = dy * -10, xOffset = dx * -10},
+		{pose = "idle", yOffset = dy * -5, xOffset = dx * -5},
+		{pose = "idle", yOffset = 0, xOffset = 0},
+	}
+	
+	local power = cellAt(ty, tx).contents
+	local es = {}
+	
+	--apply powerup & push any actuations to event set. for each entry in power.effects[]...
+	for i, effect in pairs(power.effects) do
+		if effect.stat then
+			local need = hero[effect.stat].max - hero[effect.stat].actual
+			if need > effect.amount then need = effect.amount end
+			hero[effect.stat].actual = hero[effect.stat].actual + need
+			
+			if power.actuate then
+				push(es, actuationEvent(hero[effect.stat], need))
+			end
+		end
+	end
+
+	--queue pose and cell ops
+	push(es, cellOpEvent(ty, tx, hero))
+	push(es, cellOpEvent(y, x, clear()))
+	push(es, poseEvent(ty, tx, moveFrames))
+	
+	queueSet(es)
 	
 	processNow()
 end
@@ -109,7 +157,14 @@ function heroFight(y, x, dy, dx)
 	--kill if at 0 HP
 	if target.hp.actual <= 0 then
 		--dead; queue removal from grid
-		queue(cellOpEvent(ty, tx, clear()))
+		if target.drop then
+			queueSet({
+				cellOpEvent(ty, tx, clear()), --probably unnecessary? TODO
+				cellOpEvent(ty, tx, newPower(target.drop))
+			})
+		else
+			queue(cellOpEvent(ty, tx, clear()))
+		end
 		
 		--remove stick status "pointer"
 		queue(statusEvent(ty, tx, "none"))

@@ -30,7 +30,7 @@ function processEventSets(dt)
 			end
 		
 			if e.class == "status" then
-				processStatusEvent(e)
+				processHeroStatusEvent(e)
 			end
 			
 			if e.class == "pose" then
@@ -95,7 +95,7 @@ function processActuationEvent(e)
 	end
 end
 
-function processStatusEvent(e)
+function processHeroStatusEvent(e)
 	local id = e.y * 10 + e.x --hacky, but... it's a game jam!
 	
 	hero.statusAfflictors[id] = e.status

@@ -267,9 +267,7 @@ function getAdjacentCells(ly, lx, class)
 	return cellsInDistanceRange(ly, lx, 1, 1, class)
 end
 
---TODO. enemies should *spawn* in empty spaces first, then replace powerups if there's nowhere else
--- function allEmptiesThenPowerups()
--- end
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 --could easily see moving enemy creating/spawning to another separate file TODO
 --[[
@@ -280,23 +278,26 @@ end of each night:
 ]]
 
 function spawnEnemies(l)
+	--if not provided, get list of enemy species by popping off the stage's enemy list
 	local list = l or pop(stage.enemyList) --TODO check this before popping
 	
 	if not list then return end --...or after. TODO eh
 	
-	local es = {}
+	local events = {}
 	local empties = shuffle(allClearCells())
 	
 	--if there's space, spawn all enemies in list
 	if table.getn(list) <= table.getn(empties) then		
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
-			push(es, cellOpEvent(cell.y, cell.x, enemy(en)))
+			local newEnemy = enemy(en)
+			newEnemy.drop = "blueFish" --TODO pull from stage's list
+			push(events, cellOpEvent(cell.y, cell.x, newEnemy))
 		end
 	end
 	
 	--actually queue the spawn events
-	queueSet(es)
+	queueSet(events)
 end
 
 function enemy(species)
