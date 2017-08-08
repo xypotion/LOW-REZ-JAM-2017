@@ -16,25 +16,25 @@ function love.load()
 	cellD = 15 --D as in "dimension"
 	
 	--load graphics
-	grid = love.graphics.newImage("grid.png")
-	sheet_player = love.graphics.newImage("sheet_player.png")
+	grid = love.graphics.newImage("img/grid.png")
+	sheet_player = love.graphics.newImage("img/sheet_player.png")
 	enemySheets = {
-		toxy = love.graphics.newImage("sheet_toxy.png"),
-		mercuri = love.graphics.newImage("sheet_mercuri.png"),
-		algy = love.graphics.newImage("sheet_algy.png"),
-		sewy = love.graphics.newImage("sheet_sewy.png"),
-		garby = love.graphics.newImage("sheet_garby.png"),
-		plasty = love.graphics.newImage("sheet_plasty.png"),
-		pharma = love.graphics.newImage("sheet_pharma.png"),
-		nukey = love.graphics.newImage("sheet_nukey.png")
+		toxy = love.graphics.newImage("img/sheet_toxy.png"),
+		mercuri = love.graphics.newImage("img/sheet_mercuri.png"),
+		algy = love.graphics.newImage("img/sheet_algy.png"),
+		sewy = love.graphics.newImage("img/sheet_sewy.png"),
+		garby = love.graphics.newImage("img/sheet_garby.png"),
+		plasty = love.graphics.newImage("img/sheet_plasty.png"),
+		pharma = love.graphics.newImage("img/sheet_pharma.png"),
+		nukey = love.graphics.newImage("img/sheet_nukey.png")
 	}
-	sheet_effects = love.graphics.newImage("effects.png")
-	ui = love.graphics.newImage("ui.png")
-	powerSheet = love.graphics.newImage("powers.png")
+	sheet_effects = love.graphics.newImage("img/effects.png")
+	ui = love.graphics.newImage("img/ui.png")
+	powerSheet = love.graphics.newImage("img/powers.png")
 	
 	backgrounds = {
-		day1 = love.graphics.newImage("bg_day1.png"),
-		night1 = love.graphics.newImage("bg_night1.png")
+		day1 = love.graphics.newImage("img/bg_day1.png"),
+		night1 = love.graphics.newImage("img/bg_night1.png")
 	}
 	
 	--init quads
@@ -151,7 +151,7 @@ function love.load()
 		push(stage.powers, "blueFish")
 		push(stage.powers, "redFish")
 	end
-	stage.powers = powers
+	stage.powers = shuffle(stage.powers)
 	
 	--init hero
 	hero = {
