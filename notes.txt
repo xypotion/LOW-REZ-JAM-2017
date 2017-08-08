@@ -72,13 +72,15 @@ bosses... 1 for each stage?
 	- have unique graphics
 	- randomly summon HP bubbles so player can survive more easily? but only some
 	- have fairly high HP
-- invasive species: summons adds?
-- noise pollution: strong, ranged attack?
-- heat pollution: melee attack gets stronger over time? +1 every time it hits?
-- light pollution: immune to physical attacks?
+- invasive species (algy swap): summons adds? sticky?
+- noise pollution (): strong ranged attack? constant damage over time?
+- heat pollution (nukey swap?): melee attack gets stronger over time? +1 every time it hits?
+- light pollution (toxy swap): immune to physical attacks? eek. or takes less damage
+- oil spill! (mercuri swap): sticky?
 - pesticide: constant damage over time
-- 1 of each normal enemy all at once?
-- humans? summon garbage adds?
+- 1 of each normal enemy all at once = final boss OR final stage before final boss
+- final boss = humans/"human laziness"? summon garbage adds? any adds?
+- acid rain?
 
 implement enemy syncs if time, but keep very basic. no scaling, maybe even all the same effect
 

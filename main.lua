@@ -63,6 +63,10 @@ function love.load()
 		blueFish = {
 			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
 			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
+		},
+		redFish = {
+			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 48, 16, 16, 64, 64),
 		}
 	}
 	
@@ -129,6 +133,13 @@ function love.load()
 	}
 	stage.enemyList = shuffle(stage.enemyList)
 	-- stage.boss = "invasive species"
+	local powers = {}
+	for i = 1, 10 do
+		push(powers, "blueFish")
+		push(powers, "blueFish")
+		push(powers, "redFish")
+	end
+	stage.powers = powers
 	
 	--init hero
 	hero = {

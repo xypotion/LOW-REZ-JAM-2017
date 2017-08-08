@@ -291,7 +291,7 @@ function spawnEnemies(l)
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
 			local newEnemy = enemy(en)
-			newEnemy.drop = "blueFish" --TODO pull from stage's list
+			newEnemy.drop = pop(stage.powers)
 			push(events, cellOpEvent(cell.y, cell.x, newEnemy))
 		end
 	end

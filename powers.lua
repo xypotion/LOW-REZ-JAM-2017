@@ -5,7 +5,10 @@ function newPower(type)
 	}
 	
 	if type == "blueFish" then
-		power.effects = {{stat = "hp", amount = 3}}
+		power.effects = {{stat = "hp", amount = 1}}
+		power.actuate = true
+	elseif type == "redFish" then
+		power.effects = {{stat = "sp", amount = 1}}
 		power.actuate = true
 	end
 	
