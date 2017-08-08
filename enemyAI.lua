@@ -157,8 +157,7 @@ function gluttonTurnAt(ey, ex)
 		
 		local need = glutton.hp.max - glutton.hp.actual
 		push(events, actuationEvent(glutton.hp, need))
-		
-		print(ey, ex, "recovering "..need.." HP")
+		push(events, waitEvent(0.25))
 		
 		queueSet(events)
 		

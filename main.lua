@@ -317,18 +317,25 @@ function drawStage()
 	
 	--draw cells' contents + overlays
 	for y, r in ipairs(stage.field) do
-		for x, c in ipairs(r) do			
+		for x, c in ipairs(r) do
 			drawCellContents(c.contents, y, x)
-			
+
 			--draw enemy HP bars
 			if cellAt(y, x).contents.class == "enemy" then
-				drawEnemyHP(y, x) 
+				drawEnemyHP(y, x)
 			end
 
 			--draw overlay if present
 			if c.overlayQuad then
 				drawCellOverlay(c, y, x)
 			end
+		end
+	end
+	
+	--this is suuuuch a hack to get gluttons to draw on top of their food. OK if it doesn't hurt performance. shame on you, either way.
+	for i, c in pairs(getAllCells("enemy")) do
+		if cellAt(c.y, c.x).contents.ai == "glutton" and cellAt(c.y, c.x).contents.pose == "casting" then
+			drawCellContents(cellAt(c.y, c.x).contents, c.y, c.x)
 		end
 	end
 end
@@ -353,14 +360,16 @@ function drawCellContents(obj, y, x)
 end
 
 function drawEnemyHP(ey, ex)
+	local enemy = cellAt(ey, ex).contents
+	
 	love.graphics.setColor(0, 0, 0, 127)
-	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + cellAt(ey, ex).contents.hp.max do
-		love.graphics.points(x, (ey - 1) * 15 + 18)
+	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + enemy.hp.max do
+		love.graphics.points(x + enemy.xOffset, (ey - 1) * 15 + 18 + enemy.yOffset)
 	end
 	
 	love.graphics.setColor(255, 0, 0, 127)
-	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + cellAt(ey, ex).contents.hp.shown do
-		love.graphics.points(x, (ey - 1) * 15 + 18)
+	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + enemy.hp.shown do
+		love.graphics.points(x + enemy.xOffset, (ey - 1) * 15 + 18 + enemy.yOffset)
 	end
 	
 	white()
