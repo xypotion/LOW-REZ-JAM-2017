@@ -378,7 +378,7 @@ function spawnEnemies(l)
 			local newEnemy = enemy(en)
 			newEnemy.drop = pop(stage.powers)
 			push(events, cellOpEvent(cell.y, cell.x, newEnemy))
-			-- push(soundEvent("pop"))
+			-- push(events, soundEvent("pop"))
 		end
 	end
 	

@@ -280,6 +280,7 @@ function love.keypressed(key)
 		hero.hp.actual = hero.hp.actual + 3
 		queue(actuationEvent(hero.hp, 3))
 	end
+	if key == "x" then sfx.pop:play() end
 	--END DEBUG
 
 	if game.state == "day" then

@@ -21,6 +21,7 @@ function loadSounds()
 		toxy = love.audio.newSource("sfx/toxy.wav"),
 		nukey = love.audio.newSource("sfx/nukey2.wav"),
 		kill = love.audio.newSource("sfx/kill.wav"),
+		-- pop = love.audio.newSource("sfx/pop3.mp3"), --not really needed!
 	}
 	
 	bgm = {
