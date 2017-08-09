@@ -5,6 +5,7 @@ require "enemyAI"
 require "animScripts"
 require "powers"
 require "sounds"
+require "stage"
 
 function love.load()
 	--initial setup stuff & constants
@@ -33,9 +34,12 @@ function love.load()
 	powerSheet = love.graphics.newImage("img/powers.png")
 	
 	backgrounds = {
+		title1 = love.graphics.newImage("img/title1.png"),
 		day1 = love.graphics.newImage("img/bg_day1.png"),
 		night1 = love.graphics.newImage("img/bg_night1.png")
 	}
+	
+	blackOverlay = {graphic = love.graphics.newImage("img/black.png"), alpha = 255}
 	
 	--init quads
 	quads_idle = {
@@ -105,7 +109,8 @@ function love.load()
 	--init canvas & other graphics stuff
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
-	bgMain = {graphic = "day1", alpha = 255}
+	-- bgMain = {graphic = "day1", alpha = 255}
+	bgMain = {graphic = "title1", alpha = 255}
 	bgmTimer = 0
 
 	--find & load autosave for hi scores. also info panels that have been seen? AND maybe change title screen if game beaten?
@@ -117,7 +122,8 @@ function love.load()
 	eventSetQueue = {}
 	inputLevel = "normal" --TODO should be a stack, not a string
 	game = {
-		state = "day"
+		state = "title"
+		-- state = "day"
 	}
 	
 	--init stage variables (KINDA DEBUG)
@@ -181,13 +187,16 @@ function love.load()
 	hero.statusAfflictors[33] = "none"
 		
 	--display title
-	
+	-- queue(bgEvent("title1", 1))
+	-- blackOverlay = {alpha = 255}
+	queue(fadeInEvent(1))
 
 	--DEBUG
+	--stageStart(1) TODO but also move elsewhere
 	cellAt(2,2).contents = hero
 	spawnEnemies(stage.startingEnemyList)
-	love.graphics.setFont(love.graphics.newFont(7))
-	currentBGM:play()
+	-- love.graphics.setFont(love.graphics.newFont(7))
+	-- currentBGM:play()
 end
 
 function love.update(dt)
@@ -199,9 +208,6 @@ function love.update(dt)
 		processEventSets(dt)
 		eventFrame = eventFrame % eventFrameLength
 	end
-	
-	--checking sewy adjacency here instead of in draw()
-	hero.sewyAdjacent = sewyAdjacent() 
 	
 	--queue enemy turns one by one
 	--yes, q-p-q-p-q-p is less elegant than q-q-q-p-p-p, but there's no gameplay difference & grid logic is WAY cleaner than with the reserved/vacating stuff
@@ -223,6 +229,9 @@ function love.update(dt)
 				startHeroTurn()
 			end
 		end
+	elseif game.state == "day" then --really?
+		--checking sewy adjacency here instead of in draw()
+		hero.sewyAdjacent = sewyAdjacent() 
 	end
 	
 	checkBGMTimerAndTransition(dt)
@@ -234,8 +243,20 @@ function love.draw()
 	
 	white()
 	
-	drawStage()
+	-- drawStage()
 	
+	if game.state == "title" then
+		drawTitleScreen()
+	elseif game.state == "day" or game.state == "night" then
+		drawStage()
+	end
+	
+	--overlay
+	love.graphics.setColor(255, 255, 255, blackOverlay.alpha)
+	love.graphics.draw(blackOverlay.graphic, 0, 0)
+	
+	white()
+		
 	--DEBUG
 	-- love.graphics.printf("The quick brown fox jumps over the lazy dog.", 0, 0, 64)
 	
@@ -308,19 +329,30 @@ function love.keypressed(key)
 			-- queueEnemyTurn()
 			startEnemyTurn()
 		end
+	elseif game.state == "title" then
+		--start game
+		stageStart(1)
+		--kinda DEBUG TODO
 	end
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-function drawStage()
-	--backgrounds
+function drawTitleScreen()
+	drawBackgrounds()
+end
+
+function drawBackgrounds()
 	love.graphics.draw(backgrounds[bgMain.graphic])
 	
 	if bgNext then
 		love.graphics.setColor(255, 255, 255, bgNext.alpha)
 		love.graphics.draw(backgrounds[bgNext.graphic])
 	end
+end
+
+function drawStage()
+	drawBackgrounds()
 	
 	white()
 	

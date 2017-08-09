@@ -15,7 +15,7 @@ function processEventSets(dt)
 		--if not already finished, process this event 
 		--TODO this stack of ifs is just awfs. DO SOMETHIIING EEHHHH
 		if not e.finished then
-			-- print("processing "..e.class)
+			print("processing "..e.class)
 		
 			if e.class == "gameState" then
 				processGameStateEvent(e)
@@ -51,6 +51,14 @@ function processEventSets(dt)
 			
 			if e.class == "wait" then
 				processWaitEvent(e)
+			end
+			
+			if e.class == "fadeIn" then
+				processFadeInEvent(e)
+			end
+			
+			if e.class == "fadeOut" then
+				processFadeOutEvent(e)
 			end
 		end
 				
@@ -156,13 +164,15 @@ function processBgEvent(e)
 	
 	--what if e.time is 0? TODO
 	
-	bgNext.alpha = bgNext.alpha + math.ceil(256 * eventFrameLength / e.time)
+	bgNext.alpha = bgNext.alpha + 256 * eventFrameLength / e.time
+	-- print(bgNext.alpha, bgMain.alpha)
 	
 	--fade completed? then we're done
 	if bgNext.alpha >= 255 then
 		bgMain = bgNext
 		bgNext = nil
 		e.finished = true
+		-- print("finished\n")
 	end
 end
 
@@ -172,6 +182,34 @@ function processWaitEvent(e)
 	else
 		e.finished = true
 	end
+end
+
+function processFadeOutEvent(e)
+	if blackOverlay.alpha >= 255 then
+		blackOverlay.alpha = 0
+	else
+		blackOverlay.alpha = blackOverlay.alpha + 256 * eventFrameLength / e.time
+	end
+	
+	if blackOverlay.alpha >= 255 then
+		blackOverlay.alpha = 255
+		e.finished = true
+	end
+	-- print(blackOverlay.alpha)
+end
+
+function processFadeInEvent(e)
+	if blackOverlay.alpha <= 0 then
+		blackOverlay.alpha = 255
+	else
+		blackOverlay.alpha = blackOverlay.alpha - 256 * eventFrameLength / e.time
+	end
+	
+	if blackOverlay.alpha <= 0 then
+		blackOverlay.alpha = 0
+		e.finished = true
+	end
+	-- print(blackOverlay.alpha)
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------

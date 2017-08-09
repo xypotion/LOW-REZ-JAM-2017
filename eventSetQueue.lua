@@ -80,8 +80,8 @@ function soundEvent(name)
 	return e
 end
 
--- function soundFadeEvent()
--- end
+function bgmEvent()
+end
 
 --for info popups, stage intros, boss intros, etc
 function screenEvent()
@@ -110,6 +110,24 @@ function waitEvent(time)
 	local e = {
 		class = "wait",
 		time = time or 0.5 --seconds to draw out fade
+	}
+	
+	return e
+end
+
+function fadeOutEvent(time)
+	local e = {
+		class = "fadeOut",
+		time = time or 0.25
+	}
+	
+	return e
+end
+
+function fadeInEvent(time)
+	local e = {
+		class = "fadeIn",
+		time = time or 0.25
 	}
 	
 	return e

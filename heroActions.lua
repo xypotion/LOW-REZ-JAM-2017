@@ -240,5 +240,10 @@ end
 
 function locateHero()
 	local h = getAllCells("hero")[1]
-	return h.y, h.x
+	if h then 
+		return h.y, h.x
+	else 
+		print("hero not found!")
+		return nil, nil
+	end
 end
