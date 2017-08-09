@@ -106,6 +106,7 @@ function love.load()
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
 	bgMain = {graphic = "day1", alpha = 255}
+	bgmTimer = 0
 
 	--find & load autosave for hi scores. also info panels that have been seen? AND maybe change title screen if game beaten?
 	
@@ -186,6 +187,7 @@ function love.load()
 	cellAt(2,2).contents = hero
 	spawnEnemies(stage.startingEnemyList)
 	love.graphics.setFont(love.graphics.newFont(7))
+	currentBGM:play()
 end
 
 function love.update(dt)
@@ -222,6 +224,8 @@ function love.update(dt)
 			end
 		end
 	end
+	
+	checkBGMTimerAndTransition(dt)
 end
 
 function love.draw()

@@ -25,11 +25,16 @@ function loadSounds()
 	
 	bgm = {
 		--just all sources; event can set next, repeat is implied, fade is a separate action
+		battleAIntro = love.audio.newSource("bgm/battleAIntro1.wav"),
+		battleA = love.audio.newSource("bgm/battleA1.wav")
 	}
 	
-	-- currentBGM = 
-	-- currentBGM.setLooping(true)
-	-- nextBGM = 
+	currentBGM = bgm.battleAIntro --DEBUG
+	-- currentBGM:setLooping(true)
+	nextBGM = bgm.battleA
+	
+	print(currentBGM:getDuration())
+	print(nextBGM:getDuration())
 	
 	masterVolume = 1
 end
@@ -37,4 +42,25 @@ end
 function setVolume()
 	--TODO
 	print("attempting to set volume")
+end
+
+function checkBGMTimerAndTransition(dt)
+	if nextBGM then
+		if bgmTimer >= currentBGM:getDuration() then
+			--transition
+			print("transition!", bgmTimer, currentBGM:getDuration())
+			currentBGM:stop()
+			
+			currentBGM = nextBGM
+			nextBGM = nil
+			bgmTimer = 0
+			
+			currentBGM:setLooping(true)
+			currentBGM:play()
+		else
+			bgmTimer = bgmTimer + dt
+		end
+	else
+		
+	end
 end
