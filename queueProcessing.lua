@@ -86,8 +86,10 @@ end
 function processActuationEvent(e)
 	--play sound
 	if e.delta > 0 and e.counter.posSound then
+		sfx[e.counter.posSound]:stop()
 		sfx[e.counter.posSound]:play()
 	elseif e.delta < 1 and e.counter.negSound then
+		sfx[e.counter.negSound]:stop()
 		sfx[e.counter.negSound]:play()
 	end
 	

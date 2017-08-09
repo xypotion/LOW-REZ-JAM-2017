@@ -46,6 +46,7 @@ enemies...
 - come in a few varieties, but not many
   - garby: basic attacks & moves, but will eat powerups if adjacent!
 	  - 6 HP, 1 attack
+		- explodes if it eats too many?
 	- mercuri: acts twice but has low HP
 	  - 4 HP, 1 attack
 	- sewy: can't do special attack if adjacent
@@ -59,6 +60,7 @@ enemies...
 	  - 8 HP, 1 attack, or 2 if restrained?
 	- pharma: heals other enemies on its turn (all +3 HP)
 	  - 8 HP, 1 attack (but always heals if able)
+		- limited casts? or only a chance of doing? hmm
 	- nukey: self-destructs when killed
 	  - 3 HP, 1 attack, 2 dmg for self-destruct
 - drop rewards when defeated ("purified"), either HP bubbles or items (if flashing)
@@ -74,13 +76,15 @@ bosses... 1 for each stage?
 	- have fairly high HP
 * invasive species (algy swap): summons adds? sticky?
 - noise pollution (): strong ranged attack? constant damage over time?
-* heat pollution (nukey swap?): melee attack gets stronger over time? +1 every time it hits?
+* heat pollution (nukey swap?): melee attack gets stronger over time? +1 every time it hits? or +1 if not near hero?
 * light pollution (toxy swap): immune to physical attacks? eek. or takes less damage
 * oil spill! (mercuri swap): sticky?
 - pesticide: constant damage over time
 - 1 of each normal enemy all at once = final boss OR final stage before final boss
 * final boss = humans/"human laziness"? summon garbage adds? any adds?
 - acid rain?
+- something that drains HP when it hits you?
+- garby palette swap that DOES heal fully after eating a powerup
 
 implement enemy syncs if time, but keep very basic. no scaling, maybe even all the same effect
 

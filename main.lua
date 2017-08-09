@@ -127,10 +127,10 @@ function love.load()
 		{empty(), empty(), empty()}
 	}
 	-- stage.startingEnemyList = {"garby", "garby", "garby", "garby", "nukey"}
-	-- stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
+	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
 	-- stage.startingEnemyList = {"algy", "algy"}
 	-- stage.startingEnemyList = {"nukey"}
-	stage.startingEnemyList = {"garby", "garby"}
+	-- stage.startingEnemyList = {"garby", "garby"}
 	stage.enemyList = {
 		{"garby", "garby"},
 		{"toxy", "toxy"},
@@ -157,7 +157,7 @@ function love.load()
 	hero = {
 		class = "hero",
 		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil, quick = false},
-		ap = {max = 3, actual = 3, shown = 3, posSound = nil, negSound = nil, quick = false},
+		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
 		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
 		attack = 3,
 		powers = {},
@@ -273,7 +273,8 @@ function love.keypressed(key)
 		end
 	end
 	if key == "h" then
-		sfx.hpHeal:play()
+		hero.hp.actual = hero.hp.actual + 3
+		queue(actuationEvent(hero.hp, 3))
 	end
 	--END DEBUG
 

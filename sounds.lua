@@ -1,14 +1,10 @@
 --[[
-sfx needed:
-- hero move
-- hero attack
-- hp recovery
-- sp recovery
-- wish/cast
+sfx that need work:
+- attack
 - gluttony
-- enemy heal
+- wish
 - enemy spawn (pop)
-- kill
+- ap gain
 ]]
 
 --features: fading, repeating, swapping to a new source when finished. do we need to separate music and sfx? yes, i think so
@@ -20,10 +16,10 @@ function loadSounds()
 		hp = love.audio.newSource("sfx/hp heal.wav"),
 		sp = love.audio.newSource("sfx/sp heal.wav"),
 		rare = love.audio.newSource("sfx/rare power.wav"),
-		gluttony = love.audio.newSource("sfx/gluttony3.wav"),
+		gluttony = love.audio.newSource("sfx/gluttony4.wav"),
 		pharma = love.audio.newSource("sfx/pharma.wav"),
 		toxy = love.audio.newSource("sfx/toxy.wav"),
-		nukey = love.audio.newSource("sfx/nukey.wav"),
+		nukey = love.audio.newSource("sfx/nukey2.wav"),
 		kill = love.audio.newSource("sfx/kill.wav"),
 	}
 	

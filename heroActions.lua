@@ -194,7 +194,8 @@ function heroSpecialAttack()
 	--and do stuff!
 	
 	--DEBUG
-	attacky = {soundEvent("wish")}
+	hy, hx = locateHero()
+	attacky = {soundEvent("wish"), animEvent(hy, hx, glowAnimFrames())}
 	for y, r in ipairs(stage.field) do --TODO optimize these things before canonizing
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
@@ -205,6 +206,7 @@ function heroSpecialAttack()
 		end
 	end
 	queueSet(attacky)
+	
 	killy = {}
 	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do
