@@ -564,3 +564,71 @@ ROUGH AI
 - mercuri: same but do it twice
 - toxy: move away if adjacent, otherwise shoot (attack)
 - pharma: heal all enemies if any below max HP, otherwise attack, otherwise move closer
+
+
+
+
+
+title screen -> stage 1 .. stage n (-> game over -> continue) -> ending
+- event processing will block input, so just transition between these states via events
+
+game.state = title, credits, game over, day or night (+stage = playing) 
+game.stage set when in a stage
+game.highestStage = 0; Continue only enabled if >= 1
+game.heroStats? are you initializing a new hero for every stage? hmm
+
+all initialized at the start of each stage, including on return from title screen or game over:
+stage.field
+stage.startingEnemyList
+stage.enemyList
+stage.boss
+stage.enemyCount
+stage.powers
+stage.name? number? for flyover graphics (easy to add later if needed)
+stage.dayGraphic/nightGraphic
+
+input, draw, and update separated by game state? i guess? drawFor_, keypressedFor_, updateFor_... but event queue processing is universal?
+
+title, start! -> bgEvent black -> bgEvent night + start music + stage intro -> spawn enemies -> (info popup) -> day
+
+[start -> stage] and [game over -> continue -> stage] should touch the exact same code, actually. "start" starts stage 1, "continue" starts whatever was last
+- definitely don't need a lot of game over fanfare. kill the hero, play a little music, then fade -> black -> title
+
+
+basic info popups to show on 1st Start:
+
+1. Purify the water by destroying pollutants!
+2. Use (arrows) or WASD to move & attack during daytime
+3. Use (spacebar) to make a wish for 1 SP
+4. (blue fish) heals HP, (red fish) heals SP
+
+...then 1 page each for enemies in this order: garby, plasty, mercuri, toxy, algy, sewy?, pharma, nukey
+GARBY - weak, but a glutton...
+PLASTY - hard to break down!
+MERCURI - moves so fast
+TOXY - hurts you from afar. mean!
+ALGY - yuck, don't touch it!
+SEWY - smells so bad!
+PHARMA - good for you... or not?
+NUKEY - danger: unstable elements!
+
+no info popups for bosses? except maybe final boss?
+
+ohh, info popups for powerups, though. ok
+
+if doing 8 normal stages + a final stage & boss, first 8 give set power-ups:
+1. 	HP + 1
+5.	HP + 2
+- 	HP + 3
+3. 	SP + 1
+4. 	AP + 1
+- 	fish heal more at surface
+- 	fish heal more at bottom
+8.  wish heals hero by 3
+- 	wish hurts surrounding enemies
+- 	wish does a row/column laser attack
+7.	attack + 1
+2.	fish heal more AND attack + 1 at surface
+6.	fish heal more AND attack + 1 at bottom
+
+a fun idea if you have time to make all the graphics: let the player choose a powerup after each boss fight (all remaining spawn at once, can take 1)
