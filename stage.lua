@@ -1,6 +1,5 @@
 function stageStart(n)
 	--stage initialization
-	--TODO (enemies, powers, other stage attributes)
 	stage = {}
 	stage.field = {
 		{empty(), empty(), empty()}, 
@@ -8,7 +7,7 @@ function stageStart(n)
 		{empty(), empty(), empty()}
 	}
 
-	--reset hero position & stats
+	--reset hero position & stats. yes, it's OK to do this here. don't panic. possibly change/move later when you implement Continue TODO
 	cellAt(2,2).contents = hero
 	hero.hp.actual = hero.hp.max
 	hero.hp.shown = hero.hp.max
@@ -63,18 +62,18 @@ end
 function allEnemiesAndBossForStage(n)
 	if n == 1 then
 		return 
-		{"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}, --DEBUG
-		{
-			{"garby", "garby"},
-			{"toxy", "toxy"},
-			{"algy", "algy"},
-			{"sewy", "sewy"}, 
-			{"nukey", "nukey"},
-			{"plasty", "plasty"},
-			{"pharma", "pharma"},
-			{"mercuri", "mercuri"},
-		}, 
-		--{{"garby"}, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
+		{"algy"},--, "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}, --DEBUG
+		-- {
+		-- 	{"garby", "garby"},
+		-- 	{"toxy", "toxy"},
+		-- 	{"algy", "algy"},
+		-- 	{"sewy", "sewy"},
+		-- 	{"nukey", "nukey"},
+		-- 	{"plasty", "plasty"},
+		-- 	{"pharma", "pharma"},
+		-- 	{"mercuri", "mercuri"},
+		-- },
+		{{"garby"}, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
 		"invasive species"
 	elseif n == 2 then
 		print("stage 2 enemies...")

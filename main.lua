@@ -44,31 +44,8 @@ function love.load()
 		state = "title"
 	}
 	
-	--init hero TODO load stats from autosave. probably also move elsewhere
-	hero = {
-		class = "hero",
-		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil, quick = false},
-		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
-		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
-		attack = 3,
-		powers = {},
-		pose = "idle",
-		yOffset = 0,
-		xOffset = 0,
-		statusAfflictors = {},
-		sewyAdjacent = false
-	}
-	
-	--who's afflicting the hero? no one! yes, this is hacky, and yes, i should be using getters and setters. don't care right now, though
-	hero.statusAfflictors[11] = "none"
-	hero.statusAfflictors[12] = "none"
-	hero.statusAfflictors[13] = "none"
-	hero.statusAfflictors[21] = "none"
-	hero.statusAfflictors[22] = "none"
-	hero.statusAfflictors[23] = "none"
-	hero.statusAfflictors[31] = "none"
-	hero.statusAfflictors[32] = "none"
-	hero.statusAfflictors[33] = "none"
+	--initialize hero
+	initHero()
 		
 	--fade in to title
 	queue(fadeInEvent(1))

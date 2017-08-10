@@ -171,6 +171,7 @@ function gluttonTurnAt(ey, ex)
 		push(events, poseEvent(target.y, target.x, {{pose = "idle", yOffset = 0, xOffset = 0}}))
 		
 		local need = glutton.hp.max - glutton.hp.actual
+		glutton.hp.actual = glutton.hp.actual + need
 		push(events, actuationEvent(glutton.hp, need))
 		push(events, waitEvent(0.25))
 		
@@ -371,7 +372,7 @@ function spawnEnemies(l)
 	local empties = shuffle(allClearCells())
 	
 	--if there's space, spawn all enemies in list, one by one
-	if table.getn(list) <= table.getn(empties) then		
+	if table.getn(list) <= table.getn(empties) then
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
 			local newEnemy = enemy(en)
@@ -382,6 +383,9 @@ function spawnEnemies(l)
 				cellOpEvent(cell.y, cell.x, newEnemy)
 			})
 		end
+	else
+		--there wasn't enough space! probably gotta loop to get it TODO what you want
+		print("not enough space for "..table.getn(list).." enemies!")
 	end
 end
 

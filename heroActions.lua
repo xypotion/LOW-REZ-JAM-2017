@@ -1,3 +1,33 @@
+function initHero()
+	--init hero
+	hero = {
+		class = "hero",
+		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil, quick = false},
+		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
+		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
+		attack = 3,
+		powers = {},
+		pose = "idle",
+		yOffset = 0,
+		xOffset = 0,
+		statusAfflictors = {},
+		sewyAdjacent = false
+	}
+	
+	--TODO load stats from autosave
+	
+	--who's afflicting the hero? no one! yes, this is hacky, and yes, i should be using getters and setters. don't care right now, though
+	hero.statusAfflictors[11] = "none"
+	hero.statusAfflictors[12] = "none"
+	hero.statusAfflictors[13] = "none"
+	hero.statusAfflictors[21] = "none"
+	hero.statusAfflictors[22] = "none"
+	hero.statusAfflictors[23] = "none"
+	hero.statusAfflictors[31] = "none"
+	hero.statusAfflictors[32] = "none"
+	hero.statusAfflictors[33] = "none"
+end
+
 function startHeroTurn()
 	--reset hero AP
 	hero.ap.actual = hero.ap.max
@@ -154,23 +184,35 @@ function heroFight(y, x, dy, dx)
 	
 	--kill if at 0 HP
 	if target.hp.actual <= 0 then
-		--dead; queue removal from grid & enemy count decrement TODO
-		if target.drop then
-			queueSet({
-				cellOpEvent(ty, tx, clear()), --probably unnecessary? TODO
-				cellOpEvent(ty, tx, newPower(target.drop)),
-				soundEvent("kill")
-				--counter stuff TODO
-			})
-		else
-			queue(cellOpEvent(ty, tx, clear()))
-		end
-		
-		--remove stick status "pointer"
-		queue(statusEvent(ty, tx, "none"))
+		killEnemy(ty, tx)
 	end
 
 	processNow()
+end
+
+function killEnemy(ty, tx)
+	local target = cellAt(ty, tx).contents
+	
+	--decrement enemy counter
+	stage.enemyCount.actual = stage.enemyCount.actual - 1
+
+	--drop an item (removing enemy), play sound, actuate count decrement
+	if target.drop then
+		queueSet({
+			cellOpEvent(ty, tx, clear()), --probably unnecessary? TODO
+			cellOpEvent(ty, tx, newPower(target.drop)),
+			soundEvent("kill"),
+			--counter stuff TODO
+			actuationEvent(stage.enemyCount, -1)
+		})
+	else
+		queue(cellOpEvent(ty, tx, clear())) --also unnecessary? TODO or if you're in boss mode & enemies don't drop stuff, handle differently...?
+	end
+	
+	--remove stick status "pointer"
+	queue(statusEvent(ty, tx, "none"))
+	
+	if stage.enemyCount.actual == 0 then print ("time to queue a boss?!?!?!") end
 end
 
 function heroSpecialAttack()
@@ -194,7 +236,7 @@ function heroSpecialAttack()
 	--DEBUG
 	hy, hx = locateHero()
 	attacky = {soundEvent("wish"), animEvent(hy, hx, glowAnimFrames())}
-	for y, r in ipairs(stage.field) do --TODO optimize these things before canonizing
+	for y, r in ipairs(stage.field) do --TODO optimize these things before canonizing. use getCells() or something
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
 				c.contents.hp.actual = c.contents.hp.actual - 1
@@ -205,19 +247,17 @@ function heroSpecialAttack()
 	end
 	queueSet(attacky)
 	
-	killy = {}
+	--looping again after attacking so that deaths happen after damage animactuation
 	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
 				if c.contents.hp.actual <= 0 then
-					push(killy, cellOpEvent(y, x, clear()))
+					killEnemy(y, x)
 				end
 			end
 		end
 	end
-	queueSet(killy)
-	--END DEBUG
-	--also refer to heroFight for all the things that have to happen. probably refactor & condense a lot of it
+	--END DEBUG TODO still not what you want this attack to do, but it's... cleaner? should pick 3 and do 3 damage to each...
 	
 	processNow()
 end

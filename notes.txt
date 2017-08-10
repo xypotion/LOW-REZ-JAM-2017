@@ -630,6 +630,7 @@ if doing 8 normal stages + a final stage & boss, first 8 give set power-ups:
 - 	fish heal more at bottom
 - 	wish hurts surrounding enemies
 - 	wish does a row/column laser attack
+?		wish hits all enemies?
 *		attack + 1 if HP full
 * 	all fish also heal 1 AP
 *		blue fish heal 3 HP
