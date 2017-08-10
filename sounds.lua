@@ -30,14 +30,14 @@ function loadSounds()
 		battleA = love.audio.newSource("bgm/battleA1.wav")
 	}
 	
-	currentBGM = bgm.battleAIntro --DEBUG
+	--DEBUG
+	-- currentBGM = bgm.battleAIntro 
 	-- currentBGM:setLooping(true)
-	nextBGM = bgm.battleA
-	
-	print(currentBGM:getDuration())
-	print(nextBGM:getDuration())
+	-- nextBGM = bgm.battleA
+	--END DEBUG
 	
 	masterVolume = 1
+	bgmTimer = 0
 end
 
 function setVolume()

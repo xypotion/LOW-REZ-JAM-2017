@@ -6,6 +6,7 @@ require "animScripts"
 require "powers"
 require "sounds"
 require "stage"
+require "graphics"
 
 function love.load()
 	--initial setup stuff & constants
@@ -16,90 +17,9 @@ function love.load()
 	
 	cellD = 15 --D as in "dimension"
 	
-	--load graphics
-	grid = love.graphics.newImage("img/grid.png")
-	sheet_player = love.graphics.newImage("img/sheet_player.png")
-	enemySheets = {
-		toxy = love.graphics.newImage("img/sheet_toxy.png"),
-		mercuri = love.graphics.newImage("img/sheet_mercuri.png"),
-		algy = love.graphics.newImage("img/sheet_algy.png"),
-		sewy = love.graphics.newImage("img/sheet_sewy.png"),
-		garby = love.graphics.newImage("img/sheet_garby.png"),
-		plasty = love.graphics.newImage("img/sheet_plasty.png"),
-		pharma = love.graphics.newImage("img/sheet_pharma.png"),
-		nukey = love.graphics.newImage("img/sheet_nukey.png")
-	}
-	sheet_effects = love.graphics.newImage("img/effects.png")
-	ui = love.graphics.newImage("img/ui.png")
-	powerSheet = love.graphics.newImage("img/powers.png")
-	
-	backgrounds = {
-		title1 = love.graphics.newImage("img/title1.png"),
-		day1 = love.graphics.newImage("img/bg_day1.png"),
-		night1 = love.graphics.newImage("img/bg_night1.png")
-	}
-	
-	blackOverlay = {graphic = love.graphics.newImage("img/black.png"), alpha = 255}
-	
-	--init quads
-	quads_idle = {
-		love.graphics.newQuad(0, 0, 16, 16, 64, 64),
-		love.graphics.newQuad(0, 16, 16, 16, 64, 64),
-		love.graphics.newQuad(0, 32, 16, 16, 64, 64),
-		love.graphics.newQuad(0, 48, 16, 16, 64, 64)
-	} --TODO probably quads_poses or something would be better, and put them all in here
-	
-	characterQuads = {
-		idle = {
-			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
-			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
-			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
-			love.graphics.newQuad(0, 48, 16, 16, 64, 64)
-		},
-		casting = {
-			love.graphics.newQuad(16, 0, 16, 16, 64, 64),
-			love.graphics.newQuad(16, 16, 16, 16, 64, 64),
-			love.graphics.newQuad(16, 32, 16, 16, 64, 64),
-			love.graphics.newQuad(16, 48, 16, 16, 64, 64)
-		},
-		stuck = {
-			love.graphics.newQuad(32, 0, 16, 16, 64, 64),
-			love.graphics.newQuad(32, 16, 16, 16, 64, 64),
-			love.graphics.newQuad(32, 32, 16, 16, 64, 64),
-			love.graphics.newQuad(32, 48, 16, 16, 64, 64)
-		}
-	}
-	
-	powerQuads = {
-		blueFish = {
-			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
-			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
-		},
-		redFish = {
-			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
-			love.graphics.newQuad(0, 48, 16, 16, 64, 64),
-		}
-	}
-	
-	quads_ui = {
-		hp = love.graphics.newQuad(0, 0, 9, 5, 64, 64),
-		hpT = love.graphics.newQuad(10, 0, 3, 5, 64, 64),
-		hpF = love.graphics.newQuad(14, 0, 3, 5, 64, 64),
-		ap = love.graphics.newQuad(0, 6, 9, 5, 64, 64),
-		apT1 = love.graphics.newQuad(10, 6, 5, 5, 64, 64),
-		apF1 = love.graphics.newQuad(16, 6, 5, 5, 64, 64),
-		apT2 = love.graphics.newQuad(22, 6, 4, 5, 64, 64),
-		apF2 = love.graphics.newQuad(27, 6, 4, 5, 64, 64),
-		sp = love.graphics.newQuad(0, 12, 9, 5, 64, 64),
-		spT1 = love.graphics.newQuad(10, 12, 5, 5, 64, 64),
-		spF1 = love.graphics.newQuad(16, 12, 5, 5, 64, 64),
-		spT2 = love.graphics.newQuad(22, 12, 4, 5, 64, 64),
-		spF2 = love.graphics.newQuad(27, 12, 4, 5, 64, 64),
-		stink = {
-			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
-			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
-		}
-	}
+	--load graphics & quads
+	loadGraphics()
+	loadQuads()
 	
 	initAnimFrames()
 	
@@ -109,58 +29,22 @@ function love.load()
 	--init canvas & other graphics stuff
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
-	-- bgMain = {graphic = "day1", alpha = 255}
-	bgMain = {graphic = "title1", alpha = 255}
-	bgmTimer = 0
+	bgMain = {graphic = "title1", alpha = 255} --TODO opening title changes if you've beaten the game?
+	love.graphics.setFont(love.graphics.newFont(7))
 
-	--find & load autosave for hi scores. also info panels that have been seen? AND maybe change title screen if game beaten?
+	--find & load autosave for progress, hero's current inventory (8 bools, i think), and enemy info panels seen. pretty simple
 	
 	--init mechanical variables
-	frame = 0 --for idle animations only? figure it out TODO
-	eventFrame = 0
+	frame = 0 --for idle animations and UI animations only
+	eventFrame = 0 --for other animations (casting, poseEvents, etc)
 	eventFrameLength = 0.05
 	eventSetQueue = {}
-	inputLevel = "normal" --TODO should be a stack, not a string
+	inputLevel = "normal" --TODO should be a stack, not a string?
 	game = {
 		state = "title"
-		-- state = "day"
 	}
 	
-	--init stage variables (KINDA DEBUG)
-	stage = {}
-	stage.field = {
-		{empty(), empty(), empty()}, 
-		{empty(), empty(), empty()}, 
-		{empty(), empty(), empty()}
-	}
-	-- stage.startingEnemyList = {"garby", "garby", "garby", "garby", "nukey"}
-	stage.startingEnemyList = {"mercuri", "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}
-	-- stage.startingEnemyList = {"algy", "algy"}
-	-- stage.startingEnemyList = {"nukey"}
-	-- stage.startingEnemyList = {"garby", "garby"}
-	stage.enemyList = {
-		{"garby", "garby"},
-		{"toxy", "toxy"},
-		{"algy", "algy"},
-		{"sewy", "sewy"}, 
-		{"nukey", "nukey"},
-		{"plasty", "plasty"},
-		{"pharma", "pharma"},
-		{"mercuri", "mercuri"},
-	}
-	-- stage.enemyList = {{"garby"}, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}}
-	stage.enemyList = shuffle(stage.enemyList)
-	-- stage.boss = "invasive species"
-	
-	stage.powers = {} --DEBUG
-	for i = 1, 10 do
-		push(stage.powers, "blueFish")
-		push(stage.powers, "blueFish")
-		push(stage.powers, "redFish")
-	end
-	stage.powers = shuffle(stage.powers)
-	
-	--init hero
+	--init hero TODO load stats from autosave. probably also move elsewhere
 	hero = {
 		class = "hero",
 		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil, quick = false},
@@ -186,17 +70,8 @@ function love.load()
 	hero.statusAfflictors[32] = "none"
 	hero.statusAfflictors[33] = "none"
 		
-	--display title
-	-- queue(bgEvent("title1", 1))
-	-- blackOverlay = {alpha = 255}
+	--fade in to title
 	queue(fadeInEvent(1))
-
-	--DEBUG
-	--stageStart(1) TODO but also move elsewhere
-	cellAt(2,2).contents = hero
-	spawnEnemies(stage.startingEnemyList)
-	-- love.graphics.setFont(love.graphics.newFont(7))
-	-- currentBGM:play()
 end
 
 function love.update(dt)
@@ -225,7 +100,8 @@ function love.update(dt)
 				--...queue a turn!
 				queueFullEnemyTurn(en.y, en.x)
 			else
-				--otherwise, no enemies found that have AP, so back to player
+				--otherwise, no enemies found that have AP, so spawn enemies, then back to player
+				spawnEnemies()
 				startHeroTurn()
 			end
 		end

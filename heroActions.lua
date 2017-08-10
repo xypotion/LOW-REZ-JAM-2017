@@ -1,7 +1,4 @@
 function startHeroTurn()
-	--probably don't put this here (TODO), but spawn enemies
-	spawnEnemies()
-	
 	--reset hero AP
 	hero.ap.actual = hero.ap.max
 	

@@ -1,0 +1,84 @@
+function loadGraphics()
+	grid = love.graphics.newImage("img/grid.png") --TODO remove, i guess
+	
+	sheet_player = love.graphics.newImage("img/sheet_player.png")
+	
+	enemySheets = {
+		toxy = love.graphics.newImage("img/sheet_toxy.png"),
+		mercuri = love.graphics.newImage("img/sheet_mercuri.png"),
+		algy = love.graphics.newImage("img/sheet_algy.png"),
+		sewy = love.graphics.newImage("img/sheet_sewy.png"),
+		garby = love.graphics.newImage("img/sheet_garby.png"),
+		plasty = love.graphics.newImage("img/sheet_plasty.png"),
+		pharma = love.graphics.newImage("img/sheet_pharma.png"),
+		nukey = love.graphics.newImage("img/sheet_nukey.png")
+	}
+	
+	sheet_effects = love.graphics.newImage("img/effects.png")
+	
+	ui = love.graphics.newImage("img/ui.png")
+	
+	powerSheet = love.graphics.newImage("img/powers.png")
+	
+	backgrounds = {
+		title1 = love.graphics.newImage("img/title1.png"),
+		day1 = love.graphics.newImage("img/bg_day1.png"),
+		night1 = love.graphics.newImage("img/bg_night1.png")
+	}
+	
+	blackOverlay = {graphic = love.graphics.newImage("img/black.png"), alpha = 255}
+end
+
+function loadQuads()	
+	characterQuads = {
+		idle = {
+			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 48, 16, 16, 64, 64)
+		},
+		casting = {
+			love.graphics.newQuad(16, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(16, 16, 16, 16, 64, 64),
+			love.graphics.newQuad(16, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(16, 48, 16, 16, 64, 64)
+		},
+		stuck = {
+			love.graphics.newQuad(32, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(32, 16, 16, 16, 64, 64),
+			love.graphics.newQuad(32, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(32, 48, 16, 16, 64, 64)
+		}
+	}
+	
+	powerQuads = {
+		blueFish = {
+			love.graphics.newQuad(0, 0, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 16, 16, 16, 64, 64),
+		},
+		redFish = {
+			love.graphics.newQuad(0, 32, 16, 16, 64, 64),
+			love.graphics.newQuad(0, 48, 16, 16, 64, 64),
+		}
+	}
+	
+	quads_ui = {
+		hp = love.graphics.newQuad(0, 0, 9, 5, 64, 64),
+		hpT = love.graphics.newQuad(10, 0, 3, 5, 64, 64),
+		hpF = love.graphics.newQuad(14, 0, 3, 5, 64, 64),
+		ap = love.graphics.newQuad(0, 6, 9, 5, 64, 64),
+		apT1 = love.graphics.newQuad(10, 6, 5, 5, 64, 64),
+		apF1 = love.graphics.newQuad(16, 6, 5, 5, 64, 64),
+		apT2 = love.graphics.newQuad(22, 6, 4, 5, 64, 64),
+		apF2 = love.graphics.newQuad(27, 6, 4, 5, 64, 64),
+		sp = love.graphics.newQuad(0, 12, 9, 5, 64, 64),
+		spT1 = love.graphics.newQuad(10, 12, 5, 5, 64, 64),
+		spF1 = love.graphics.newQuad(16, 12, 5, 5, 64, 64),
+		spT2 = love.graphics.newQuad(22, 12, 4, 5, 64, 64),
+		spF2 = love.graphics.newQuad(27, 12, 4, 5, 64, 64),
+		stink = {
+			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
+			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
+		}
+	}
+end

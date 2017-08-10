@@ -15,7 +15,7 @@ function processEventSets(dt)
 		--if not already finished, process this event 
 		--TODO this stack of ifs is just awfs. DO SOMETHIIING EEHHHH
 		if not e.finished then
-			print("processing "..e.class)
+			-- print("processing "..e.class)
 		
 			if e.class == "gameState" then
 				processGameStateEvent(e)

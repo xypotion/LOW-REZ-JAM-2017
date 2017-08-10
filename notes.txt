@@ -618,17 +618,22 @@ ohh, info popups for powerups, though. ok
 
 if doing 8 normal stages + a final stage & boss, first 8 give set power-ups:
 1. 	HP + 1
-5.	HP + 2
-- 	HP + 3
+2.	fish heal more AND attack + 1 at surface
 3. 	SP + 1
 4. 	AP + 1
+5.	HP + 2
+6.	fish heal more AND attack + 1 at bottom
+7.	attack + 1
+8.  wish heals hero by 3 HP
+- 	HP + 3
 - 	fish heal more at surface
 - 	fish heal more at bottom
-8.  wish heals hero by 3
 - 	wish hurts surrounding enemies
 - 	wish does a row/column laser attack
-7.	attack + 1
-2.	fish heal more AND attack + 1 at surface
-6.	fish heal more AND attack + 1 at bottom
+*		attack + 1 if HP full
+* 	all fish also heal 1 AP
+*		blue fish heal 3 HP
+*		red fish heal 2 SP
+?		all increase HP by 1? start really weak?
 
 a fun idea if you have time to make all the graphics: let the player choose a powerup after each boss fight (all remaining spawn at once, can take 1)
