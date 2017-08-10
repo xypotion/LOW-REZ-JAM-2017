@@ -80,7 +80,15 @@ function soundEvent(name)
 	return e
 end
 
-function bgmEvent()
+function bgmEvent(nowName, nextName)
+	local e = {
+		class = "bgm",
+		current = nowName,
+		next = nextName
+	}
+	
+	return e
+
 end
 
 --for info popups, stage intros, boss intros, etc

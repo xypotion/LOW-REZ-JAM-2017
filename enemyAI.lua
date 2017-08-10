@@ -368,22 +368,21 @@ function spawnEnemies(l)
 	
 	if not list then return end --...or after. TODO eh
 	
-	local events = {}
 	local empties = shuffle(allClearCells())
 	
-	--if there's space, spawn all enemies in list
+	--if there's space, spawn all enemies in list, one by one
 	if table.getn(list) <= table.getn(empties) then		
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
 			local newEnemy = enemy(en)
 			newEnemy.drop = pop(stage.powers)
-			push(events, cellOpEvent(cell.y, cell.x, newEnemy))
-			-- push(events, soundEvent("pop"))
+			queueSet({
+				waitEvent(0.25),
+				soundEvent("tick"),
+				cellOpEvent(cell.y, cell.x, newEnemy)
+			})
 		end
 	end
-	
-	--actually queue the spawn events
-	queueSet(events)
 end
 
 function enemy(species)

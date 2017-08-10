@@ -79,6 +79,9 @@ function loadQuads()
 		stink = {
 			love.graphics.newQuad(0, 18, 30, 5, 64, 64),
 			love.graphics.newQuad(0, 24, 30, 5, 64, 64),
-		}
+		},
+		enemiesLeft = love.graphics.newQuad(52, 0, 12, 5, 64, 64),
+		enemyAlive = love.graphics.newQuad(52, 6, 3, 2, 64, 64),
+		enemyDead = love.graphics.newQuad(56, 6, 3, 2, 64, 64), --TODO decide if you actually want this
 	}
 end

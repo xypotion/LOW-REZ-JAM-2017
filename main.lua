@@ -214,10 +214,6 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-function drawTitleScreen()
-	drawBackgrounds()
-end
-
 function drawBackgrounds()
 	love.graphics.draw(backgrounds[bgMain.graphic])
 	
@@ -225,6 +221,10 @@ function drawBackgrounds()
 		love.graphics.setColor(255, 255, 255, bgNext.alpha)
 		love.graphics.draw(backgrounds[bgNext.graphic])
 	end
+end
+
+function drawTitleScreen()
+	drawBackgrounds()
 end
 
 function drawStage()
@@ -252,6 +252,13 @@ function drawStage()
 				drawCellOverlay(c, y, x)
 			end
 		end
+	end
+	
+	--draw enemy counter
+	love.graphics.draw(ui, quads_ui.enemiesLeft, 51, 8)
+	for i = 0, stage.enemyCount.shown - 1 do
+		-- love.graphics.draw(ui, quads_ui.enemyAlive, 51 - i, 14 + i)
+		love.graphics.draw(ui, quads_ui.enemyAlive, 51 + (i % 3) * 4, 14 + math.floor(i / 3) * 3)
 	end
 	
 	--this is suuuuch a hack to get gluttons to draw on top of their food. OK if it doesn't hurt performance. shame on you, either way.

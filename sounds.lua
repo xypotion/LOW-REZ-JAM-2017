@@ -21,6 +21,7 @@ function loadSounds()
 		toxy = love.audio.newSource("sfx/toxy.wav"),
 		nukey = love.audio.newSource("sfx/nukey2.wav"),
 		kill = love.audio.newSource("sfx/kill.wav"),
+		tick = love.audio.newSource("sfx/tick.wav"),
 		-- pop = love.audio.newSource("sfx/pop3.mp3"), --not really needed!
 	}
 	
@@ -45,6 +46,7 @@ function setVolume()
 	print("attempting to set volume")
 end
 
+--if there is a nextBGM and currentBGM has finished, set current to next and play that on loop
 function checkBGMTimerAndTransition(dt)
 	if nextBGM then
 		if bgmTimer >= currentBGM:getDuration() then
@@ -62,6 +64,6 @@ function checkBGMTimerAndTransition(dt)
 			bgmTimer = bgmTimer + dt
 		end
 	else
-		
+		--?
 	end
 end

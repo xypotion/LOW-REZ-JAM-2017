@@ -83,7 +83,7 @@ bosses... 1 for each stage?
 - 1 of each normal enemy all at once = final boss OR final stage before final boss
 * final boss = humans/"human laziness"? summon garbage adds? any adds?
 - acid rain?
-- something that drains HP when it hits you?
+- something that drains HP when it hits you? or just automatically heals 3 HP every turn?
 - garby palette swap that DOES heal fully after eating a powerup
 
 implement enemy syncs if time, but keep very basic. no scaling, maybe even all the same effect

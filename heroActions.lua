@@ -154,12 +154,13 @@ function heroFight(y, x, dy, dx)
 	
 	--kill if at 0 HP
 	if target.hp.actual <= 0 then
-		--dead; queue removal from grid
+		--dead; queue removal from grid & enemy count decrement TODO
 		if target.drop then
 			queueSet({
 				cellOpEvent(ty, tx, clear()), --probably unnecessary? TODO
 				cellOpEvent(ty, tx, newPower(target.drop)),
 				soundEvent("kill")
+				--counter stuff TODO
 			})
 		else
 			queue(cellOpEvent(ty, tx, clear()))

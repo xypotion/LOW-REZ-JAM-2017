@@ -45,6 +45,10 @@ function processEventSets(dt)
 				processSoundEvent(e)
 			end
 			
+			if e.class == "bgm" then
+				processBgmEvent(e)
+			end
+			
 			if e.class == "bg" then
 				processBgEvent(e)
 			end
@@ -153,8 +157,24 @@ function processSoundEvent(e)
 	e.finished = true
 end
 
+function processBgmEvent(e)
+	currentBGM = bgm[e.current]
+	currentBGM:play()
+	bgmTimer = 0
+	
+	--if there is a next, set up for transition later. otherwise, loop current now
+	if e.next then
+		nextBGM = bgm[e.next]
+	else
+		currentBGM:setLooping(true)
+		nextBGM = nil
+	end
+	
+	e.finished = true
+end
 
 function processScreenEvent()
+	--TODO remove? was this going to be title/fade? lol
 end
 
 function processBgEvent(e)
