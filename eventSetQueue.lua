@@ -20,7 +20,7 @@ function cellOpEvent(y, x, thing)
 end
 
 --for updating visible counters to their actual values
---counter = {actual, shown, posSound, negSound, quick}
+--counter = {actual, shown, posSound, negSound}
 function actuationEvent(c, d)
 	local e = {
 		class = "actuation",
@@ -67,14 +67,12 @@ function animEvent(y, x, f)--fx, f)
 	return e
 end
 
---for starting or stopping (? TODO) sounds
+--for starting or stopping sounds
 function soundEvent(name)
 	local e = {
 		class = "sound",
 		soundName = name
-		--next sound
-		--repeatTimes
-		--TODO what if you're fading music in or out?
+		--repeatTimes TODO probably the best way to do a good gluttony sound
 	}
 	
 	return e
@@ -88,7 +86,10 @@ function bgmEvent(nowName, nextName)
 	}
 	
 	return e
+end
 
+function bgmFadeEvent()
+	--TODO
 end
 
 --for info popups, stage intros, boss intros, etc

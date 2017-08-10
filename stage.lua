@@ -30,7 +30,7 @@ function stageStart(n)
 	stage.powers = shuffle(stage.powers)
 	
 	--count enemies
-	stage.enemyCount = {max = 0, actual = 0, shown = 0, posSound = "tick", negSound = nil, quick = false} --TODO remove "quick". it's not a thing
+	stage.enemyCount = {max = 0, actual = 0, shown = 0, posSound = "tick", negSound = nil}
 	for k, v in pairs(stage.startingEnemyList) do
 		stage.enemyCount.max = stage.enemyCount.max + 1
 	end
@@ -46,7 +46,6 @@ function stageStart(n)
 	queue(fadeOutEvent())
 	queue(gameStateEvent("state", "night"))
 	queue(bgEvent("night1", 0))
-	-- currentBGM:play() --TODO a queueable music event, i think?
 	queue(bgmEvent("battleAIntro", "battleA"))
 	queue(fadeInEvent())
 	

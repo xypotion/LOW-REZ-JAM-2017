@@ -86,15 +86,12 @@ function processGameStateEvent(e)
 	e.finished = true
 end
 
---TODO sound? moving, enemy kills...
 function processCellOpEvent(e)
 	cellAt(e.y, e.x).contents = e.payload
 		
 	e.finished = true
 end
 
---TODO "quick" actuations
---TODO pos/neg sounds
 function processActuationEvent(e)
 	--play sound
 	if e.delta > 0 and e.counter.posSound then
@@ -171,10 +168,6 @@ function processBgmEvent(e)
 	end
 	
 	e.finished = true
-end
-
-function processScreenEvent()
-	--TODO remove? was this going to be title/fade? lol
 end
 
 function processBgEvent(e)

@@ -29,7 +29,7 @@ function love.load()
 	--init canvas & other graphics stuff
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
-	bgMain = {graphic = "title1", alpha = 255} --TODO opening title changes if you've beaten the game?
+	bgMain = {graphic = "title1", alpha = 255} --TODO opening title changes if you've beaten the game. do if time!
 	love.graphics.setFont(love.graphics.newFont(7))
 
 	--find & load autosave for progress, hero's current inventory (8 bools, i think), and enemy info panels seen. pretty simple
@@ -62,8 +62,7 @@ function love.update(dt)
 	end
 	
 	--queue enemy turns one by one
-	--yes, q-p-q-p-q-p is less elegant than q-q-q-p-p-p, but there's no gameplay difference & grid logic is WAY cleaner than with the reserved/vacating stuff
-	--TODO ...but maybe move elsewhere
+	--TODO maybe move elsewhere
 	if game.state == "night" then
 		--if event queue is empty...?
 		if not peek(eventSetQueue) then
@@ -179,13 +178,12 @@ function love.keypressed(key)
 		
 		--queue night & end of player turn TODO feels pretty weird to be doing this here tbh. at least move to playerAction() or something
 		if hero.ap.actual <= 0 then
-			-- queueEnemyTurn()
 			startEnemyTurn()
 		end
 	elseif game.state == "title" then
 		--start game
 		stageStart(1)
-		--kinda DEBUG TODO
+		--kinda DEBUG TODO an actual menu! Start, Continue, Credits
 	end
 end
 
@@ -252,6 +250,7 @@ function drawCellContents(obj, y, x)
 		if heroStuck() then
 			love.graphics.draw(sheet_player, characterQuads["stuck"][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		else
+			--does this make sense? (if you ever get around to adding a casting animation for the hero,) won't you still want the "stuck" sprite? TODO
 			love.graphics.draw(sheet_player, characterQuads[obj.pose][getCharacterAnimFrame()], cellD * x - 13 + obj.xOffset, cellD * y - 13 + obj.yOffset)
 		end
 	elseif obj.class == "enemy" then
@@ -400,5 +399,9 @@ end
 
 --i'm honestly a little freaked out that you can use this to SET cell attributes, but i guess that's what "pass by reference" is all about. ok! i guess!!
 function cellAt(y, x)
-	return stage.field[y][x]
+	if stage.field[y] then
+		return stage.field[y][x]
+	else
+		return nil
+	end
 end

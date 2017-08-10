@@ -45,7 +45,6 @@ function locationsOfAllEnemiesWithAP()
 			end
 		end
 	end
-	
 	--TODO COULD optimize this, or not since it will be obsolete when you change enemy turn order code
 	
 	return arr
@@ -85,8 +84,6 @@ function healerTurnAt(ey, ex)
 	
 	--heal all if any are hurt, otherwise act like melee
 	if hurt then
-		--TODO casting pose for the healer
-		
 		local es = {}
 		for i, c in pairs(enemyCells) do
 			--get difference; can heal a max of 3 HP
@@ -219,6 +216,8 @@ function enemyAttackHero(ey, ex)
 end
 
 --real talk: TODO you gotta implement a* or something because this algo is awkward. hiding behind your friend is not the same as approaching your target
+	--maybe just always favor moving towards center? hack, but it would halfway fix this. not perfect, though
+	--find distance to hero, recurse outward (somehow), scoring potential destinations? ehhhh? or look up a* :|
 function enemyApproachHero(ey, ex)
 	local emptyNeighbors = getAdjacentCells(ey, ex, "clear")
 	local hy, hx = locateHero()
@@ -364,10 +363,9 @@ end of each night:
 --...but when do you announce the boss & change the UI?
 
 function spawnEnemies(l)
-	--if not provided, get list of enemy species by popping off the stage's enemy list
-	local list = l or pop(stage.enemyList) --TODO check this before popping
-	
-	if not list then return end --...or after. TODO eh
+	--if not provided, get list of enemy species by popping off the stage's enemy list. if none, then return
+	local list = l or pop(stage.enemyList)
+	if not list then return end
 	
 	local empties = shuffle(allClearCells())
 	
@@ -384,7 +382,7 @@ function spawnEnemies(l)
 			})
 		end
 	else
-		--there wasn't enough space! probably gotta loop to get it TODO what you want
+		--there wasn't enough space! probably gotta loop through all to get it TODO what you want
 		print("not enough space for "..table.getn(list).." enemies!")
 	end
 end
@@ -396,8 +394,8 @@ function enemy(species)
 		species = species,
 		pose = "idle",
 		ai = "melee",
-		hp = {max = 5, actual = 0, shown = 0, posSound = nil, negSound = nil, quick = true},
-		ap = {max = 1, actual = 0, shown = 0, posSound = nil, negSound = nil, quick = false},
+		hp = {max = 5, actual = 0, shown = 0, posSound = nil, negSound = nil},
+		ap = {max = 1, actual = 0, shown = 0, posSound = nil, negSound = nil},
 		attack = 1,
 		yOffset = 0,
 		xOffset = 0

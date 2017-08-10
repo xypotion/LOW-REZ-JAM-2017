@@ -2,9 +2,9 @@ function initHero()
 	--init hero
 	hero = {
 		class = "hero",
-		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil, quick = false},
-		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
-		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil, quick = false},
+		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil},
+		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
+		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
 		attack = 3,
 		powers = {},
 		pose = "idle",
@@ -45,12 +45,12 @@ function reduceHeroAP()
 	queue(actuationEvent(hero.ap, -1))
 end
 
-function heroImpetus(dy, dx) --TODO rename playerImpetus
+function heroImpetus(dy, dx)
 	local y, x = locateHero()
 	
-	--see what lies ahead TODO this can still be optimized
+	--see what lies ahead
 	local destClass = nil
-	if stage.field[y + dy] and stage.field[y + dy][x + dx] then
+	if cellAt(y + dy, x + dx) then
 		destClass = cellAt(y + dy, x + dx).contents.class
 	else
 		--seems like you're trying to move off the grid, so...
@@ -84,7 +84,7 @@ function heroImpetus(dy, dx) --TODO rename playerImpetus
 	end
 end
 
---TODO probably rename
+--merge with enemyMoveTo() somehow TODO (maybe)
 function heroMove(y, x, dy, dx)
 	local ty, tx = y + dy, x + dx
 	
@@ -114,7 +114,6 @@ function heroMove(y, x, dy, dx)
 	processNow()
 end
 
---TODO probably rename
 function heroGetPowerUp(y, x, dy, dx)
 	local ty, tx = y + dy, x + dx
 	
@@ -151,7 +150,6 @@ function heroGetPowerUp(y, x, dy, dx)
 	processNow()
 end
 
---TODO clean up, maybe rename
 function heroFight(y, x, dy, dx)
 	local ty, tx = y + dy, x + dx
 	local target = cellAt(ty, tx).contents
@@ -199,10 +197,8 @@ function killEnemy(ty, tx)
 	--drop an item (removing enemy), play sound, actuate count decrement
 	if target.drop then
 		queueSet({
-			cellOpEvent(ty, tx, clear()), --probably unnecessary? TODO
 			cellOpEvent(ty, tx, newPower(target.drop)),
 			soundEvent("kill"),
-			--counter stuff TODO
 			actuationEvent(stage.enemyCount, -1)
 		})
 	else
@@ -216,13 +212,11 @@ function killEnemy(ty, tx)
 end
 
 function heroSpecialAttack()
+	--NOPE if sewy adjacent
 	if hero.sp.actual <= 0 or hero.sewyAdjacent then
-		--TODO some kind of error feedback? or is silence OK?
 		return
 	end
-	
-	--TODO don't allow casting if no enemies present? or do? :o maybe if all of stage's enemies are dead?
-	
+		
 	--reduce SP and AP
 	hero.sp.actual = hero.sp.actual - 1
 	hero.ap.actual = hero.ap.actual - 1
@@ -236,7 +230,7 @@ function heroSpecialAttack()
 	--DEBUG
 	hy, hx = locateHero()
 	attacky = {soundEvent("wish"), animEvent(hy, hx, glowAnimFrames())}
-	for y, r in ipairs(stage.field) do --TODO optimize these things before canonizing. use getCells() or something
+	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
 				c.contents.hp.actual = c.contents.hp.actual - 1
@@ -257,7 +251,7 @@ function heroSpecialAttack()
 			end
 		end
 	end
-	--END DEBUG TODO still not what you want this attack to do, but it's... cleaner? should pick 3 and do 3 damage to each...
+	--END DEBUG TODO this attack should pick 3 and do 3 damage to each
 	
 	processNow()
 end

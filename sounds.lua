@@ -25,6 +25,8 @@ function loadSounds()
 		-- pop = love.audio.newSource("sfx/pop3.mp3"), --not really needed!
 	}
 	
+	-- TODO i think reduce volume for all sfx. can't think of a way to just INCREASE bgm volume. oh, well
+	
 	bgm = {
 		--just all sources; event can set next, repeat is implied, fade is a separate action
 		battleAIntro = love.audio.newSource("bgm/battleAIntro1.wav"),
@@ -42,7 +44,7 @@ function loadSounds()
 end
 
 function setVolume()
-	--TODO
+	--TODO for fades and "V"
 	print("attempting to set volume")
 end
 

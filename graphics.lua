@@ -1,5 +1,5 @@
 function loadGraphics()
-	grid = love.graphics.newImage("img/grid.png") --TODO remove, i guess
+	-- grid = love.graphics.newImage("img/grid.png") --TODO remove, i guess
 	
 	sheet_player = love.graphics.newImage("img/sheet_player.png")
 	
