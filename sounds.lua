@@ -25,19 +25,16 @@ function loadSounds()
 		-- pop = love.audio.newSource("sfx/pop3.mp3"), --not really needed!
 	}
 	
-	-- TODO i think reduce volume for all sfx. can't think of a way to just INCREASE bgm volume. oh, well
+	--reduce volume for all sfx
+	for k, s in pairs(sfx) do
+		s:setVolume(0.4)
+	end
 	
 	bgm = {
 		--just all sources; event can set next, repeat is implied, fade is a separate action
 		battleAIntro = love.audio.newSource("bgm/battleAIntro1.wav"),
 		battleA = love.audio.newSource("bgm/battleA1.wav")
 	}
-	
-	--DEBUG
-	-- currentBGM = bgm.battleAIntro 
-	-- currentBGM:setLooping(true)
-	-- nextBGM = bgm.battleA
-	--END DEBUG
 	
 	masterVolume = 1
 	bgmTimer = 0
