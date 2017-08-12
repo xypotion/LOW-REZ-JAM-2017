@@ -387,6 +387,24 @@ function spawnEnemies(l)
 	end
 end
 
+function spawnBossAndSwitchUI()
+	stage.bossMode = true
+	local cell = {}
+	local empties = shuffle(allClearCells())
+	if empties[1] then
+		cell = empties[1]
+	else
+		--TODO case that there are somehow 8 powerups on screen when you kill the last enemy; replace one
+	end
+	
+	print("queue boss spawn now ~~")
+	queueSet({
+		waitEvent(0.25),
+		soundEvent("tick"),
+		cellOpEvent(cell.y, cell.x, enemy(stage.bossSpecies))
+	})
+end
+
 function enemy(species)
 	--base enemy
 	local enemy = {
@@ -432,6 +450,17 @@ function enemy(species)
 	elseif species == "pharma" then
 		enemy.hp.max = 7
 		enemy.ai = "healer"
+
+	else
+		--it's a boss
+		enemy.isBoss = true
+		
+		if species == "oil" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+			enemy.effect = "stick"
+			enemy.reaction = "stick" 
+		end
 	end
 	
 	enemy.hp.actual = enemy.hp.max

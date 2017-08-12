@@ -64,20 +64,26 @@ function love.update(dt)
 	--queue enemy turns one by one
 	--TODO maybe move elsewhere
 	if game.state == "night" then
-		--if event queue is empty...?
+		--if event queue is empty, 
 		if not peek(eventSetQueue) then
+			
 			--currently not shuffling here so that such as mercuris can take their turns consecutively, but this is lazy. can also break if they change rows
 			--TODO a much better solution is to do it in order of distance from hero. left-to-right is not equivalent to right-to-left if you go in order
 				--something something cellsInDistanceRange. loop through 1-2-3-4, break when you find one with AP?
 			local en = locationsOfAllEnemiesWithAP()[1]
 			
-			-- if there was at least one with AP...
-			if en then --? something else?
+			-- if there was at least one enemy with AP...
+			if en then
 				--...queue a turn!
 				queueFullEnemyTurn(en.y, en.x)
 			else
-				--otherwise, no enemies found that have AP, so spawn enemies, then back to player
-				spawnEnemies()
+				--otherwise, no enemies found that have AP, so spawn enemies or boss, then back to player
+				if stage.enemyCount.shown > 0 then
+					spawnEnemies()
+				elseif not stage.bossMode then
+					spawnBossAndSwitchUI()
+				end
+				
 				startHeroTurn()
 			end
 		end
@@ -229,12 +235,7 @@ function drawStage()
 		end
 	end
 	
-	--draw enemy counter
-	love.graphics.draw(ui, quads_ui.enemiesLeft, 51, 8)
-	for i = 0, stage.enemyCount.shown - 1 do
-		-- love.graphics.draw(ui, quads_ui.enemyAlive, 51 - i, 14 + i)
-		love.graphics.draw(ui, quads_ui.enemyAlive, 51 + (i % 3) * 4, 14 + math.floor(i / 3) * 3)
-	end
+	drawEnemyUI()
 	
 	--this is suuuuch a hack to get gluttons to draw on top of their food. OK if it doesn't hurt performance. shame on you, either way.
 	for i, c in pairs(getAllCells("enemy")) do
@@ -327,6 +328,29 @@ function drawUI()
 		love.graphics.draw(ui, quads_ui.stink[getNonCharacterAnimFrame()], 33, 50)
 	end
 end
+
+function drawEnemyUI()
+	if stage.bossMode then
+		--boss UI
+		love.graphics.draw(ui, quads_ui.boss[getNonCharacterAnimFrame()], 51, 8)
+		--boss HP
+	else
+		if stage.enemyCount.shown > 0 then
+			--draw enemy counter
+			love.graphics.draw(ui, quads_ui.enemiesLeft, 51, 8)
+			for i = 0, stage.enemyCount.shown - 1 do
+				-- love.graphics.draw(ui, quads_ui.enemyAlive, 51 - i, 14 + i)
+				love.graphics.draw(ui, quads_ui.enemyAlive, 51 + (i % 3) * 4, 14 + math.floor(i / 3) * 3)
+			end
+		else
+			--flashing "left?"
+			love.graphics.setColor(255, getNonCharacterAnimFrame() * 127, getNonCharacterAnimFrame() * 127)
+			love.graphics.draw(ui, quads_ui.enemiesLeft, 51, 8)
+			white()
+		end
+	end
+end
+	
 
 function loadTitleScreen()
 end

@@ -17,7 +17,7 @@ function stageStart(n)
 	hero.sp.shown = hero.sp.max
 	
 	--fetch and shuffle stage's enemies 
-	stage.startingEnemyList, stage.enemyList, stage.boss = allEnemiesAndBossForStage(n)
+	stage.startingEnemyList, stage.enemyList, stage.bossSpecies = allEnemiesAndBossForStage(n)
 	stage.enemyList = shuffle(stage.enemyList)
 	
 	--probably just hard-code ratios for drops instead of this TODO
@@ -61,7 +61,7 @@ end
 function allEnemiesAndBossForStage(n)
 	if n == 1 then
 		return 
-		{"algy"},--, "toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey"}, --DEBUG
+		{"toxy"},-- "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
 		-- {
 		-- 	{"garby", "garby"},
 		-- 	{"toxy", "toxy"},
@@ -72,8 +72,9 @@ function allEnemiesAndBossForStage(n)
 		-- 	{"pharma", "pharma"},
 		-- 	{"mercuri", "mercuri"},
 		-- },
-		{{"garby"}, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
-		"invasive species"
+		{{"garby"}, {"garby"}},-- {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
+		-- "invasive species"
+		"oil"
 	elseif n == 2 then
 		print("stage 2 enemies...")
 	end
