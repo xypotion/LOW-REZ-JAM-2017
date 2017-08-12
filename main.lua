@@ -43,6 +43,7 @@ function love.load()
 	game = {
 		state = "title"
 	}
+	bossHPRatio = 0 --hhaaaack
 	
 	--initialize hero
 	initHero()
@@ -90,6 +91,11 @@ function love.update(dt)
 	elseif game.state == "day" then --really?
 		--checking sewy adjacency here instead of in draw()
 		hero.sewyAdjacent = sewyAdjacent() 
+	end
+	
+	--determine boss' shown/max ratio (* 27). hacky but whatever. just trying to save draw() some math
+	if stage and stage.boss then
+		bossHPRatio = math.ceil(stage.boss.hp.shown * 27 / stage.boss.hp.max)
 	end
 	
 	checkBGMTimerAndTransition(dt)
@@ -224,7 +230,7 @@ function drawStage()
 			drawCellContents(c.contents, y, x)
 
 			--draw enemy HP bars
-			if cellAt(y, x).contents.class == "enemy" then
+			if cellAt(y, x).contents.class == "enemy" and not cellAt(y, x).contents.isBoss then
 				drawEnemyHP(y, x)
 			end
 
@@ -333,7 +339,17 @@ function drawEnemyUI()
 	if stage.bossMode then
 		--boss UI
 		love.graphics.draw(ui, quads_ui.boss[getNonCharacterAnimFrame()], 51, 8)
-		--boss HP
+		-- if love.keyboard.isDown("j") then print(stage.boss.hp.shown) end
+		
+		--boss hp bar = 4 rectangles
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.rectangle("fill", 52, 15, 10, 31)
+		white()
+		love.graphics.rectangle("fill", 53, 16, 8, 29)
+		love.graphics.setColor(127, 127, 127)
+		love.graphics.rectangle("fill", 54, 17, 6, 27)
+		love.graphics.setColor(255, 0, 0)
+		love.graphics.rectangle("fill", 54, 44 - bossHPRatio, 6, bossHPRatio)
 	else
 		if stage.enemyCount.shown > 0 then
 			--draw enemy counter

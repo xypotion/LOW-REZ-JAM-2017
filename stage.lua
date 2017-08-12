@@ -72,7 +72,7 @@ function allEnemiesAndBossForStage(n)
 		-- 	{"pharma", "pharma"},
 		-- 	{"mercuri", "mercuri"},
 		-- },
-		{{"garby"}, {"garby"}},-- {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
+		{{"garby"}},--, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
 		-- "invasive species"
 		"oil"
 	elseif n == 2 then

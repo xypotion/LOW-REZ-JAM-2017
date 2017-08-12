@@ -388,7 +388,10 @@ function spawnEnemies(l)
 end
 
 function spawnBossAndSwitchUI()
-	stage.bossMode = true
+	stage.bossMode = true --TODO is this actually necessary? maybe just test for presence of stage.boss (set to nil when starting new stage)?
+	
+	stage.boss = enemy(stage.bossSpecies)
+	
 	local cell = {}
 	local empties = shuffle(allClearCells())
 	if empties[1] then
@@ -401,7 +404,7 @@ function spawnBossAndSwitchUI()
 	queueSet({
 		waitEvent(0.25),
 		soundEvent("tick"),
-		cellOpEvent(cell.y, cell.x, enemy(stage.bossSpecies))
+		cellOpEvent(cell.y, cell.x, stage.boss)
 	})
 end
 
