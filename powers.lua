@@ -14,3 +14,7 @@ function newPower(type)
 	
 	return power
 end
+
+function queueRarePowerups()
+	print("queueing rare powerup placement")
+end

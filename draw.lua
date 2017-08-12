@@ -163,7 +163,7 @@ function drawUI()
 end
 
 function drawEnemyUI()
-	if stage.bossMode then
+	if stage.boss then
 		--boss UI
 		love.graphics.draw(ui, quads_ui.boss[getNonCharacterAnimFrame()], 51, 8)
 		-- if love.keyboard.isDown("j") then print(stage.boss.hp.shown) end

@@ -1,20 +1,19 @@
-function stageStart(n)
+function initStage()
 	--stage initialization
 	stage = {}
 	stage.field = {
-		{empty(), empty(), empty()}, 
-		{empty(), empty(), empty()}, 
+		{empty(), empty(), empty()},
+		{empty(), empty(), empty()},
 		{empty(), empty(), empty()}
 	}
-
-	--reset hero position & stats. yes, it's OK to do this here. don't panic. possibly change/move later when you implement Continue TODO
-	cellAt(2,2).contents = hero
+	--...not that simple, unfortunately. might have to reset things one by one TODO
+end
+	
+function stageStart(n)
+	--reset hero stats (will be actuated in a moment). yes, it's OK to do this here. don't panic. possibly change/move later when you implement Continue TODO
 	hero.hp.actual = hero.hp.max
-	hero.hp.shown = hero.hp.max
 	hero.ap.actual = hero.ap.max
-	hero.ap.shown = hero.ap.max
 	hero.sp.actual = hero.sp.max
-	hero.sp.shown = hero.sp.max
 	
 	--fetch and shuffle stage's enemies 
 	stage.startingEnemyList, stage.enemyList, stage.bossSpecies = allEnemiesAndBossForStage(n)
@@ -43,19 +42,56 @@ function stageStart(n)
 	print(stage.enemyCount.actual)
 	
 	--DEBUG kinda
-	queue(fadeOutEvent())
-	queue(gameStateEvent("state", "night"))
-	queue(bgEvent("night1", 0))
-	queue(bgmEvent("battleAIntro", "battleA"))
+	--screen should be faded out at this point, either from title screen transition or stageEnd()
+	
+	--actuate those stats
+	queueSet({
+		actuationEvent(hero.hp, hero.hp.actual - hero.hp.shown),
+		actuationEvent(hero.sp, hero.sp.actual - hero.sp.shown),
+		actuationEvent(hero.ap, hero.ap.actual - hero.ap.shown),
+	})
+	
+	--reset that field
+	queueSet({
+		cellOpEvent(1, 1, clear()),
+		cellOpEvent(1, 2, clear()),
+		cellOpEvent(1, 3, clear()),
+		cellOpEvent(2, 1, clear()),
+		cellOpEvent(2, 2, hero),
+		cellOpEvent(2, 3, clear()),
+		cellOpEvent(3, 1, clear()),
+		cellOpEvent(3, 2, clear()),
+		cellOpEvent(3, 3, clear()),
+	})
+	
+	--night time ~
+	queueSet({
+		gameStateEvent("state", "night"),
+		bgEvent("night1", 0)
+	})
+	
+	queue(bgmEvent("battleAIntro", "battleA")) --DEBUG
 	queue(fadeInEvent())
 	
 	--spawn starting enemies
 	queue(actuationEvent(stage.enemyCount, stage.enemyCount.actual))
-	spawnEnemies(stage.startingEnemyList)
+	spawnEnemies(stage.startingEnemyList, {2, 2}) --excluding 2, 2 because that's where hero WILL be as per queued event above. messy, i know.
 	print("queue enemy info popup here")
 	
 	---aaand begin
 	startHeroTurn()
+end
+
+function stageEnd()
+	stage.boss = nil
+	
+	--fade music
+	print("fading music") --TODO
+	
+	--quick fade before resetting hero pos & stats
+	queue(fadeOutEvent())
+	
+	game.maxStage = game.maxStage + 1
 end
 
 function allEnemiesAndBossForStage(n)
@@ -76,6 +112,22 @@ function allEnemiesAndBossForStage(n)
 		-- "invasive species"
 		"oil"
 	elseif n == 2 then
-		print("stage 2 enemies...")
+		return
+		{"plasty"},-- "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		-- {
+		-- 	{"garby", "garby"},
+		-- 	{"toxy", "toxy"},
+		-- 	{"algy", "algy"},
+		-- 	{"sewy", "sewy"},
+		-- 	{"nukey", "nukey"},
+		-- 	{"plasty", "plasty"},
+		-- 	{"pharma", "pharma"},
+		-- 	{"mercuri", "mercuri"},
+		-- },
+		{{"pharma", "pharma"}},--, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
+		-- "invasive species"
+		"oil"
+	elseif n == 3 then
+		print("stg 3 3n3mi3s")
 	end
 end

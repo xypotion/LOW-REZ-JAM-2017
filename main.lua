@@ -42,11 +42,13 @@ function love.load()
 	eventSetQueue = {}
 	inputLevel = "normal" --TODO should be a stack, not a string?
 	game = {
-		state = "title"
+		state = "title",
+		maxStage = 1
 	}
 	bossHPRatio = 0 --hhaaaack
 	
-	--initialize hero
+	--initialize hero and stage objects
+	initStage()
 	initHero()
 		
 	--fade in to title
@@ -82,7 +84,7 @@ function love.update(dt)
 				--otherwise, no enemies found that have AP, so spawn enemies or boss, then back to player
 				if stage.enemyCount.shown > 0 then
 					spawnEnemies()
-				elseif not stage.bossMode then
+				elseif not stage.boss then
 					spawnBossAndSwitchUI()
 				end
 				
@@ -94,9 +96,23 @@ function love.update(dt)
 		hero.sewyAdjacent = sewyAdjacent() 
 	end
 	
-	--determine boss' shown/max ratio (* 27). hacky but whatever. just trying to save draw() some math
+	--boss stuff happening? update HP, see if defeated...
 	if stage and stage.boss then
+		--saving draw() some math by determining hp bar size here
 		bossHPRatio = math.ceil(stage.boss.hp.shown * 27 / stage.boss.hp.max)
+		
+		if stage.boss.hp.shown <= 0 then
+			--stage over!
+			print("boss is dead")
+			
+			--queue rare powerups
+			queueRarePowerups()
+			
+			--DEBUG
+			collectRarePowerup()
+			stageEnd()
+			stageStart(game.maxStage)
+		end
 	end
 	
 	checkBGMTimerAndTransition(dt)
@@ -166,8 +182,14 @@ function love.keypressed(key)
 			startEnemyTurn()
 		end
 	elseif game.state == "title" then
-		--start game
-		stageStart(1)
+		queue(fadeOutEvent()) --DEBUG?
+		if key == "c" then --DEBUG
+			stageStart(game.maxStage)
+		else
+			--start game
+			stageStart(1)
+		end
+		
 		--kinda DEBUG TODO an actual menu! Start, Continue, Credits
 	end
 end

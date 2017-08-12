@@ -5,7 +5,7 @@ function initHero()
 		hp = {max = 9, actual = 2, shown = 9, posSound = "hp", negSound = nil},
 		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
 		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
-		attack = 3,
+		attack = 9,
 		powers = {},
 		pose = "idle",
 		yOffset = 0,
@@ -148,6 +148,10 @@ function heroGetPowerUp(y, x, dy, dx)
 	queueSet(es)
 	
 	processNow()
+end
+
+function collectRarePowerup(y, x, dy, dx)
+	print("rare powerup collected!")
 end
 
 function heroFight(y, x, dy, dx)

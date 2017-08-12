@@ -362,7 +362,7 @@ end of each night:
 --spawning bosses: go ahead and use the same algo as above, for the wild case that all other cells contain powers & there's nowhere to spawn at first TODO
 --...but when do you announce the boss & change the UI?
 
-function spawnEnemies(l)
+function spawnEnemies(l, exclude)
 	--if not provided, get list of enemy species by popping off the stage's enemy list. if none, then return
 	local list = l or pop(stage.enemyList)
 	if not list then return end
@@ -388,8 +388,6 @@ function spawnEnemies(l)
 end
 
 function spawnBossAndSwitchUI()
-	stage.bossMode = true --TODO is this actually necessary? maybe just test for presence of stage.boss (set to nil when starting new stage)?
-	
 	stage.boss = enemy(stage.bossSpecies)
 	
 	local cell = {}
