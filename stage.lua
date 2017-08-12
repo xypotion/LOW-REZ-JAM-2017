@@ -75,11 +75,18 @@ function stageStart(n)
 	
 	--spawn starting enemies
 	queue(actuationEvent(stage.enemyCount, stage.enemyCount.actual))
-	spawnEnemies(stage.startingEnemyList, {2, 2}) --excluding 2, 2 because that's where hero WILL be as per queued event above. messy, i know.
-	print("queue enemy info popup here")
 	
-	---aaand begin
-	startHeroTurn()
+	--and the awkward part... having these be called (via queue & processing) AFTER the above things ensures that enemy spawns never overwrite hero
+	queue(functionEvent("spawnEnemies", stage.startingEnemyList))
+	
+	--also queueing this to occur later so to preserve the original order
+	queue(functionEvent("startHeroTurn"))
+	
+	-- spawnEnemies(stage.startingEnemyList)
+	-- print("queue enemy info popup here")
+	
+	-- ---aaand begin
+	-- startHeroTurn()
 end
 
 function stageEnd()
@@ -113,7 +120,7 @@ function allEnemiesAndBossForStage(n)
 		"oil"
 	elseif n == 2 then
 		return
-		{"plasty"},-- "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
 		-- {
 		-- 	{"garby", "garby"},
 		-- 	{"toxy", "toxy"},

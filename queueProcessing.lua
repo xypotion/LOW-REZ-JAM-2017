@@ -16,6 +16,12 @@ function processEventSets(dt)
 		--TODO this stack of ifs is just awfs. DO SOMETHIIING EEHHHH
 		if not e.finished then
 			-- print("processing "..e.class)
+			
+			if e.class == "function" then
+				-- print("...calling "..e.func)
+				_G[e.func](e.arg1)
+				e.finished = true
+			end
 		
 			if e.class == "gameState" then
 				processGameStateEvent(e)

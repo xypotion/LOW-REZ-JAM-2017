@@ -142,6 +142,18 @@ function fadeInEvent(time)
 	return e
 end
 
+--when processed, causes a function to be called with args
+--is this the worst thing i've done yet? or should i have done this a long time ago?
+function functionEvent(func, arg1)
+	local e = {
+		class = "function",
+		func = func,
+		arg1 = arg1 --messy, messy, messy. oh, well.
+	}
+	
+	return e
+end
+
 --------------------------------------------------------------------------
 
 function queue(event)
