@@ -23,8 +23,13 @@ high-level to do & time estimates as of 8/7, 1AM
 
 8/10: thanks to an interview, a day of studying (today), and D&D, you essentially have 3 days left for this project. most important things to get done:
 - bosses
+  √ flow within stages
+	- actual bosses' graphics & data
 - stages
-- ending with rudimentary art
+  √ most mechanics
+	- actual enemies
+√ rudimentary ending
+- actual ending
 - game over
 - start/continue/credits on final title screen
 - other musics

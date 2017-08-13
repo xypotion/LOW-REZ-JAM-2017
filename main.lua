@@ -44,7 +44,8 @@ function love.load()
 	inputLevel = "normal" --TODO should be a stack, not a string?
 	game = {
 		state = "title",
-		maxStage = 1
+		maxStage = 1,
+		lastStage = 2--9
 	}
 	bossHPRatio = 0 --hhaaaack
 	
@@ -104,15 +105,29 @@ function love.update(dt)
 		
 		if stage.boss.hp.shown <= 0 then
 			--stage over!
-			print("boss is dead")
+			-- print("boss is dead")
+			queue(screenEvent("\n\n\n  STAGE "..game.maxStage.."\n  COMPLETE!"))
+			-- queue(screenEvent("\n\n  STAGE "..game.maxStage.."\n  COMPLETE!\n\n Choose reward:"))
 			
-			--queue rare powerups
-			queueRarePowerups()
+			--DEBUGgy
+			if game.maxStage == game.lastStage then
+				queueSet({
+					fadeOutEvent(),
+					screenEvent("\n\nYOU WIN!\n\nThanks for\nplaying!")
+					--and return to title
+					print("...and return to title")
+					love.event.quit()
+				})
+			else
+				--queue rare powerups
+				queueRarePowerups()
 			
-			--DEBUG
-			collectRarePowerup()
-			stageEnd()
-			stageStart(game.maxStage)
+				--DEBUG; should happen in heroActions
+				collectRarePowerup()
+				stageEnd()
+				stageStart(game.maxStage)
+				--END DEBUG
+			end
 		end
 	end
 	

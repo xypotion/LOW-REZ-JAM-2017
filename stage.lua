@@ -123,7 +123,7 @@ function allEnemiesAndBossForStage(n)
 		"oil"
 	elseif n == 2 then
 		return
-		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		{"toxy", "sewy", "garby", "algy", "plasty", "pharma"},--, "nukey", "mercuri"}, --DEBUG
 		-- {
 		-- 	{"garby", "garby"},
 		-- 	{"toxy", "toxy"},
