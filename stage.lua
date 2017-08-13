@@ -123,7 +123,7 @@ function allEnemiesAndBossForStage(n)
 		"oil"
 	elseif n == 2 then
 		return
-		{"toxy", "sewy", "garby", "algy", "plasty", "pharma"},--, "nukey", "mercuri"}, --DEBUG
+		{"toxy", "sewy"},-- "garby", "algy", "plasty", "pharma"},--, "nukey", "mercuri"}, --DEBUG
 		-- {
 		-- 	{"garby", "garby"},
 		-- 	{"toxy", "toxy"},
@@ -136,8 +136,18 @@ function allEnemiesAndBossForStage(n)
 		-- },
 		{{"pharma", "pharma"}},--, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
 		-- "invasive species"
-		"oil"
+		"garby"
 	elseif n == 3 then
 		print("stg 3 3n3mi3s")
 	end
+end
+
+function unloadGameAndReturnToTitle()
+	queueSet({
+		gameStateEvent("state", "title"),
+		bgEvent("title1", 0),
+		functionEvent("initStage"), --queueing to happen again since this happens in love.load()
+		functionEvent("initHero"), --queueing to happen again since this happens in love.load()
+	})
+	queue(fadeInEvent(1))
 end

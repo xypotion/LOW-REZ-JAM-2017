@@ -72,61 +72,80 @@ function love.update(dt)
 	if game.state == "night" then
 		--if event queue is empty, 
 		if not peek(eventSetQueue) then
-			
-			--currently not shuffling here so that such as mercuris can take their turns consecutively, but this is lazy. can also break if they change rows
-			--TODO a much better solution is to do it in order of distance from hero. left-to-right is not equivalent to right-to-left if you go in order
-				--something something cellsInDistanceRange. loop through 1-2-3-4, break when you find one with AP?
-			local en = locationsOfAllEnemiesWithAP()[1]
-			
-			-- if there was at least one enemy with AP...
-			if en then
-				--...queue a turn!
-				queueFullEnemyTurn(en.y, en.x)
-			else
-				--otherwise, no enemies found that have AP, so spawn enemies or boss, then back to player
-				if stage.enemyCount.shown > 0 then
-					spawnEnemies()
-				elseif not stage.boss then
-					spawnBossAndSwitchUI()
-				end
-				
-				startHeroTurn()
-			end
-		end
-	elseif game.state == "day" then --really?
-		--checking sewy adjacency here instead of in draw()
-		hero.sewyAdjacent = sewyAdjacent() 
-	end
-	
-	--boss stuff happening? update HP, see if defeated...
-	if stage and stage.boss then
-		--saving draw() some math by determining hp bar size here
-		bossHPRatio = math.ceil(stage.boss.hp.shown * 27 / stage.boss.hp.max)
-		
-		if stage.boss.hp.shown <= 0 then
-			--stage over!
-			-- print("boss is dead")
-			queue(screenEvent("\n\n\n  STAGE "..game.maxStage.."\n  COMPLETE!"))
-			-- queue(screenEvent("\n\n  STAGE "..game.maxStage.."\n  COMPLETE!\n\n Choose reward:"))
-			
-			--DEBUGgy
-			if game.maxStage == game.lastStage then
+			--hero defeated? back to title if so
+			if hero.hp.shown <= 0 then
 				queueSet({
 					fadeOutEvent(),
-					screenEvent("\n\nYOU WIN!\n\nThanks for\nplaying!")
-					--and return to title
-					print("...and return to title")
-					love.event.quit()
+					screenEvent("\n\n  GAME OVER\n    </3"),
 				})
+				--and return to title
+				print("...and return to title") --TODO
+				-- love.event.quit()
+				-- queue(functionEvent("unloadGameAndReturnToTitle"))
+				unloadGameAndReturnToTitle()
 			else
-				--queue rare powerups
-				queueRarePowerups()
+				--NOT game over, so continue or finish enemy turn
+				--currently not shuffling here so that such as mercuris can take their turns consecutively, but this is lazy. can also break if they change rows
+				--TODO a much better solution is to do it in order of distance from hero. left-to-right is not equivalent to right-to-left if you go in order
+					--something something cellsInDistanceRange. loop through 1-2-3-4, break when you find one with AP?
+					--ooh, or chain turns with functionEvents? TODO maybe the cleanest idea to try
+				local en = locationsOfAllEnemiesWithAP()[1]
+		
+				-- if there was at least one enemy with AP...
+				if en then
+					--...queue a turn!
+					queueFullEnemyTurn(en.y, en.x)
+				else
+					--otherwise, no enemies found that have AP, so spawn enemies or boss, then back to player
+					if stage.enemyCount.shown > 0 then
+						spawnEnemies()
+					elseif not stage.boss then
+						spawnBossAndSwitchUI()
+					end
 			
-				--DEBUG; should happen in heroActions
-				collectRarePowerup()
-				stageEnd()
-				stageStart(game.maxStage)
-				--END DEBUG
+					startHeroTurn()
+				end
+			end
+		end
+	elseif game.state == "day" then
+		--checking sewy adjacency here instead of in draw()
+		hero.sewyAdjacent = sewyAdjacent() 
+	
+		--boss stuff happening? update HP, see if defeated...
+		if stage and stage.boss then
+			--saving draw() some math by determining hp bar size here
+			bossHPRatio = math.ceil(stage.boss.hp.shown * 27 / stage.boss.hp.max)
+		
+			--boss defeated; dump powerups (and for now, move on to next stage immediately)
+			if stage.boss.hp.shown <= 0 and not peek(eventSetQueue) then
+				--stage over!
+				-- print("boss is dead")
+				queue(screenEvent("\n\n\n  STAGE "..game.maxStage.."\n  COMPLETE!"))
+				-- queue(screenEvent("\n\n  STAGE "..game.maxStage.."\n  COMPLETE!\n\n Choose reward:"))
+			
+				--DEBUGgy
+				if game.maxStage == game.lastStage then
+					--ending!
+					--DEBUG
+					queueSet({
+						fadeOutEvent(),
+						screenEvent("\n\nYOU WIN!\n\nThanks for\nplaying!"),
+					})
+					--and return to title
+					-- print("...and return to title") --TODO
+					-- queue(functionEvent("unloadGameAndReturnToTitle"))
+					unloadGameAndReturnToTitle()
+					-- love.event.quit()
+				else
+					--queue rare powerups
+					queueRarePowerups()
+			
+					--DEBUG; should happen in heroActions
+					collectRarePowerup()
+					stageEnd()
+					stageStart(game.maxStage)
+					--END DEBUG
+				end
 			end
 		end
 	end
@@ -198,11 +217,13 @@ function love.keypressed(key)
 			startEnemyTurn()
 		end
 	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then
+		print("starting game from title")
 		queue(fadeOutEvent()) --DEBUG?
 		if key == "c" then --DEBUG
 			stageStart(game.maxStage)
 		else
 			--start game
+			game.maxStage = 1
 			stageStart(1)
 		end
 		

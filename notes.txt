@@ -38,9 +38,10 @@ high-level to do & time estimates as of 8/7, 1AM
 - info popups, if time. printing is fine if no time for hand-drawn art
 - autosave, if time
 - turn count + death count for nice ending screen
-- alternate title screen
+- alternate title screen if game won
 - remove print()s and DEBUGs
 - bug: shouldn't cancel spawn when not enough room
+- bug: gluttonous bosses should not turn red. just a color bug, i think
 
 Heart's Desire: Black Lake
 
