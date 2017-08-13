@@ -22,6 +22,8 @@ high-level to do & time estimates as of 8/7, 1AM
 * also, wow, there are almost 700 entrants already. frig.
 
 8/10: thanks to an interview, a day of studying (today), and D&D, you essentially have 3 days left for this project. most important things to get done:
+- bug: shouldn't cancel spawn when not enough room
+- bug: gluttonous bosses should not turn red. just a color bug, i think
 - bosses
   √ flow within stages
 	- actual bosses' graphics/stats/behaviors
@@ -49,8 +51,10 @@ high-level to do & time estimates as of 8/7, 1AM
 - turn count + death count for nice ending screen
 - alternate title screen if game won
 - remove print()s and DEBUGs
-- bug: shouldn't cancel spawn when not enough room
-- bug: gluttonous bosses should not turn red. just a color bug, i think
+- if time:
+  - alternate stage backgrounds! mountains, city, whole world?
+	- better animation for "magic" damage/effects. spark is boring
+	- slightly better sfx
 
 Heart's Desire: Black Lake
 
