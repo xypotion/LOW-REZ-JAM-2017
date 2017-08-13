@@ -70,6 +70,10 @@ function processEventSets(dt)
 			if e.class == "fadeOut" then
 				processFadeOutEvent(e)
 			end
+			
+			if e.class == "screen" then
+				processScreenEvent(e)
+			end
 		end
 				
 		--tally finished events in set
@@ -229,6 +233,45 @@ function processFadeInEvent(e)
 		e.finished = true
 	end
 	-- print(blackOverlay.alpha)
+end
+
+--i hate hacking like this, but i'm out of patience for good architecture at the moment. simple effect but complicated to do nicely
+function processScreenEvent(e)
+	if not e.state then
+		--begin
+		overlay.text = e.text
+		overlay.xOffset = 64
+		e.state = "flyin"
+	elseif e.state == "flyin" then
+		overlay.xOffset = overlay.xOffset - 8
+		
+		if overlay.xOffset == 0 then
+			e.state = "waiting"
+			
+			if e.keypressRequired then
+				e.waitingForKeypress = true
+			else
+				e.expirationTime = 0.5
+			end
+		end
+	elseif e.state == "waiting" then
+		if e.waitingForKeypress then
+			if love.keyboard.isDown("space") then
+				e.state = "flyout"
+			end
+		elseif e.expirationTime > 0 then
+			e.expirationTime = e.expirationTime - eventFrameLength
+		else
+			e.state = "flyout"
+		end
+	elseif e.state == "flyout" then
+		overlay.xOffset = overlay.xOffset - 8
+
+		if overlay.xOffset <= -64 then
+			e.finished = true
+			overlay.text = ""
+		end
+	end
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------

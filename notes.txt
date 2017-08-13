@@ -34,6 +34,7 @@ high-level to do & time estimates as of 8/7, 1AM
 - autosave, if time
 - turn count + death count for nice ending screen
 - alternate title screen
+- remove print()s and DEBUGs
 - bug: shouldn't cancel spawn when not enough room
 
 Heart's Desire: Black Lake

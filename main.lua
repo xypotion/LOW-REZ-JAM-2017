@@ -32,6 +32,7 @@ function love.load()
 	gameCanvas:setFilter("nearest")
 	bgMain = {graphic = "title1", alpha = 255} --TODO opening title changes if you've beaten the game. do if time!
 	love.graphics.setFont(love.graphics.newFont(7))
+	overlay = {xOffset = 0, text = ""}
 
 	--find & load autosave for progress, hero's current inventory (8 bools, i think), and enemy info panels seen. pretty simple
 	
@@ -181,7 +182,7 @@ function love.keypressed(key)
 		if hero.ap.actual <= 0 then
 			startEnemyTurn()
 		end
-	elseif game.state == "title" then
+	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then
 		queue(fadeOutEvent()) --DEBUG?
 		if key == "c" then --DEBUG
 			stageStart(game.maxStage)

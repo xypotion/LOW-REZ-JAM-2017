@@ -21,6 +21,9 @@ function love.draw()
 	white()
 		
 	--DEBUG
+	love.graphics.print(overlay.text, overlay.xOffset, 0)
+	
+	--DEBUG
 	-- love.graphics.printf("The quick brown fox jumps over the lazy dog.", 0, 0, 64)
 	
 	--draw gameCanvas
