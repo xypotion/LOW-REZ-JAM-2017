@@ -26,6 +26,7 @@ high-level to do & time estimates as of 8/7, 1AM
 - bug: gluttonous bosses should not turn red. just a color bug, i think
 - bug: hero CAN die on own turn because of nukey. gotta check for that. should probably refactor game-over code in that case
 - todo: enemy turn order fix (then shuffle turns). have one turn queue the next via functionEvent if remaining AP? like skipping stones
+- check out other TODOs :|
 - bosses
   √ flow within stages
 	- actual bosses' graphics/stats/behaviors
@@ -33,6 +34,11 @@ high-level to do & time estimates as of 8/7, 1AM
 - stages
   √ most mechanics
 	- actual enemy/boss arrays
+- music
+  - fading on stage transition, victory, game over
+  - other battle music, integrated into stages
+	- boss music
+	- title screen music
 √ rudimentary ending
   - make it look better
 √ game over
@@ -40,24 +46,24 @@ high-level to do & time estimates as of 8/7, 1AM
 - title screen:
   √ menu interaction
 	- credits
-	- make it look a little better
-- music
-  - fading on stage transition, victory, game over
-  - other battle music, integrated into stages
-	- boss music
+	- make it look a little better. city + roads or something (title text moves? ehh)
+- info popups, if time. printing is fine if no time for hand-drawn art
 - boss powerups. if out of time: killing bosses just increases your max HP, maybe other static boosts (see below)
+  - separate action of collecting & application of powerup. will help when Continuing and reinitializing hero
+- autosave for stage progress, if time
+  - include collected powerups if not static
+	- turn count + death count for nice ending screen
 √ V for master volume
   - actual graphic + rectangles (easy, do it)
-- info popups, if time. printing is fine if no time for hand-drawn art
-- autosave, if time
-- turn count + death count for nice ending screen
-- alternate title screen if game won
+- game over -> title with CONTINUE selected; victory -> title with CREDITS selected (easy, do it)
 - remove print()s and DEBUGs
 - if time:
-  - alternate stage backgrounds! mountains, city, whole world?
+  - resizable window!
+  - alternate stage backgrounds! mountains, city, whole world for last stage?
 	- better animation for "magic" damage/effects. spark is boring
 	- slightly better sfx
-	- "pure!" effect after killing enemy? eh. not needed
+	- "pure!" effect after killing enemy? not needed
+	- alternate title screen if game won
 
 Heart's Desire: Black Lake
 
@@ -675,7 +681,7 @@ if doing 8 normal stages + a final stage & boss, first 8 give set power-ups:
 - 	wish does a row/column laser attack
 ?		wish hits all enemies?
 *		attack + 1 if HP full
-* 	all fish also heal 1 AP
+* 	all fish also heal all AP
 *		blue fish heal 3 HP
 *		red fish heal 2 SP
 ?		all increase HP by 1? start really weak?
