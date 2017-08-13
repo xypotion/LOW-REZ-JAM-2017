@@ -461,6 +461,30 @@ function enemy(species)
 			enemy.ap.max = 2
 			enemy.effect = "stick"
 			enemy.reaction = "stick" 
+		elseif species == "heat" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+		elseif species == "noise" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+		elseif species == "light" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+		elseif species == "xps" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+		elseif species == "invasive" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+		elseif species == "gluttony" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+		elseif species == "greed" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+		elseif species == "apathy" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
 		end
 	end
 	

@@ -11,8 +11,16 @@ function loadGraphics()
 		garby = love.graphics.newImage("img/sheet_garby.png"),
 		plasty = love.graphics.newImage("img/sheet_plasty.png"),
 		pharma = love.graphics.newImage("img/sheet_pharma.png"),
-		nukey = love.graphics.newImage("img/sheet_nukey.png"),
+		nukey = love.graphics.newImage("img/sheet_nukey 3.png"),
 		oil = love.graphics.newImage("img/sheet_oil.png"),
+		heat = love.graphics.newImage("img/sheet_nukey.png"),
+		noise = love.graphics.newImage("img/sheet_noise_pollution.png"),
+		light = love.graphics.newImage("img/sheet_light_pollution.png"),
+		invasive = love.graphics.newImage("img/sheet_invasive_species.png"),
+		xps = love.graphics.newImage("img/sheet_xps.png"),
+		gluttony = love.graphics.newImage("img/sheet_gluttony.png"),
+		greed = love.graphics.newImage("img/sheet_greed.png"),
+		apathy = love.graphics.newImage("img/sheet_apathy.png"),
 	}
 	
 	sheet_effects = love.graphics.newImage("img/effects.png")

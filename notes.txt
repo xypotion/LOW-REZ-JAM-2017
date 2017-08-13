@@ -24,6 +24,8 @@ high-level to do & time estimates as of 8/7, 1AM
 8/10: thanks to an interview, a day of studying (today), and D&D, you essentially have 3 days left for this project. most important things to get done:
 - bug: shouldn't cancel spawn when not enough room
 - bug: gluttonous bosses should not turn red. just a color bug, i think
+- bug: hero CAN die on own turn because of nukey. gotta check for that. should probably refactor game-over code in that case
+- todo: enemy turn order fix (then shuffle turns). have one turn queue the next via functionEvent if remaining AP? like skipping stones
 - bosses
   √ flow within stages
 	- actual bosses' graphics/stats/behaviors
@@ -55,6 +57,7 @@ high-level to do & time estimates as of 8/7, 1AM
   - alternate stage backgrounds! mountains, city, whole world?
 	- better animation for "magic" damage/effects. spark is boring
 	- slightly better sfx
+	- "pure!" effect after killing enemy? eh. not needed
 
 Heart's Desire: Black Lake
 
@@ -110,7 +113,7 @@ bosses... 1 for each stage? (pharma sewy garby)
 	- randomly summon HP bubbles so player can survive more easily? but only some
 	- have fairly high HP
 * invasive species (rainbow algy palette swap): summons adds? or sticky?
-* noise pollution (rainbow sewy swap?): strong ranged attack? constant damage over time?
+* noise pollution (rainbow sewy swap?): strong ranged attack + melee + can't wish when adjacent?
 * heat pollution (nukey swap?): melee attack gets stronger over time? +1 every time it hits? or +1 if not near hero? reaction on its turn only, 1AP
 * light pollution (light toxy swap. lavender?): immune to physical attacks? eek. or takes less damage?
 * oil spill! (black mercuri swap): sticky? or just 3 AP?
