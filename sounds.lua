@@ -37,12 +37,29 @@ function loadSounds()
 	}
 	
 	masterVolume = 1
+	bgmVolume = 1
+	cycleVolume()
+	
 	bgmTimer = 0
 end
 
+function cycleVolume()
+	--TODO for fades (?) and "V"
+	masterVolume = (masterVolume - 0.25) % 1.25
+	
+	setVolume()
+	
+	print("master volume:", masterVolume)
+end
+
 function setVolume()
-	--TODO for fades and "V"
-	print("attempting to set volume")
+	for k, s in pairs(sfx) do
+		s:setVolume(masterVolume * 0.4)
+	end
+	
+	for k, b in pairs(bgm) do
+		b:setVolume(masterVolume * bgmVolume)
+	end
 end
 
 --if there is a nextBGM and currentBGM has finished, set current to next and play that on loop

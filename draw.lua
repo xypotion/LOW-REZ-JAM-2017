@@ -20,8 +20,16 @@ function love.draw()
 	
 	white()
 		
-	--DEBUG
+	--print overlay text. DEBUG, kinda.
 	love.graphics.print(overlay.text, overlay.xOffset, 0)
+	
+	--show volume popup
+	if volumePopupAlpha > 0 then
+		love.graphics.setColor(255, 255, 255, volumePopupAlpha)
+		love.graphics.print("volume "..masterVolume, 2, 56)
+		-- love.graphics.rectangle? + ui TODO
+		white()
+	end
 	
 	--DEBUG
 	-- love.graphics.printf("The quick brown fox jumps over the lazy dog.", 0, 0, 64)
@@ -42,6 +50,8 @@ end
 
 function drawTitleScreen()
 	drawBackgrounds()
+	
+	love.graphics.draw(ui, quads_ui["tinyHeart"][getNonCharacterAnimFrame()], 6, 25 + titleMenuCursorPos * 8)
 end
 
 function drawStage()

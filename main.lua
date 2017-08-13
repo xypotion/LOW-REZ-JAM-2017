@@ -48,6 +48,8 @@ function love.load()
 		lastStage = 2--9
 	}
 	bossHPRatio = 0 --hhaaaack
+	titleMenuCursorPos = 1
+	volumePopupAlpha = 0
 	
 	--initialize hero and stage objects
 	initStage()
@@ -151,6 +153,11 @@ function love.update(dt)
 	end
 	
 	checkBGMTimerAndTransition(dt)
+	
+	--fade volume popup
+	if volumePopupAlpha > 0 then
+		volumePopupAlpha = volumePopupAlpha - 5
+	end
 end
 
 function love.keypressed(key)
@@ -159,9 +166,9 @@ function love.keypressed(key)
 		--merry quitmas
 		love.event.quit()
 	end
-	if key == "return" then
+	if key == "i" then
 		--inspect grid
-		print("\nstuff:")
+		print("\ninfo:")
 		for y,r in ipairs(stage.field) do
 			for x,c in ipairs(r) do
 				print(y, x, c.contents.class)
@@ -185,12 +192,17 @@ function love.keypressed(key)
 			print(yyy, xxx, "occupied!")
 		end
 	end
-	if key == "h" then
-		hero.hp.actual = hero.hp.actual + 3
-		queue(actuationEvent(hero.hp, 3))
-	end
-	if key == "x" then sfx.pop:play() end
+	-- if key == "h" then
+	-- 	hero.hp.actual = hero.hp.actual + 3
+	-- 	queue(actuationEvent(hero.hp, 3))
+	-- end
+	-- if key == "x" then sfx.pop:play() end
 	--END DEBUG
+	
+	if key == "v" then 
+		cycleVolume() 
+		volumePopupAlpha = 255
+	end
 
 	if game.state == "day" then
 		--take directional input
@@ -216,18 +228,23 @@ function love.keypressed(key)
 		if hero.ap.actual <= 0 then
 			startEnemyTurn()
 		end
-	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then
-		print("starting game from title")
-		queue(fadeOutEvent()) --DEBUG?
-		if key == "c" then --DEBUG
-			stageStart(game.maxStage)
-		else
-			--start game
-			game.maxStage = 1
-			stageStart(1)
+	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then		
+		if key == "up" or key == "w" then
+			titleMenuCursorPos = (titleMenuCursorPos - 2) % 3 + 1
+		elseif key == "down" or key == "s" then
+			titleMenuCursorPos = titleMenuCursorPos % 3 + 1
+		elseif key == "return" or key == "space" then
+			queue(fadeOutEvent())
+			
+			if titleMenuCursorPos == 1 then
+				--start game
+				game.maxStage = 1
+				stageStart(1)
+			elseif titleMenuCursorPos == 2 then
+				stageStart(game.maxStage)
+			elseif titleMenuCursorPos == 3 then
+			end
 		end
-		
-		--kinda DEBUG TODO an actual menu! Start, Continue, Credits
 	end
 end
 

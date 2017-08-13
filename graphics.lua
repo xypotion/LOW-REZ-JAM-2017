@@ -87,6 +87,10 @@ function loadQuads()
 		boss = {
 			love.graphics.newQuad(52, 9, 12, 5, 64, 64),
 			love.graphics.newQuad(52, 15, 12, 5, 64, 64),
+		},
+		tinyHeart = {
+			love.graphics.newQuad(0, 30, 8, 7, 64, 64),
+			love.graphics.newQuad(9, 30, 8, 7, 64, 64),
 		}
 	}
 end

@@ -24,17 +24,26 @@ high-level to do & time estimates as of 8/7, 1AM
 8/10: thanks to an interview, a day of studying (today), and D&D, you essentially have 3 days left for this project. most important things to get done:
 - bosses
   √ flow within stages
-	- actual bosses' graphics & data
+	- actual bosses' graphics/stats/behaviors
+	- fanfare?
 - stages
   √ most mechanics
-	- actual enemies
+	- actual enemy/boss arrays
 √ rudimentary ending
-- actual ending
-- game over
-- start/continue/credits on final title screen
-- other musics
+  - make it look better
+√ game over
+  - make it look better
+- title screen:
+  √ menu interaction
+	- credits
+	- make it look a little better
+- music
+  - fading on stage transition, victory, game over
+  - other battle music, integrated into stages
+	- boss music
 - boss powerups. if out of time: killing bosses just increases your max HP, maybe other static boosts (see below)
-- V for music volume
+√ V for master volume
+  - actual graphic + rectangles (easy, do it)
 - info popups, if time. printing is fine if no time for hand-drawn art
 - autosave, if time
 - turn count + death count for nice ending screen
@@ -89,24 +98,29 @@ enemies...
 
 enemy syncs, if doing: any 3 in a row -> all get attack + 1? or something more elaborate? :/
 
-bosses... 1 for each stage?
+bosses... 1 for each stage? (pharma sewy garby)
 - all:
   - only appear when all other enemies defeated, after minor fanfare
   - attack 3 times per turn?
 	- have unique graphics
 	- randomly summon HP bubbles so player can survive more easily? but only some
 	- have fairly high HP
-* invasive species (algy swap): summons adds? sticky?
-- noise pollution (): strong ranged attack? constant damage over time?
-* heat pollution (nukey swap?): melee attack gets stronger over time? +1 every time it hits? or +1 if not near hero?
-* light pollution (toxy swap): immune to physical attacks? eek. or takes less damage
-* oil spill! (mercuri swap): sticky?
-- pesticide: constant damage over time
+* invasive species (rainbow algy palette swap): summons adds? or sticky?
+* noise pollution (rainbow sewy swap?): strong ranged attack? constant damage over time?
+* heat pollution (nukey swap?): melee attack gets stronger over time? +1 every time it hits? or +1 if not near hero? reaction on its turn only, 1AP
+* light pollution (light toxy swap. lavender?): immune to physical attacks? eek. or takes less damage?
+* oil spill! (black mercuri swap): sticky? or just 3 AP?
+* styrofoam or XPS (white plasty palette swap): heals when not adjacent to hero? doesn't chase? 1 AP. might need healStrength if doing
+* dumping? consumption/gluttony? (garby swap): 3 AP, seeks out powerups (lots of garbies and mercuris in level, DOES fully heal after eating
+* lobbying? greed? (black pharma swap): summons 1 pharma + 1 melee action. not tons of HP. penultimate boss?
+* final boss = humans/"human laziness"/apathy? summons 1 random add per turn, then acts as melee for 1 AP. or ranger? hm
+- pesticide/agriculture: constant damage over time
 - 1 of each normal enemy all at once = final boss OR final stage before final boss
-* final boss = humans/"human laziness"? summon garbage adds? any adds?
 - acid rain?
 - something that drains HP when it hits you? or just automatically heals 3 HP every turn?
 - garby palette swap that DOES heal fully after eating a powerup
+- a ranger with >1 AP
+- an escapey healer? eh
 
 implement enemy syncs if time, but keep very basic. no scaling, maybe even all the same effect
 
