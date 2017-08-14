@@ -74,19 +74,7 @@ function love.update(dt)
 	if game.state == "night" then
 		--if event queue is empty, 
 		if not peek(eventSetQueue) then
-			--hero defeated? back to title if so
-			if hero.hp.shown <= 0 then
-				queueSet({
-					fadeOutEvent(),
-					screenEvent("\n\n  GAME OVER\n    </3"),
-				})
-				--and return to title
-				-- print("...and return to title")
-				-- love.event.quit()
-				-- queue(functionEvent("unloadGameAndReturnToTitle"))
-				unloadGameAndReturnToTitle()
-			else
-				--NOT game over, so continue or finish enemy turn
+			--continue or finish enemy turn
 				--currently not shuffling here so that such as mercuris can take their turns consecutively, but this is lazy. can also break if they change rows
 				--TODO a much better solution is to do it in order of distance from hero. left-to-right is not equivalent to right-to-left if you go in order
 					--something something cellsInDistanceRange. loop through 1-2-3-4, break when you find one with AP?
@@ -107,7 +95,7 @@ function love.update(dt)
 			
 					startHeroTurn()
 				end
-			end
+			-- end
 		end
 	elseif game.state == "day" then
 		--checking sewy adjacency here instead of in draw()
@@ -149,6 +137,11 @@ function love.update(dt)
 					--END DEBUG
 				end
 			end
+		end
+		
+		--if out of events & AP, queue night and end of player turn
+		if not peek(eventSetQueue) and hero.ap.actual <= 0 then
+			startEnemyTurn()
 		end
 	end
 	
@@ -223,11 +216,6 @@ function love.keypressed(key)
 			if key == "space" then
 				heroSpecialAttack()
 			end
-		end
-		
-		--queue night & end of player turn TODO feels pretty weird to be doing this here tbh. at least move to playerAction() or something
-		if hero.ap.actual <= 0 then
-			startEnemyTurn()
 		end
 	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then		
 		if key == "up" or key == "w" then

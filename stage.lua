@@ -144,6 +144,16 @@ function allEnemiesAndBossForStage(n)
 	end
 end
 
+function gameOverIFHeroDead()
+	if hero.hp.actual <= 0 then
+		queueSet({
+			fadeOutEvent(),
+			screenEvent("\n\n  GAME OVER\n    </3"),
+		})
+		unloadGameAndReturnToTitle()
+	end
+end
+
 function unloadGameAndReturnToTitle()
 	queueSet({
 		gameStateEvent("state", "title"),

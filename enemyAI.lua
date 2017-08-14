@@ -212,7 +212,8 @@ function enemyAttackHero(ey, ex)
 		queue(statusEvent(ey, ex, "stick"))
 	end
 	
-	--hero defeated? TODO game over implementation
+	--check if hero defeated
+	gameOverIFHeroDead()
 end
 
 --real talk: TODO you gotta implement a* or something because this algo is awkward. hiding behind your friend is not the same as approaching your target
