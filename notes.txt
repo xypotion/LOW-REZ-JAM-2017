@@ -22,7 +22,7 @@ high-level to do & time estimates as of 8/7, 1AM
 * also, wow, there are almost 700 entrants already. frig.
 
 8/10: thanks to an interview, a day of studying (today), and D&D, you essentially have 3 days left for this project. most important things to get done:
-- bug: shouldn't cancel spawn when not enough room
+√ bug: shouldn't cancel spawn when not enough room
 √ bug: gluttonous bosses should not turn red. just a color bug, i think
 - bug: hero CAN die on own turn because of nukey. gotta check for that. should probably refactor game-over code in that case
 - todo: not enough fish drop in game. maybe don't make them a limited resource... just drop by ratio instead (easy)

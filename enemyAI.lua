@@ -363,14 +363,30 @@ end of each night:
 --...but when do you announce the boss & change the UI?
 
 function spawnEnemies(l, exclude)
-	--if not provided, get list of enemy species by popping off the stage's enemy list. if none, then return
-	local list = l or pop(stage.enemyList)
-	if not list then return end
-	
 	local empties = shuffle(allClearCells())
+	local list = nil
 	
-	--if there's space, spawn all enemies in list, one by one
-	if table.getn(list) <= table.getn(empties) then
+	--either just assign l to list (usually for stage.startingEnemies), or find a set of enemies in stage.enemyList that will fit in the available space
+	if l then
+		list = l
+	else
+		local nextEnemies
+		local loops = 1
+		while not list and loops <= table.getn(stage.enemyList) do
+		  nextEnemies = pop(stage.enemyList)
+			if table.getn(nextEnemies) <= table.getn(empties) then
+				list = nextEnemies
+			else
+				push(stage.enemyList, nextEnemies)
+				print("wasn't enough room")
+				tablePrint(stage.enemyList)
+			end
+			loops = loops + 1
+		end
+	end	
+	
+	--spawn all enemies in list one by one (if there's anything to spawn)
+	if list then
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
 			local newEnemy = enemy(en)
@@ -381,11 +397,34 @@ function spawnEnemies(l, exclude)
 				cellOpEvent(cell.y, cell.x, newEnemy)
 			})
 		end
-	else
-		--there wasn't enough space! probably gotta loop through all to get it TODO what you want
-		print("not enough space for "..table.getn(list).." enemies!")
 	end
 end
+
+-- function spawnEnemies(l, exclude)
+-- 	--if not provided, get list of enemy species by popping off the stage's enemy list. if none, then return
+-- 	local list = l or pop(stage.enemyList)
+-- 	if not list then return end
+--
+-- 	local empties = shuffle(allClearCells())
+--
+-- 	--if there's space, spawn all enemies in list, one by one
+-- 	if table.getn(list) <= table.getn(empties) then
+-- 		for k, en in ipairs(list) do
+-- 			local cell = pop(empties)
+-- 			local newEnemy = enemy(en)
+-- 			newEnemy.drop = pop(stage.powers)
+-- 			queueSet({
+-- 				waitEvent(0.25),
+-- 				soundEvent("tick"),
+-- 				cellOpEvent(cell.y, cell.x, newEnemy)
+-- 			})
+-- 		end
+-- 	else
+-- 		--there wasn't enough space! probably gotta loop through all to get it TODO what you want
+-- 		print("not enough space for "..table.getn(list).." enemies!")
+-- 		-- push(stage.enemyList, list)
+-- 	end
+-- end
 
 function spawnBossAndSwitchUI()
 	stage.boss = enemy(stage.bossSpecies)

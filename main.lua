@@ -192,6 +192,7 @@ function love.keypressed(key)
 			print(yyy, xxx, "occupied!")
 		end
 	end
+	if key == "t" then tablePrint(stage.enemyList) end
 	-- if key == "h" then
 	-- 	hero.hp.actual = hero.hp.actual + 3
 	-- 	queue(actuationEvent(hero.hp, 3))
@@ -321,4 +322,38 @@ function cellAt(y, x)
 	else
 		return nil
 	end
+end
+
+function peek(q)
+	return q[1]
+end
+
+function pop(q)
+	local item = q[1]
+	
+	for i = 2, table.getn(q) do
+		q[i - 1] = q[i]
+	end
+	
+	q[table.getn(q)] = nil
+
+	return item
+end
+
+function push(q, item)
+	table.insert(q, item)
+end
+
+--an old helper function i made in 2014 :)
+function tablePrint(table, offset)
+	offset = offset or "  "
+	
+	for k,v in pairs(table) do
+		if type(v) == "table" then
+			print(offset.."sub-table ["..k.."]:")
+			tablePrint(v, offset.."  ")
+		else
+			print(offset.."["..k.."] = "..tostring(v))
+		end
+	end	
 end

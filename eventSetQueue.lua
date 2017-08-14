@@ -176,23 +176,3 @@ function queueSet(eventSet)
 end
 
 --------------------------------------------------------------------------
-
-function peek(q)
-	return q[1]
-end
-
-function pop(q)
-	local item = q[1]
-	
-	for i = 1, table.getn(q) do
-		q[i - 1] = q[i]
-	end
-	
-	q[table.getn(q)] = nil
-
-	return item
-end
-
-function push(q, item)
-	table.insert(q, item)
-end
