@@ -205,7 +205,7 @@ function killEnemy(ty, tx)
 	--drop an item (removing enemy), play sound, actuate count decrement
 	if target.drop then
 		queueSet({
-			cellOpEvent(ty, tx, newPower(target.drop)),
+			cellOpEvent(ty, tx, newPower()),
 			soundEvent("kill"),
 			actuationEvent(stage.enemyCount, -1)
 		})

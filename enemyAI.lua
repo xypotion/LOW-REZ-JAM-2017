@@ -391,7 +391,8 @@ function spawnEnemies(l, exclude)
 		for k, en in ipairs(list) do
 			local cell = pop(empties)
 			local newEnemy = enemy(en)
-			newEnemy.drop = pop(stage.powers)
+			-- newEnemy.drop = pop(stage.powers) --leaving in in case you ever let common enemies drop rare powerups...
+			newEnemy.drop = true
 			queueSet({
 				waitEvent(0.25),
 				soundEvent("tick"),
