@@ -162,4 +162,5 @@ function unloadGameAndReturnToTitle()
 		functionEvent("initHero"), --queueing to happen again since this happens in love.load()
 	})
 	queue(fadeInEvent(1))
+	titleMenuCursorPos = 2
 end

@@ -25,7 +25,7 @@ high-level to do & time estimates as of 8/7, 1AM
 √ bug: shouldn't cancel spawn when not enough room
 √ bug: gluttonous bosses should not turn red. just a color bug, i think
 √ bug: hero CAN die on own turn because of nukey. gotta check for that. should probably refactor game-over code in that case
-- todo: not enough fish drop in game. maybe don't make them a limited resource... just drop by ratio instead (easy)
+√ todo: not enough fish drop in game. maybe don't make them a limited resource... just drop by ratio instead (easy)
 - todo: enemy turn order fix (then shuffle turns). have one turn queue the next via functionEvent if remaining AP? like skipping stones
 - todo: game over -> title with CONTINUE selected; victory -> title with CREDITS selected (easy, do it)
 - todo: remove print()s and DEBUGs

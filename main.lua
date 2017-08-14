@@ -126,6 +126,8 @@ function love.update(dt)
 					-- queue(functionEvent("unloadGameAndReturnToTitle"))
 					unloadGameAndReturnToTitle()
 					-- love.event.quit()
+					
+					titleMenuCursorPos = 3
 				else
 					--queue rare powerups
 					queueRarePowerups()
@@ -225,13 +227,14 @@ function love.keypressed(key)
 		elseif key == "return" or key == "space" then
 			queue(fadeOutEvent())
 			
-			if titleMenuCursorPos == 1 then
-				--start game
+			if titleMenuCursorPos == 1 then	--START
 				game.maxStage = 1
 				stageStart(1)
-			elseif titleMenuCursorPos == 2 then
+			elseif titleMenuCursorPos == 2 then --CONTINUE
 				stageStart(game.maxStage)
-			elseif titleMenuCursorPos == 3 then
+			elseif titleMenuCursorPos == 3 then --CREDITS
+				queue(screenEvent("\nCredits!", true))
+				queue(fadeInEvent())
 			end
 		end
 	end
