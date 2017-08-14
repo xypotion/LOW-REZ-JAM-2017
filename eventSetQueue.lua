@@ -89,15 +89,8 @@ function bgmEvent(nowName, nextName)
 end
 
 function bgmFadeEvent()
-	--TODO
-end
-
---for info popups, stage intros, boss intros, etc
-function screenEvent()
 	local e = {
-		class = "screen",
-		--graphic to display
-		--frames = {{xOffset, yOffset, alpha}s }
+		class = "bgmFade"
 	}
 	
 	return e

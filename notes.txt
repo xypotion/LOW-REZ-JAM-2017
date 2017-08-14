@@ -40,8 +40,8 @@ high-level to do & time estimates as of 8/7, 1AM
 	. inputLevel feels a little underused... but that and other refactoring TODOs are not important now, in the home stretch
 * PLAYTESTING!
 - music
-  - fading on stage transition, victory, game over
-  - other battle music, integrated into stages
+  √ fading on stage transition, victory, game over
+  √ other battle music, integrated into stages
 	- boss music
 	- title screen music
 	- game over music

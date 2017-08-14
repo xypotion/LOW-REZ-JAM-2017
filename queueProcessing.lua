@@ -55,6 +55,10 @@ function processEventSets(dt)
 				processBgmEvent(e)
 			end
 			
+			if e.class == "bgmFade" then
+				processBgmFadeEvent(e)
+			end
+			
 			if e.class == "bg" then
 				processBgEvent(e)
 			end
@@ -168,16 +172,34 @@ function processBgmEvent(e)
 	currentBGM = bgm[e.current]
 	currentBGM:play()
 	bgmTimer = 0
+
+	if bgmTimer == 0 then
+		bgmVolume = 1
+		setVolume()
+	end
 	
 	--if there is a next, set up for transition later. otherwise, loop current now
 	if e.next then
 		nextBGM = bgm[e.next]
+	print("just started music in queue processing", nextBGM, currentBGM) --TODO
 	else
 		currentBGM:setLooping(true)
 		nextBGM = nil
 	end
 	
 	e.finished = true
+end
+
+function processBgmFadeEvent(e)
+	bgmVolume = bgmVolume - 0.05
+	setVolume()
+	
+	if bgmVolume <= 0 then
+		currentBGM:stop()
+		nextBGM = nil
+		
+		e.finished = true
+	end
 end
 
 function processBgEvent(e)

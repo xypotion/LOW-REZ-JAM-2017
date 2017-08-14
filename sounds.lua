@@ -66,10 +66,12 @@ end
 
 --if there is a nextBGM and currentBGM has finished, set current to next and play that on loop
 function checkBGMTimerAndTransition(dt)
-	if nextBGM then
+	if nextBGM then --and currentBGM:isPlaying() then
+		-- print("waiting...")
 		if bgmTimer >= currentBGM:getDuration() then
 			--transition
 			print("transition!", bgmTimer, currentBGM:getDuration())
+	print("transitioning music", nextBGM, currentBGM) --TODO
 			currentBGM:stop()
 			
 			currentBGM = nextBGM
@@ -78,6 +80,7 @@ function checkBGMTimerAndTransition(dt)
 			
 			currentBGM:setLooping(true)
 			currentBGM:play()
+	print("transitioned.", nextBGM, currentBGM) --TODO
 		else
 			bgmTimer = bgmTimer + dt
 		end

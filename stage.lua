@@ -39,7 +39,7 @@ function stageStart(n)
 		end
 	end
 	stage.enemyCount.actual = stage.enemyCount.max
-	print(stage.enemyCount.actual)
+	-- print(stage.enemyCount.actual)
 	
 	--DEBUG kinda
 	--screen should be faded out at this point, either from title screen transition or stageEnd()
@@ -70,7 +70,19 @@ function stageStart(n)
 		bgEvent("night1", 0)
 	})
 	
-	queue(bgmEvent("battleBIntro", "battleB")) --DEBUG
+	--start up which music?
+	if game.maxStage < game.lastStage then
+		if game.maxStage % 2 == 0 then
+			queue(bgmEvent("battleAIntro", "battleA"))
+		else
+			queue(bgmEvent("battleBIntro", "battleB"))
+		end
+	else
+		--boss music			
+		queue(bgmEvent("battleAIntro", "battleA")) --TODO actual boss music
+	end
+	print("queueing music at start of stage", nextBGM, currentBGM) --TODO
+	
 	queue(fadeInEvent())
 	
 	--spawn starting enemies
@@ -96,7 +108,8 @@ function stageEnd()
 	stage.boss = nil
 	
 	--fade music
-	print("fading music") --TODO
+	print("fading music at end of stage", nextBGM, currentBGM) --TODO
+	queue(bgmFadeEvent())
 	
 	--quick fade before resetting hero pos & stats
 	queue(fadeOutEvent())
@@ -108,7 +121,8 @@ function allEnemiesAndBossForStage(n)
 	if n == 1 then
 		return 
 		-- {"heat", "gluttony", "noise", "invasive", "oil", "light", "xps", "greed"}, --DEBUG
-		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		-- {"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		{"sewy"},
 		{
 			-- {"garby", "garby"},
 			-- {"toxy", "toxy"},
@@ -157,6 +171,7 @@ end
 function unloadGameAndReturnToTitle()
 	queueSet({
 		gameStateEvent("state", "title"),
+		bgmFadeEvent(),
 		bgEvent("title1", 0),
 		functionEvent("initStage"), --queueing to happen again since this happens in love.load()
 		functionEvent("initHero"), --queueing to happen again since this happens in love.load()
