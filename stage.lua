@@ -70,7 +70,7 @@ function stageStart(n)
 		bgEvent("night1", 0)
 	})
 	
-	queue(bgmEvent("battleAIntro", "battleA")) --DEBUG
+	queue(bgmEvent("battleBIntro", "battleB")) --DEBUG
 	queue(fadeInEvent())
 	
 	--spawn starting enemies

@@ -33,7 +33,9 @@ function loadSounds()
 	bgm = {
 		--just all sources; event can set next, repeat is implied, fade is a separate action
 		battleAIntro = love.audio.newSource("bgm/battleAIntro1.wav"),
-		battleA = love.audio.newSource("bgm/battleA1.wav")
+		battleA = love.audio.newSource("bgm/battleA1.wav"),
+		battleBIntro = love.audio.newSource("bgm/battleBIntro1.wav"),
+		battleB = love.audio.newSource("bgm/battleB1.wav"),
 	}
 	
 	masterVolume = 1
