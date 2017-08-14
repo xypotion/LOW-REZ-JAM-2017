@@ -81,7 +81,7 @@ function love.update(dt)
 					screenEvent("\n\n  GAME OVER\n    </3"),
 				})
 				--and return to title
-				print("...and return to title") --TODO
+				-- print("...and return to title")
 				-- love.event.quit()
 				-- queue(functionEvent("unloadGameAndReturnToTitle"))
 				unloadGameAndReturnToTitle()
@@ -134,7 +134,7 @@ function love.update(dt)
 						screenEvent("\n\nYOU WIN!\n\nThanks for\nplaying!"),
 					})
 					--and return to title
-					-- print("...and return to title") --TODO
+					-- print("...and return to title")
 					-- queue(functionEvent("unloadGameAndReturnToTitle"))
 					unloadGameAndReturnToTitle()
 					-- love.event.quit()

@@ -43,8 +43,8 @@ function loadSounds()
 	bgmTimer = 0
 end
 
+--called when "V" pressed; decreases volume by 25% or sets to 1 if at 0
 function cycleVolume()
-	--TODO for fades (?) and "V"
 	masterVolume = (masterVolume - 0.25) % 1.25
 	
 	setVolume()

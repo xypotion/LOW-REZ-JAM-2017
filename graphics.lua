@@ -91,7 +91,7 @@ function loadQuads()
 		},
 		enemiesLeft = love.graphics.newQuad(52, 0, 12, 5, 64, 64),
 		enemyAlive = love.graphics.newQuad(52, 6, 3, 2, 64, 64),
-		enemyDead = love.graphics.newQuad(56, 6, 3, 2, 64, 64), --TODO decide if you actually want this
+		-- enemyDead = love.graphics.newQuad(56, 6, 3, 2, 64, 64), --TODO decide if you actually want this
 		boss = {
 			love.graphics.newQuad(52, 9, 12, 5, 64, 64),
 			love.graphics.newQuad(52, 15, 12, 5, 64, 64),

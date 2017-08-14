@@ -25,44 +25,61 @@ high-level to do & time estimates as of 8/7, 1AM
 - bug: shouldn't cancel spawn when not enough room
 - bug: gluttonous bosses should not turn red. just a color bug, i think
 - bug: hero CAN die on own turn because of nukey. gotta check for that. should probably refactor game-over code in that case
+- todo: not enough fish drop in game. maybe don't make them a limited resource... just drop by ratio instead (easy)
 - todo: enemy turn order fix (then shuffle turns). have one turn queue the next via functionEvent if remaining AP? like skipping stones
-- check out other TODOs :|
+- todo: game over -> title with CONTINUE selected; victory -> title with CREDITS selected (easy, do it)
+- todo: remove print()s and DEBUGs
+- other minor TODOs:
+  - casting while stuck = stuck animation, not casting
+	- ranged attack animation
+	- boss should always spawn, even when there are 8 powerups on screen
+	- killEnemy() when no drop: add sound? any other change?
+	- can bgEvents work when time = 0?
+	- UI sheet has an unnecessary repetition or two. if graphic is exactly the same, don't need multiple quads
+	  - gosh, kinda ditto for hero sheet. :|
+	. inputLevel feels a little underused... but that and other refactoring TODOs are not important now, in the home stretch
+* PLAYTESTING!
+- music
+  - fading on stage transition, victory, game over
+  - other battle music, integrated into stages
+	- boss music
+	- title screen music
+- better default wish effect
+  - fine: 2 damage, not 1
+	- better: 3 damage to 3 random enemies
 - bosses
   √ flow within stages
 	- actual bosses' graphics/stats/behaviors
 	- fanfare?
 - stages
   √ most mechanics
+	- make sure Continue actually works
 	- actual enemy/boss arrays
-- music
-  - fading on stage transition, victory, game over
-  - other battle music, integrated into stages
-	- boss music
-	- title screen music
 √ rudimentary ending
   - make it look better
 √ game over
   - make it look better
 - title screen:
   √ menu interaction
-	- credits
+	- credits: cfxr, beepbox, pixen, lowrezjam, itchio, dustin?
 	- make it look a little better. city + roads or something (title text moves? ehh)
 - info popups, if time. printing is fine if no time for hand-drawn art
-- boss powerups. if out of time: killing bosses just increases your max HP, maybe other static boosts (see below)
-  - separate action of collecting & application of powerup. will help when Continuing and reinitializing hero
+- boss powerups. if out of time: killing bosses just increases your max HP, MAYBE other static boosts (see below)
+  - if doing fancy style: separate action of collecting & application of powerup. will help when Continuing and reinitializing hero
+	  - i really want to do these, but i could see implementing them taking several hours. 
+		- some change behavior code. maybe actually easier than stats?
+		- some change stats that would need to be loaded in multiple ways, plus graphical toggles
 - autosave for stage progress, if time
   - include collected powerups if not static
 	- turn count + death count for nice ending screen
 √ V for master volume
   - actual graphic + rectangles (easy, do it)
-- game over -> title with CONTINUE selected; victory -> title with CREDITS selected (easy, do it)
-- remove print()s and DEBUGs
-- if time:
+- nice-to-haves if time:
   - resizable window!
   - alternate stage backgrounds! mountains, city, whole world for last stage?
 	- better animation for "magic" damage/effects. spark is boring
 	- slightly better sfx
-	- "pure!" effect after killing enemy? not needed
+	- "pure!" effect after killing enemy? def not needed
 	- alternate title screen if game won
 
 Heart's Desire: Black Lake
