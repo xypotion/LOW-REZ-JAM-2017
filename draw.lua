@@ -202,7 +202,8 @@ function drawEnemyUI()
 			--flashing "left?"
 			love.graphics.setColor(255, getNonCharacterAnimFrame() * 127, getNonCharacterAnimFrame() * 127)
 			love.graphics.draw(ui, quads_ui.enemiesLeft, 51, 8)
-			white()
 		end
 	end
+	
+	white()
 end

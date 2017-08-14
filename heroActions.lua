@@ -3,7 +3,7 @@ function initHero()
 	hero = {
 		class = "hero",
 		-- hp = {max = 9, actual = 9, shown = 9, posSound = "hp", negSound = nil},
-		hp = {max = 1, actual = 1, shown = 1, posSound = "hp", negSound = nil}, --for testing game over easily!
+		hp = {max = 9, actual = 9, shown = 9, posSound = "hp", negSound = nil}, --for testing game over easily!
 		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
 		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
 		attack = 9,
