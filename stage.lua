@@ -110,10 +110,10 @@ function allEnemiesAndBossForStage(n)
 		-- {"heat", "gluttony", "noise", "invasive", "oil", "light", "xps", "greed"}, --DEBUG
 		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
 		{
-			{"garby", "garby"},
-			{"toxy", "toxy"},
-			{"algy", "algy"},
-			{"sewy", "sewy"},
+			-- {"garby", "garby"},
+			-- {"toxy", "toxy"},
+			-- {"algy", "algy"},
+			-- {"sewy", "sewy"},
 			-- {"nukey", "nukey"},
 			-- {"plasty", "plasty"},
 			-- {"pharma", "pharma"},

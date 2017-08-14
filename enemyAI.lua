@@ -363,7 +363,7 @@ end of each night:
 --spawning bosses: go ahead and use the same algo as above, for the wild case that all other cells contain powers & there's nowhere to spawn at first TODO
 --...but when do you announce the boss & change the UI?
 
-function spawnEnemies(l, exclude)
+function spawnEnemies(l)
 	local empties = shuffle(allClearCells())
 	local list = nil
 	
@@ -402,7 +402,7 @@ function spawnEnemies(l, exclude)
 	end
 end
 
--- function spawnEnemies(l, exclude)
+-- function spawnEnemies(l)
 -- 	--if not provided, get list of enemy species by popping off the stage's enemy list. if none, then return
 -- 	local list = l or pop(stage.enemyList)
 -- 	if not list then return end
@@ -429,22 +429,21 @@ end
 -- end
 
 function spawnBossAndSwitchUI()
-	stage.boss = enemy(stage.bossSpecies)
-	
-	local cell = {}
 	local empties = shuffle(allClearCells())
-	if empties[1] then
-		cell = empties[1]
-	else
-		--TODO case that there are somehow 8 powerups on screen when you kill the last enemy; replace one
-	end
+		
+	if empties[1] then		
+		-- there's at least one clear cell for the boss, so spawn	it
+		stage.boss = enemy(stage.bossSpecies)
 	
-	print("queue boss spawn now ~~")
-	queueSet({
-		waitEvent(0.25),
-		soundEvent("tick"),
-		cellOpEvent(cell.y, cell.x, stage.boss)
-	})
+		print("queue boss spawn now ~~")
+		queueSet({
+			waitEvent(0.25),
+			soundEvent("tick"),
+			cellOpEvent(empties[1].y, empties[1].x, stage.boss)
+		})
+	else
+		--miraculously, no free spaces exist; try again next round
+	end
 end
 
 function enemy(species)
