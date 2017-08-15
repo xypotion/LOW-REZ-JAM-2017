@@ -516,7 +516,7 @@ function enemy(species)
 			enemy.ai = "ranger"
 		elseif species == "noise" then
 			enemy.hp.max = 30
-			enemy.ap.max = 2
+			enemy.ap.max = 2 --TODO 3? nothing gets 3 AP... 3 for Light if you swap with Noise? or shift XPS and Noise down?
 			--TODO stinky like sewy? maybe whole field?
 		elseif species == "xps" then
 			enemy.hp.max = 50
@@ -525,6 +525,7 @@ function enemy(species)
 		elseif species == "gluttony" then
 			enemy.hp.max = 30
 			enemy.ap.max = 2
+			enemy.attack = 2
 			enemy.ai = "glutton"
 		elseif species == "greed" then
 			enemy.hp.max = 30
