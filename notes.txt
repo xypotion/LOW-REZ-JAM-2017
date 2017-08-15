@@ -23,12 +23,16 @@ high-level to do & time estimates as of 8/7, 1AM
 
 8/14, 11:15 PM - basically a day an a half left. what do you still need to do?
 - todo: track turns & deaths, then print on ending screen. don't forget to reset them, too, in case player wants to try again!
-- todo: grey out Continue on load if you're not implementing autosaves
+- todo: disable + grey out Continue on load if you're not implementing autosaves
 - other minor TODOs:
+  - make Start reset enemy info? hm
 	- ranged attack animation
-	- killEnemy() when no drop (e.g. bosses): add sound? any other change? (only do if possible; boss adds should have drops, right?)
-	- can bgEvents work when time = 0?
-	- UI sheet has an unnecessary repetition or two. if graphic is exactly the same, don't need multiple quads
+  - resizable window!
+  - alternate stage backgrounds! mountains, city, whole world for last stage?
+	- alternate title screen if game won
+	. killEnemy() when no drop (e.g. bosses): add sound? any other change? (only do if possible; boss adds should have drops, right?)
+	? can bgEvents work when time = 0? (maybe doesn't matter)
+	. UI sheet has an unnecessary repetition or two. if graphic is exactly the same, don't need multiple quads
 	  - gosh, kinda ditto for hero sheet. :|
 		- condense graphics, in general. but not high-priority
 	. inputLevel feels a little underused... but that and other refactoring TODOs are not important now, in the home stretch
@@ -39,14 +43,13 @@ high-level to do & time estimates as of 8/7, 1AM
 * PLAYTESTING!
 * PUBLISHING & UPLOADING!
   - including screenshots and little blurbs for game page
-- make ending look better
-- make game over look better
-- title screen:
-	- credits: cfxr, beepbox, pixen, lowrezjam, itchio, dustin?
-	- make it look a little better. city + roads or something (title text moves? ehh)
+	- custom app icon? hmm
+- better art:
+  - title screen
+	- ending
+	? last stage?
+	? two stage backgrounds (one with mountains instead of city?)
 - music
-	- title screen music
-	? game over music
 	- victory music
 	- last stage & final boss music?
 - bosses
@@ -57,7 +60,7 @@ high-level to do & time estimates as of 8/7, 1AM
 		- adds for greed
 		- adds for apathy
 		- healing for xps? or nah?
-	- fanfare?
+	- fanfare when spawned? alarm or something?
 	- death sound and/or animation?
 - boss powerups... if out of time: killing bosses just increases your max HP, MAYBE other static boosts (see below)
   - if doing fancy style: separate action of collecting & application of powerup. will help when Continuing and reinitializing hero
@@ -69,12 +72,9 @@ high-level to do & time estimates as of 8/7, 1AM
   - include collected powerups if not static
 	- turn count + death count for nice ending screen
 - nice-to-haves if time:
-  - resizable window!
-  - alternate stage backgrounds! mountains, city, whole world for last stage?
 	- better animation for "magic" damage/effects. spark is boring
 	- slightly better sfx
 	- "pure!" effect after killing enemy? def not needed
-	- alternate title screen if game won
 
 Heart's Desire: Black Lake
 

@@ -10,6 +10,10 @@ function initStage()
 end
 	
 function stageStart(n)
+	
+	--fade music
+	print("fading music at end of stage", nextBGM, currentBGM) --TODO
+	queue(bgmFadeEvent())
 	--reset hero stats (will be actuated in a moment). yes, it's OK to do this here. don't panic. possibly change/move later when you implement Continue TODO
 	hero.hp.actual = hero.hp.max
 	hero.ap.actual = hero.ap.max
@@ -106,10 +110,6 @@ end
 
 function stageEnd()
 	stage.boss = nil
-	
-	--fade music
-	print("fading music at end of stage", nextBGM, currentBGM) --TODO
-	queue(bgmFadeEvent())
 	
 	--quick fade before resetting hero pos & stats
 	queue(fadeOutEvent())
@@ -242,9 +242,10 @@ end
 
 function gameOverIFHeroDead()
 	if hero.hp.actual <= 0 then
+		queue(bgmFadeEvent())
 		queueSet({
 			fadeOutEvent(),
-			screenEvent("\n\n\nGAME OVER\n</3"),
+			screenEvent("</3\nGAME OVER\n\n\"Please try again!\"\nMother Nature", true),
 		})
 		unloadGameAndReturnToTitle()
 	end
@@ -258,6 +259,7 @@ function unloadGameAndReturnToTitle()
 		functionEvent("initStage"), --queueing to happen again since this happens in love.load()
 		functionEvent("initHero"), --queueing to happen again since this happens in love.load()
 	})
+	queue(bgmEvent("titleIntro", "title"))
 	queue(fadeInEvent(1))
 	titleMenuCursorPos = 2
 end

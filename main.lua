@@ -57,6 +57,7 @@ function love.load()
 	initHero()
 		
 	--fade in to title
+	queue(bgmEvent("titleIntro", "title"))
 	queue(fadeInEvent(1))
 end
 
@@ -247,7 +248,7 @@ function love.keypressed(key)
 			if key == "d" or key == "right" then
 				heroImpetus(0, 1)
 			end
-			if key == "space" then
+			if key == "space" or key == "return" then
 				heroSpecialAttack()
 			end
 		end
@@ -269,7 +270,12 @@ function love.keypressed(key)
 			elseif titleMenuCursorPos == 2 then --CONTINUE
 				stageStart(game.maxStage)
 			elseif titleMenuCursorPos == 3 then --CREDITS
-				queue(screenEvent("\nCredits!", true))
+				queue(screenEvent("\nCredits:\nAll art, sound, design, and code by Max Wunderlich.", true))
+				queue(screenEvent("\nArt created in Pixen\n\npixenapp.com", true))
+				queue(screenEvent("\nMusic composed in Beepbox\n\nbeepbox.co", true))
+				queue(screenEvent("\nSFX created in CFXR\n\nthirdcog.eu/\napps/cfxr", true))
+				queue(screenEvent("\nMade with Löve for LOW REZ JAM 2017\n\nitch.io/jam/lowrezjam2017", true))
+				queue(screenEvent("\n\n\nlove2d.org\n<3", true))
 				queue(fadeInEvent())
 			end
 		end
