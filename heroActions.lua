@@ -235,31 +235,30 @@ function heroSpecialAttack()
 	
 	--and do stuff!
 	
-	--DEBUG
-	hy, hx = locateHero()
-	attacky = {soundEvent("wish"), animEvent(hy, hx, glowAnimFrames())}
-	for y, r in ipairs(stage.field) do
-		for x, c in ipairs(r) do
-			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
-				c.contents.hp.actual = c.contents.hp.actual - 1
-				push(attacky, actuationEvent(c.contents.hp, -1))
-				push(attacky, animEvent(y, x, sparkAnimFrames()))
-			end
-		end
-	end
-	queueSet(attacky)
+	--attack up to 3 random enemies
+	local enemyCells = shuffle(getAllCells("enemy"))
 	
-	--looping again after attacking so that deaths happen after damage animactuation
-	for y, r in ipairs(stage.field) do
-		for x, c in ipairs(r) do
-			if c and c.contents and c.contents.class and c.contents.class == "enemy" then
-				if c.contents.hp.actual <= 0 then
-					killEnemy(y, x)
-				end
+	for i = 1, 3 do
+		local ec = pop(enemyCells)
+		
+		--attack one
+		if ec then
+			local en = cellAt(ec.y, ec.x).contents
+			en.hp.actual = en.hp.actual - 3
+			queueSet({
+				soundEvent("nukey"),
+				animEvent(ec.y, ec.x, sparkAnimFrames()),
+				actuationEvent(en.hp, -3)
+			})
+			
+			--defeated?
+			if en.hp.actual <= 0 then
+				killEnemy(ec.y, ec.x)
 			end
 		end
 	end
-	--END DEBUG TODO this attack should pick 3 and do 3 damage to each
+	
+	--TODO healing effect IF you have the powerup
 	
 	processNow()
 end

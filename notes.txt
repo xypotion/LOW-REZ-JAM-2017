@@ -29,8 +29,10 @@ high-level to do & time estimates as of 8/7, 1AM
 - todo: enemy turn order fix (then shuffle turns). have one turn queue the next via functionEvent if remaining AP? like skipping stones
 √ todo: game over -> title with CONTINUE selected; victory -> title with CREDITS selected (easy, do it)
 - todo: remove print()s and DEBUGs
+- todo: P to pass a turn? AND can't use a wish with no enemies? 
+  * OR trying to use a wish with no enemies costs only AP and no SP?
 - other minor TODOs:
-  - casting while stuck = stuck animation, not casting
+  √ casting while stuck = stuck animation, not casting
 	- ranged attack animation
 	√ boss should always spawn, even when there are 8 powerups on screen
 	- killEnemy() when no drop: add sound? any other change? (only do if possible; boss adds should have drops, right?)
@@ -47,9 +49,9 @@ high-level to do & time estimates as of 8/7, 1AM
 	- game over music
 	- victory music
 	- last stage & final boss music?
-- better default wish effect
-  - fine: 2 damage, not 1
-	- better: 3 damage to 3 random enemies
+√ better default wish effect
+  x fine: 2 damage, not 1
+	√ better: 3 damage to 3 random enemies
 - bosses
   √ flow within stages
 	- actual bosses' graphics/stats/behaviors

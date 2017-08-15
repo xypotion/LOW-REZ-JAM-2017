@@ -163,6 +163,7 @@ end
 
 
 function processSoundEvent(e)
+	sfx[e.soundName]:stop()
 	sfx[e.soundName]:play()
 	
 	e.finished = true
