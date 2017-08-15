@@ -21,7 +21,20 @@ function love.draw()
 	white()
 		
 	--print overlay text. DEBUG, kinda.
-	love.graphics.print(overlay.text, overlay.xOffset, 0)
+	-- love.graphics.print(overlay.text, overlay.xOffset, 0)
+	if overlay.backdrop then 
+		love.graphics.setColor(0, 0, 127, 223)
+		love.graphics.rectangle("fill", 1 + overlay.xOffset, 1, 62, 62)
+		love.graphics.setColor(0, 127, 127, 255)
+		love.graphics.rectangle("line", 1 + overlay.xOffset, 1, 62, 62)
+		white()
+	end
+	
+	if overlay.image then
+		love.graphics.draw(overlay.image, overlayImageQuad, 24 + overlay.xOffset, 4)
+	end
+	
+	love.graphics.printf(overlay.text, overlay.xOffset + 2, 2, 60, "center")
 	
 	--show volume popup
 	if volumePopupAlpha > 0 then

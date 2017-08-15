@@ -31,7 +31,7 @@ function love.load()
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
 	bgMain = {graphic = "title1", alpha = 255} --TODO opening title changes if you've beaten the game. do if time!
-	love.graphics.setFont(love.graphics.newFont(7))
+	love.graphics.setFont(love.graphics.newFont(8))
 	overlay = {xOffset = 0, text = ""}
 
 	--find & load autosave for progress, hero's current inventory (8 bools, i think), and enemy info panels seen. pretty simple
@@ -188,6 +188,30 @@ function love.keypressed(key)
 		end
 	end
 	if key == "t" then tablePrint(stage.enemyList) end
+	-- if key == "x" then queue(screenEvent("The quick brown fox jumps over the lazy dog. Oh, did you know that already?", true, true)) end
+	-- if key == "x" then queue(screenEvent("\n    TOXY\n\nThe quick brown fox jumps over the lazy dog.", true, true, enemySheets.toxy)) end
+	-- if key == "x" then queue(screenEvent("\n\n- BOSS -\n\nNOISE\nPOLLUTION", true, true, enemySheets.toxy)) end
+	if key == "x" then 
+		queue(screenEvent("\n\nGARBY\nIt never stops consuming.", true, true, enemySheets.garby))
+		queue(screenEvent("\n\nTOXY\nA meanie that hurts from afar.", true, true, enemySheets.toxy))
+		queue(screenEvent("\n\nMERCURI\nA.K.A. Quicksilver.", true, true, enemySheets.mercuri))
+		queue(screenEvent("\n\nNUKEY\nDANGER: UNSTABLE ELEMENTS", true, true, enemySheets.nukey))
+		queue(screenEvent("\n\nPHARMA\nGood for you... or not?", true, true, enemySheets.pharma))
+		queue(screenEvent("\n\nALGY\nSo sticky! Don't touch it.", true, true, enemySheets.algy))
+		queue(screenEvent("\n\nPLASTY\nHard to break down!", true, true, enemySheets.plasty))
+		queue(screenEvent("\n\nSEWY\nUnbearably smelly. Yuck.", true, true, enemySheets.sewy))
+	end
+	if key == "z" then 
+		queue(screenEvent("\n\n- BOSS -\n\nNOISE\nPOLLUTION", true, true, enemySheets.noise))
+		queue(screenEvent("\n\n- BOSS -\n\nHEAT\nPOLLUTION", true, true, enemySheets.heat))
+		queue(screenEvent("\n\n- BOSS -\n\nLIGHT\nPOLLUTION", true, true, enemySheets.light))
+		queue(screenEvent("\n\n- BOSS -\n\nINVASIVE\nSPECIES", true, true, enemySheets.invasive))
+		queue(screenEvent("\n\n- BOSS -\n\nOIL\nSPILL", true, true, enemySheets.oil))
+		queue(screenEvent("\n\n- BOSS -\n\nXPS", true, true, enemySheets.xps))
+		queue(screenEvent("\n\n- BOSS -\n\nGLUTTONY", true, true, enemySheets.gluttony))
+		queue(screenEvent("\n\n- BOSS -\n\nGREED", true, true, enemySheets.greed))
+		queue(screenEvent("\n\n- BOSS -\n\nAPATHY", true, true, enemySheets.apathy))
+	end
 	-- if key == "h" then
 	-- 	hero.hp.actual = hero.hp.actual + 3
 	-- 	queue(actuationEvent(hero.hp, 3))

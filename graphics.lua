@@ -39,6 +39,8 @@ function loadGraphics()
 end
 
 function loadQuads()	
+	overlayImageQuad = love.graphics.newQuad(0, 0, 16, 16, 64, 64)
+	
 	characterQuads = {
 		idle = {
 			love.graphics.newQuad(0, 0, 16, 16, 64, 64),

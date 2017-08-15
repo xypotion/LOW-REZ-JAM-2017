@@ -136,11 +136,13 @@ function fadeInEvent(time)
 end
 
 --for overlays and such. text or image flies up from the bottom & is then dismissed either after a wait or a keypress
-function screenEvent(text, kr) --TODO should actually be an overlay graphic's name, but just text for now
+function screenEvent(text, kr, bd, im) --TODO should actually be an overlay graphic's name, but just text for now
 	local e = {
 		class = "screen",
 		text = text,
-		keypressRequired = kr
+		keypressRequired = kr,
+		backdrop = bd,
+		image = im
 	}
 		
 	return e

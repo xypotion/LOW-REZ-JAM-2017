@@ -265,6 +265,9 @@ function processScreenEvent(e)
 		overlay.text = e.text
 		overlay.xOffset = 64
 		e.state = "flyin"
+		
+		if e.backdrop then overlay.backdrop = true else overlay.backdrop = false end
+		if e.image then overlay.image = e.image else overlay.image = nil end
 	elseif e.state == "flyin" then
 		overlay.xOffset = overlay.xOffset - 8
 		

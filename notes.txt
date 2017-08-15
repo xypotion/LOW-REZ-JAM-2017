@@ -44,7 +44,7 @@ high-level to do & time estimates as of 8/7, 1AM
 - music
   √ fading on stage transition, victory, game over
   √ other battle music, integrated into stages
-	- boss music
+	- boss music? maybe not?
 	- title screen music
 	- game over music
 	- victory music
