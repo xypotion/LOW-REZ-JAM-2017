@@ -101,6 +101,7 @@ function loadQuads()
 		tinyHeart = {
 			love.graphics.newQuad(0, 30, 8, 7, 64, 64),
 			love.graphics.newQuad(9, 30, 8, 7, 64, 64),
-		}
+		},
+		volume = love.graphics.newQuad(27, 0, 22, 5, 64, 64)
 	}
 end

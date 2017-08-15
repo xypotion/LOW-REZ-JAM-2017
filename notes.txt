@@ -23,7 +23,6 @@ high-level to do & time estimates as of 8/7, 1AM
 
 8/14, 11:15 PM - basically a day an a half left. what do you still need to do?
 - todo: track turns & deaths, then print on ending screen. don't forget to reset them, too, in case player wants to try again!
-- todo: actual volume graphic + rectangles (easy, do it)
 - todo: show story after starting
 - todo: grey out Continue if you're not implementing autosaves
 - other minor TODOs:

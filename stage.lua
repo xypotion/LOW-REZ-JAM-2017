@@ -88,7 +88,7 @@ function stageStart(n)
 	--spawn starting enemies
 	queue(actuationEvent(stage.enemyCount, stage.enemyCount.actual))
 	
-	queue(screenEvent("\n\n\n  STAGE "..game.maxStage)) --TODO use graphics, not text
+	queue(screenEvent("\n\n\nSTAGE "..game.maxStage)) --TODO use graphics, not text
 	-- queue(screenEvent("\n\n\n  STAGE "..game.maxStage.."\n\n    press SPACE", true)) --TODO use graphics, not text
 	
 	--and the awkward part... having these be called (via queue & processing) AFTER the above things ensures that enemy spawns never overwrite hero
@@ -244,7 +244,7 @@ function gameOverIFHeroDead()
 	if hero.hp.actual <= 0 then
 		queueSet({
 			fadeOutEvent(),
-			screenEvent("\n\n  GAME OVER\n    </3"),
+			screenEvent("\n\n\nGAME OVER\n</3"),
 		})
 		unloadGameAndReturnToTitle()
 	end

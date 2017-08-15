@@ -38,9 +38,16 @@ function love.draw()
 	
 	--show volume popup
 	if volumePopupAlpha > 0 then
+		love.graphics.setColor(30, 37, 108, volumePopupAlpha)
+		love.graphics.rectangle("fill", 0, 57, 31, 7)
+		
 		love.graphics.setColor(255, 255, 255, volumePopupAlpha)
-		love.graphics.print("volume "..masterVolume, 2, 56)
-		-- love.graphics.rectangle? + ui TODO
+		-- love.graphics.print("volume "..masterVolume, 2, 56)
+		love.graphics.draw(ui, quads_ui.volume, 7, 58)
+
+		-- love.graphics.setColor(255, 255, 255, volumePopupAlpha)
+		love.graphics.rectangle("fill", 2, 62 - masterVolume * 4, 3, masterVolume * 4)
+		
 		white()
 	end
 	

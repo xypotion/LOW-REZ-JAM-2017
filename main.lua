@@ -111,7 +111,7 @@ function love.update(dt)
 			if stage.boss.hp.shown <= 0 and not peek(eventSetQueue) then
 				--stage over!
 				-- print("boss is dead")
-				queue(screenEvent("\n\n\n  STAGE "..game.maxStage.."\n  COMPLETE!"))
+				queue(screenEvent("\n\nSTAGE "..game.maxStage.."\nCOMPLETE!"))
 				-- queue(screenEvent("\n\n  STAGE "..game.maxStage.."\n  COMPLETE!\n\n Choose reward:"))
 			
 				--DEBUGgy
@@ -152,7 +152,7 @@ function love.update(dt)
 	
 	--fade volume popup
 	if volumePopupAlpha > 0 then
-		volumePopupAlpha = volumePopupAlpha - 5
+		volumePopupAlpha = volumePopupAlpha - 2
 	end
 end
 
