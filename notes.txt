@@ -45,8 +45,8 @@ high-level to do & time estimates as of 8/7, 1AM
   - including screenshots and little blurbs for game page
 	- custom app icon? hmm
 - better art:
-  - title screen
-	- ending
+  √ title screen
+	√ ending
 	? last stage?
 	? two stage backgrounds (one with mountains instead of city?)
 - music
@@ -690,7 +690,8 @@ if doing 8 normal stages + a final stage & boss, first 8 give set power-ups:
 - 	fish heal more at bottom
 - 	wish hurts surrounding enemies
 - 	wish does a row/column laser attack
-?		wish hits all enemies?
+*		wish hits all enemies instead of 3
+*		OR wish does 4 damage instead of 3
 *		attack + 1 if HP full
 * 	all fish also heal all AP
 *		blue fish heal 3 HP
