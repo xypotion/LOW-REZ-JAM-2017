@@ -119,42 +119,54 @@ end
 
 function allEnemiesAndBossForStage(n)
 	if n == 1 then
-		return 
+		return
 		-- {"heat", "gluttony", "noise", "invasive", "oil", "light", "xps", "greed"}, --DEBUG
-		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
-		-- {"algy"},
+		-- {"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		{"garby", "garby"},
 		{
-			-- {"garby", "garby"},
-			-- {"toxy", "toxy"},
-			-- {"algy", "algy"},
-			-- {"sewy", "sewy"},
-			-- {"nukey", "nukey"},
-			-- {"plasty", "plasty"},
-			-- {"pharma", "pharma"},
-			-- {"mercuri", "mercuri"},
-			{"toxy"}
+			{"garby"},
+			{"garby"},
+			{"garby"},
+			{"garby", "garby"},
 		},
-		-- {{"garby", "garby", "garby", "garby"}, },--, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
-		-- "invasive species"
-		"oil"
+		"heat"
 	elseif n == 2 then
 		return
-		{"toxy", "nukey"},-- "garby", "algy", "plasty", "pharma"},--, "nukey", "mercuri"}, --DEBUG
-		-- {
-		-- 	{"garby", "garby"},
-		-- 	{"toxy", "toxy"},
-		-- 	{"algy", "algy"},
-		-- 	{"sewy", "sewy"},
-		-- 	{"nukey", "nukey"},
-		-- 	{"plasty", "plasty"},
-		-- 	{"pharma", "pharma"},
-		-- 	{"mercuri", "mercuri"},
-		-- },
-		{{"pharma", "pharma"}},--, {"garby"}, {"garby"}, {"garby"}, {"plasty"}, {"garby", "garby"}},
-		-- "invasive species"
-		"garby"
+		{"garby", "garby"},
+		{
+			{"plasty"},
+			{"plasty"},
+			{"plasty"},
+			{"garby"},
+			{"garby"},
+			{"garby"},
+			{"garby"},
+		},
+		"invasive"
 	elseif n == 3 then
-		print("stg 3 3n3mi3s")
+		return
+		{"plasty", "plasty"},
+		{
+			{"plasty"},
+			{"mercuri"},
+			{"mercuri"},
+			{"mercuri"},
+			{"garby", "mercuri"},
+			{"garby", "garby"},
+			{"garby"},
+			{"garby"},
+		},
+		"oil"	--
+	-- elseif n == 4 then
+	-- elseif n == 5 then
+	-- elseif n == 6 then
+	-- elseif n == 7 then
+	-- elseif n == 8 then
+	elseif n == 9 then
+		return
+		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		{},
+		"apathy"
 	end
 end
 

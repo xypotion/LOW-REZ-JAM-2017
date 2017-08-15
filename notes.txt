@@ -31,6 +31,7 @@ high-level to do & time estimates as of 8/7, 1AM
 - todo: remove print()s and DEBUGs
 - todo: P to pass a turn? AND can't use a wish with no enemies? 
   * OR trying to use a wish with no enemies costs only AP and no SP?
+- todo: track turns & deaths for ending screen
 - other minor TODOs:
   √ casting while stuck = stuck animation, not casting
 	- ranged attack animation
@@ -39,12 +40,13 @@ high-level to do & time estimates as of 8/7, 1AM
 	- can bgEvents work when time = 0?
 	- UI sheet has an unnecessary repetition or two. if graphic is exactly the same, don't need multiple quads
 	  - gosh, kinda ditto for hero sheet. :|
+		- condense graphics, in general. but not high-priority
 	. inputLevel feels a little underused... but that and other refactoring TODOs are not important now, in the home stretch
 * PLAYTESTING!
 - music
   √ fading on stage transition, victory, game over
   √ other battle music, integrated into stages
-	- boss music? maybe not?
+	? boss music? maybe not?
 	- title screen music
 	- game over music
 	- victory music
@@ -74,7 +76,7 @@ high-level to do & time estimates as of 8/7, 1AM
 	√ optional graphic = 1st quad in given sheet
   √ info for enemies
 	√ info for bosses
-	- make enemy spawns trigger them automatically
+	√ make enemy spawns trigger them automatically
 - boss powerups. if out of time: killing bosses just increases your max HP, MAYBE other static boosts (see below)
   - if doing fancy style: separate action of collecting & application of powerup. will help when Continuing and reinitializing hero
 	  - i really want to do these, but i could see implementing them taking several hours. 
