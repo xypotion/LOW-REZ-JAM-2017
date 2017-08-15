@@ -498,37 +498,43 @@ function enemy(species)
 		--it's a boss
 		enemy.isBoss = true
 		
-		if species == "oil" then
-			enemy.hp.max = 20
-			enemy.ap.max = 2
-			enemy.effect = "stick"
-			enemy.reaction = "stick" 
-		elseif species == "heat" then
-			enemy.hp.max = 20
-			enemy.ap.max = 2
-		elseif species == "noise" then
-			enemy.hp.max = 30
-			enemy.ap.max = 2
-		elseif species == "light" then
-			enemy.hp.max = 30
-			enemy.ap.max = 2
-		elseif species == "xps" then
-			enemy.hp.max = 30
-			enemy.ap.max = 2
+		if species == "heat" then
+			enemy.hp.max = 16
+			enemy.ap.max = 1
+			enemy.attack = 2 --TODO "heats up"?
 		elseif species == "invasive" then
-			enemy.hp.max = 36
+			enemy.hp.max = 30
 			enemy.ap.max = 1
 			enemy.effect = "stick"
 			enemy.reaction = "stick" 
+		elseif species == "oil" then
+			enemy.hp.max = 21
+			enemy.ap.max = 2
+		elseif species == "light" then
+			enemy.hp.max = 24
+			enemy.ap.max = 2
+			enemy.ai = "ranger"
+		elseif species == "noise" then
+			enemy.hp.max = 30
+			enemy.ap.max = 2
+			--TODO stinky like sewy? maybe whole field?
+		elseif species == "xps" then
+			enemy.hp.max = 50
+			enemy.ap.max = 1
+			--auto-healing? TODO reduce HP if so
 		elseif species == "gluttony" then
 			enemy.hp.max = 30
 			enemy.ap.max = 2
+			enemy.ai = "glutton"
 		elseif species == "greed" then
 			enemy.hp.max = 30
 			enemy.ap.max = 2
+			--TODO always summons a pharma with first action
 		elseif species == "apathy" then
-			enemy.hp.max = 30
-			enemy.ap.max = 2
+			enemy.hp.max = 99
+			enemy.ap.max = 1
+			enemy.attack = 2
+			--TODO always summons with first action
 		end
 	end
 	

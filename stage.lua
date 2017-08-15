@@ -122,12 +122,12 @@ function allEnemiesAndBossForStage(n)
 		return
 		-- {"heat", "gluttony", "noise", "invasive", "oil", "light", "xps", "greed"}, --DEBUG
 		-- {"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
-		{"garby", "garby"},
+		{"garby"},
 		{
 			{"garby"},
 			{"garby"},
 			{"garby"},
-			{"garby", "garby"},
+			{"garby", "garby"}, --6
 		},
 		"heat"
 	elseif n == 2 then
@@ -136,32 +136,102 @@ function allEnemiesAndBossForStage(n)
 		{
 			{"plasty"},
 			{"plasty"},
-			{"plasty"},
-			{"garby"},
-			{"garby"},
-			{"garby"},
-			{"garby"},
+			{"garby", "garby"},
+			{"garby"}, --8
 		},
 		"invasive"
 	elseif n == 3 then
 		return
 		{"plasty", "plasty"},
 		{
+			{"garby"},
+			{"mercuri"},
+			{"mercuri"},
+			{"mercuri"},
+			{"garby", "plasty"},
+			{"garby"},
+			{"garby"}, --10
+		},
+		"oil"
+	elseif n == 4 then
+		return
+		{"garby", "mercuri"},
+		{
 			{"plasty"},
 			{"mercuri"},
 			{"mercuri"},
-			{"mercuri"},
-			{"garby", "mercuri"},
-			{"garby", "garby"},
+			{"plasty", "garby"},
+			{"toxy", "toxy"},
+			{"toxy"},
 			{"garby"},
-			{"garby"},
+			{"garby"}, --12
 		},
-		"oil"	--
-	-- elseif n == 4 then
-	-- elseif n == 5 then
-	-- elseif n == 6 then
-	-- elseif n == 7 then
-	-- elseif n == 8 then
+		"light"
+	elseif n == 5 then
+		return
+		{"toxy", "garby", "mercuri"},
+		{
+			{"algy"},
+			{"mercuri"},
+			{"algy"},
+			{"plasty", "garby"},
+			{"toxy", "algy"},
+			{"toxy"},
+			{"garby"},
+			{"garby"},
+			{"plasty"} --14
+		},
+		"xps"
+	elseif n == 6 then
+		return
+		{"mercuri", "plasty"},
+		{
+			{"garby"},
+			{"garby", "garby"},
+			{"algy", "algy"},
+			{"toxy", "toxy", "toxy"},
+			{"plasty"},
+			{"plasty"},
+			{"sewy"},
+			{"sewy"},
+			{"sewy"},
+			{"sewy"} --16
+		},
+		"noise"
+	elseif n == 7 then
+		return
+		{"garby", "garby", "garby", "garby"},
+		{
+			{"plasty", "pharma"},
+			{"algy", "pharma"},
+			{"toxy", "pharma"},
+			{"sewy"},
+			{"sewy"},
+			{"mercuri"},
+			{"mercuri"},
+			{"garby"},
+			{"garby"},
+			{"garby"},
+			{"garby"} --18
+		},
+		"gluttony"
+	elseif n == 8 then
+		return
+		{"pharma", "pharma"},
+		{
+			{"mercuri", "garby"},
+			{"algy", "garby"},
+			{"toxy", "garby"},
+			{"plasty", "garby"},
+			{"algy"},
+			{"toxy"},
+			{"mercuri"},
+			{"sewy"},
+			{"pharma"},
+			{"nukey"},
+			{"nukey", "nukey", "nukey", "nukey"} --20
+		},
+		"greed"
 	elseif n == 9 then
 		return
 		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
