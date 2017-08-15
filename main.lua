@@ -192,14 +192,14 @@ function love.keypressed(key)
 	-- if key == "x" then queue(screenEvent("\n    TOXY\n\nThe quick brown fox jumps over the lazy dog.", true, true, enemySheets.toxy)) end
 	-- if key == "x" then queue(screenEvent("\n\n- BOSS -\n\nNOISE\nPOLLUTION", true, true, enemySheets.toxy)) end
 	if key == "x" then 
-		queue(screenEvent("\n\nGARBY\nIt never stops consuming.", true, true, enemySheets.garby))
-		queue(screenEvent("\n\nTOXY\nA meanie that hurts from afar.", true, true, enemySheets.toxy))
-		queue(screenEvent("\n\nMERCURI\nA.K.A. Quicksilver.", true, true, enemySheets.mercuri))
-		queue(screenEvent("\n\nNUKEY\nDANGER: UNSTABLE ELEMENTS", true, true, enemySheets.nukey))
-		queue(screenEvent("\n\nPHARMA\nGood for you... or not?", true, true, enemySheets.pharma))
-		queue(screenEvent("\n\nALGY\nSo sticky! Don't touch it.", true, true, enemySheets.algy))
+		queue(screenEvent("\n\nGARBY\nConsumes anything in reach.", true, true, enemySheets.garby))
 		queue(screenEvent("\n\nPLASTY\nHard to break down!", true, true, enemySheets.plasty))
-		queue(screenEvent("\n\nSEWY\nUnbearably smelly. Yuck.", true, true, enemySheets.sewy))
+		queue(screenEvent("\n\nTOXY\nA meanie that hurts from afar.", true, true, enemySheets.toxy))
+		queue(screenEvent("\n\nMERCURI\nQuick like quicksilver!", true, true, enemySheets.mercuri))
+		queue(screenEvent("\n\nPHARMA\nGood for you... or not?", true, true, enemySheets.pharma))
+		queue(screenEvent("\n\nSEWY\nUnbearably smelly! Yuck!!", true, true, enemySheets.sewy))
+		queue(screenEvent("\n\nNUKEY\nDANGER: UNSTABLE ELEMENTS", true, true, enemySheets.nukey))
+		queue(screenEvent("\n\nALGY\nSticky - don't touch it!", true, true, enemySheets.algy))
 	end
 	if key == "z" then 
 		queue(screenEvent("\n\n- BOSS -\n\nNOISE\nPOLLUTION", true, true, enemySheets.noise))
@@ -211,6 +211,13 @@ function love.keypressed(key)
 		queue(screenEvent("\n\n- BOSS -\n\nGLUTTONY", true, true, enemySheets.gluttony))
 		queue(screenEvent("\n\n- BOSS -\n\nGREED", true, true, enemySheets.greed))
 		queue(screenEvent("\n\n- BOSS -\n\nAPATHY", true, true, enemySheets.apathy))
+	end
+	if key == "q" then
+		queue(screenEvent("Welcome to the blue sea... but look at all this garbage! I created you to purify my waters.", true, true))
+		-- queue(screenEvent("I made you to purify all the earth's waters.\n\n\n1/4", true, true))
+		queue(screenEvent("Move with WASD or the arrow keys. Move into pollution to break it down!", true, true))
+		queue(screenEvent("SPACE or ENTER does a special move that can break down up to 3 enemies! ZAP!!", true, true))
+		queue(screenEvent("Blue fish restore your HP. Red fish recharge your powers. Good luck! Love, Mother Nature", true, true))
 	end
 	-- if key == "h" then
 	-- 	hero.hp.actual = hero.hp.actual + 3
