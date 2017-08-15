@@ -398,6 +398,7 @@ function spawnEnemies(l)
 				soundEvent("tick"),
 				cellOpEvent(cell.y, cell.x, newEnemy)
 			})
+			enemyInfoPopupIfFirstTime(en)
 		end
 	end
 end
@@ -441,6 +442,7 @@ function spawnBossAndSwitchUI()
 			soundEvent("tick"),
 			cellOpEvent(empties[1].y, empties[1].x, stage.boss)
 		})
+		enemyInfoPopupIfFirstTime(stage.bossSpecies)
 	else
 		--miraculously, no free spaces exist; try again next round
 	end
@@ -535,3 +537,33 @@ function enemy(species)
 	
 	return enemy
 end
+
+function enemyInfoPopupIfFirstTime(species)
+	if game.seenPopups[species] then
+		--already seen during this game!
+		return
+	else
+		game.seenPopups[species] = true
+		queue(screenEvent(enemyInfo[species], true, true, enemySheets[species]))
+	end
+end
+
+enemyInfo = {
+		toxy = "\n\nTOXY\nA meanie that hurts from afar.",
+		mercuri = "\n\nMERCURI\nQuick like quicksilver!", 
+		algy = "\n\nALGY\nSticky - don't touch it!",
+		sewy = "\n\nSEWY\nUnbearably smelly! Yuck!!",
+		garby = "\n\nGARBY\nConsumes anything in reach.",
+		plasty = "\n\nPLASTY\nHard to break down!",
+		pharma = "\n\nPHARMA\nGood for you... or not?", 
+		nukey = "\n\nNUKEY\nDANGER: UNSTABLE ELEMENTS",
+		oil = "\n\n- BOSS -\n\nOIL\nSPILL",
+		heat = "\n\n- BOSS -\n\nHEAT\nPOLLUTION",
+		noise = "\n\n- BOSS -\n\nNOISE\nPOLLUTION",
+		light = "\n\n- BOSS -\n\nLIGHT\nPOLLUTION",
+		invasive = "\n\n- BOSS -\n\nINVASIVE\nSPECIES",
+		xps = "\n\n- BOSS -\n\nXPS",
+		gluttony = "\n\n- BOSS -\n\nGLUTTONY",
+		greed = "\n\n- BOSS -\n\nGREED",
+		apathy = "\n\n- BOSS -\n\nAPATHY",
+}

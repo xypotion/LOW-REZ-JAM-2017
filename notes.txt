@@ -69,11 +69,12 @@ high-level to do & time estimates as of 8/7, 1AM
 	- credits: cfxr, beepbox, pixen, lowrezjam, itchio, dustin?
 	- make it look a little better. city + roads or something (title text moves? ehh)
 - info popups, if time. printing is fine if no time for hand-drawn art
-  - use printf + sentences (draw differently)
-  - optional backdrop
-	- optional graphic = 1st quad in given sheet
-	- info for enemies
-	- info for bosses
+  √ use printf + sentences (draw differently)
+  √ optional backdrop
+	√ optional graphic = 1st quad in given sheet
+  √ info for enemies
+	√ info for bosses
+	- make enemy spawns trigger them automatically
 - boss powerups. if out of time: killing bosses just increases your max HP, MAYBE other static boosts (see below)
   - if doing fancy style: separate action of collecting & application of powerup. will help when Continuing and reinitializing hero
 	  - i really want to do these, but i could see implementing them taking several hours. 

@@ -246,7 +246,7 @@ function heroSpecialAttack()
 			local en = cellAt(ec.y, ec.x).contents
 			en.hp.actual = en.hp.actual - 3
 			queueSet({
-				soundEvent("nukey"),
+				soundEvent("wish"),
 				animEvent(ec.y, ec.x, sparkAnimFrames()),
 				actuationEvent(en.hp, -3)
 			})
