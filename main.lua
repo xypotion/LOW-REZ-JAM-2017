@@ -214,11 +214,11 @@ function love.keypressed(key)
 		queue(screenEvent("\n\n- BOSS -\n\nAPATHY", true, true, enemySheets.apathy))
 	end
 	if key == "q" then
-		queue(screenEvent("Welcome to the blue sea... but look at all this garbage! I've created you to purify my oceans.", true, true))
-		-- queue(screenEvent("I made you to purify all the earth's waters.\n\n\n1/4", true, true))
-		queue(screenEvent("Move with WASD or the arrow keys. Bump into pollution to break it down!", true, true))
-		queue(screenEvent("SPACE or ENTER does a special move that can hit up to 3 enemies. ZAP!!", true, true))
-		queue(screenEvent("Blue fish restore your HP. Red fish recharge your powers. Good luck! Love, Mother Nature", true, true))
+		-- queue(screenEvent("Welcome to the blue sea... but look at all this garbage! I've created you to purify my oceans.", true, true))
+		-- -- queue(screenEvent("I made you to purify all the earth's waters.\n\n\n1/4", true, true))
+		-- queue(screenEvent("Move with WASD or the arrow keys. Bump into pollution to break it down!", true, true))
+		-- queue(screenEvent("SPACE or ENTER does a special move that can hit up to 3 enemies. ZAP!!", true, true))
+		-- queue(screenEvent("Blue fish restore your HP. Red fish recharge your powers. Good luck! Love, Mother Nature", true, true))
 	end
 	-- if key == "h" then
 	-- 	hero.hp.actual = hero.hp.actual + 3
@@ -262,6 +262,10 @@ function love.keypressed(key)
 			if titleMenuCursorPos == 1 then	--START
 				game.maxStage = 1
 				stageStart(1)
+				queue(screenEvent("Welcome to the blue sea... but look at all this garbage! I've created you to purify my oceans.", true, true))
+				queue(screenEvent("Move with WASD or the arrow keys. Bump into pollution to break it down.", true, true))
+				queue(screenEvent("SPACE or ENTER does a special move that can hit up to 3 enemies. ZAP!", true, true))
+				queue(screenEvent("Blue fish restore your HP. Red fish recharge your powers. Good luck! Love, Mother Nature", true, true))
 			elseif titleMenuCursorPos == 2 then --CONTINUE
 				stageStart(game.maxStage)
 			elseif titleMenuCursorPos == 3 then --CREDITS

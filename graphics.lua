@@ -31,8 +31,8 @@ function loadGraphics()
 	
 	backgrounds = {
 		title1 = love.graphics.newImage("img/title1.png"),
-		day1 = love.graphics.newImage("img/bg_day1.png"),
-		night1 = love.graphics.newImage("img/bg_night1.png")
+		day1 = love.graphics.newImage("img/bg_day2.png"),
+		night1 = love.graphics.newImage("img/bg_night2.png")
 	}
 	
 	blackOverlay = {graphic = love.graphics.newImage("img/black.png"), alpha = 255}
