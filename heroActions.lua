@@ -31,6 +31,9 @@ function initHero()
 end
 
 function startHeroTurn()
+	stage.days = stage.days + 1
+	-- game.days = game.days + 1
+	
 	--reset hero AP
 	hero.ap.actual = hero.ap.max
 	

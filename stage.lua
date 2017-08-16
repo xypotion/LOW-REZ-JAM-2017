@@ -10,6 +10,7 @@ function initStage()
 end
 	
 function stageStart(n)
+	stage.days = 0
 	
 	--fade music
 	print("fading music at end of stage", nextBGM, currentBGM) --TODO
@@ -110,6 +111,10 @@ end
 
 function stageEnd()
 	stage.boss = nil
+				
+	--tracking total days; only added to game.days here, when stage is complete
+	print("adding "..stage.days.." to game.days, for a total of "..game.days + stage.days)
+	game.days = game.days + stage.days
 	
 	--quick fade before resetting hero pos & stats
 	queue(fadeOutEvent())
@@ -124,10 +129,10 @@ function allEnemiesAndBossForStage(n)
 		-- {"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
 		{"garby"},
 		{
-			-- {"garby"},
-			-- {"garby"},
-			-- {"garby"},
-			-- {"garby", "garby"}, --6
+			{"garby"},
+			{"garby"},
+			{"garby"},
+			{"garby", "garby"}, --6
 		},
 		"heat"
 		-- "apathy"
@@ -244,6 +249,8 @@ end
 
 function gameOverIFHeroDead()
 	if hero.hp.actual <= 0 then
+		game.deaths = game.deaths + 1
+		
 		queue(bgmFadeEvent())
 		queueSet({
 			fadeOutEvent(),
@@ -260,8 +267,8 @@ function startEnding()
 	queue(fadeOutEvent())
 	queueSet({
 		bgEvent("ending1"),
-		functionEvent("initStage"),
-		functionEvent("initHero"),
+		-- functionEvent("initStage"), --to clear game stuff away (?) maybe not necessary, actually
+		-- functionEvent("initHero"),
 		gameStateEvent("state", "ending"),
 	})
 	queue(fadeInEvent())
@@ -281,7 +288,8 @@ function startEnding()
 	queue(screenEvent("You have fulfilled my heart's desire. Thank you!\nLove,\nMother Nature", true, true))
 	
 	--player stats
-	queue(screenEvent("\n\n\n\nDefeats: 0\nDays: 123", true)) --TODO
+	--using game.days + stage.days here because the last stage's days are correctly never added to game.days (in case player wants to play stage 9 again)
+	queue(screenEvent("\n\n\n\nDefeats: "..game.deaths.."\nDays: "..game.days + stage.days, true)) 
 	
 	--just one more look at prettiness :)
 	queue(screenEvent("", true)) 
@@ -297,7 +305,11 @@ function unloadGameAndReturnToTitle()
 	if game.beaten then 
 		whichTitle = "title2"
 	else
-		whichTitle = "title1"
+		if game.started then
+			whichTitle = "title1"
+		else
+			whichTitle = "title0"
+		end
 	end
 	
 	queueSet({

@@ -30,6 +30,7 @@ function loadGraphics()
 	powerSheet = love.graphics.newImage("img/powers.png")
 	
 	backgrounds = {
+		title0 = love.graphics.newImage("img/title0.png"),
 		title1 = love.graphics.newImage("img/title1.png"),
 		title2 = love.graphics.newImage("img/title2.png"),
 		day1 = love.graphics.newImage("img/bg_day2.png"),

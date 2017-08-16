@@ -32,7 +32,7 @@ function love.load()
 	--init canvas & other graphics stuff
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
-	bgMain = {graphic = "title1", alpha = 255} --TODO opening title changes if you've beaten the game. do if time!
+	bgMain = {graphic = "title0", alpha = 255}
 	love.graphics.setFont(love.graphics.newFont(8))
 	overlay = {xOffset = 0, text = ""}
 
@@ -47,9 +47,13 @@ function love.load()
 	game = {
 		state = "title",
 		maxStage = 1,
-		lastStage = 9,
+		lastStage = 3,
 		-- lastStage = 1,
-		seenPopups = {}
+		seenPopups = {},
+		started = false,
+		beaten = false,
+		deaths = 0,
+		days = 0,
 	}
 	bossHPRatio = 0 --hhaaaack
 	titleMenuCursorPos = 1
@@ -155,6 +159,7 @@ function love.keypressed(key)
 		love.event.quit()
 	end
 	if key == "e" then startEnding() end
+	if key == "t" then print("deaths:", game.deaths, "days", game.days) end
 	--[[
 	if key == "i" then
 		--inspect grid
@@ -230,25 +235,31 @@ function love.keypressed(key)
 			if key == "space" or key == "return" then
 				heroSpecialAttack()
 			end
-		end
+		end	
+		-- print("stage.days: "..stage.days.." game.days: "..game.days)
+
 	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then		
 		if key == "up" or key == "w" then
 			titleMenuCursorPos = (titleMenuCursorPos - 2) % 3 + 1
 		elseif key == "down" or key == "s" then
 			titleMenuCursorPos = titleMenuCursorPos % 3 + 1
 		elseif key == "return" or key == "space" then
-			queue(fadeOutEvent())
-			
 			if titleMenuCursorPos == 1 then	--START
+				queue(fadeOutEvent())
 				game.maxStage = 1
+				game.started = true
+				game.deaths = 0
+				game.days = 0
 				stageStart(1)
 				queue(screenEvent("Welcome to the blue sea... but look at all this garbage! I've created you to purify my oceans.", true, true))
 				queue(screenEvent("Move with WASD or the arrow keys. Bump into pollution to break it down.", true, true))
 				queue(screenEvent("SPACE or ENTER does a special move that can hit up to 3 enemies. ZAP!", true, true))
 				queue(screenEvent("Blue fish restore your HP. Red fish recharge your powers. Good luck! Love, Mother Nature", true, true))
-			elseif titleMenuCursorPos == 2 then --CONTINUE
+			elseif titleMenuCursorPos == 2 and game.started then --CONTINUE
+				queue(fadeOutEvent())
 				stageStart(game.maxStage)
 			elseif titleMenuCursorPos == 3 then --CREDITS
+				queue(fadeOutEvent())
 				queue(screenEvent("\nCredits:\nAll art, sound, design, and code by Max Wunderlich.", true))
 				queue(screenEvent("\nArt created in Pixen\n\npixenapp.com", true))
 				queue(screenEvent("\nMusic composed in Beepbox\n\nbeepbox.co", true))

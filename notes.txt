@@ -22,12 +22,8 @@ high-level to do & time estimates as of 8/7, 1AM
 * also, wow, there are almost 700 entrants already. frig.
 
 8/14, 11:15 PM - basically a day an a half left. what do you still need to do?
-- todo: stage 9 music...
-- todo: track turns & deaths, then print on ending screen. don't forget to reset them, too, in case player wants to try again!
-- todo: disable + grey out Continue on load if you're not implementing autosaves
-- todo: improve ending text
-- todo: make ending "VICTORY" appear differently
 - todo: credits - add my itch.io username? and special thanks to dustin (+ /astralung)
+- bug: boss hp actuation should happen at night too (for healing)
 - bug?: enemy HP bars in the wrong place on dustin's computer? maybe just a quirk with love.graphics.points()?? 
   - tried subtracting 0.5 from locations; no change on OSX (good), any change on Windows?
 . bug: algy AS AN ADD, REMAINING AFTER KILLING BOSS, leaves its stick on the hero. should never happen outside of final boss, though, so no biggie for now
@@ -53,7 +49,7 @@ high-level to do & time estimates as of 8/7, 1AM
 	- 2 rounds for me: good. adjusted bosses to mostly be harder
 * PUBLISHING & UPLOADING!
   - including screenshots and little blurbs for game page
-	- custom app icon? hmm
+	- custom app icon? hmmmmmmmm
 - better art:
 	? last stage?
 	? two stage backgrounds (one with mountains instead of city?)
@@ -734,3 +730,7 @@ my own playtests after adjusting bosses:
 √ actually, invasive is also too easy. attack -> 2
 - i died four times on stage 7 :o bad luck? or too many toxies?
 - got lucky on greed (no room to summon adds). apathy was tough but i did it in one try
+
+3
+- total time: _
+- deaths: _, turns: _
