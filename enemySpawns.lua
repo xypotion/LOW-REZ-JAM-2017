@@ -126,12 +126,12 @@ function enemy(species, hasDrop)
 		enemy.isBoss = true
 		
 		if species == "heat" then
-			enemy.hp.max = 18
+			enemy.hp.max = 21
 			enemy.ap.max = 1
 			enemy.attack = 3
 		elseif species == "invasive" then
 			enemy.hp.max = 30
-			enemy.ap.max = 1
+			enemy.ap.max = 2
 			enemy.effect = "stick"
 			enemy.reaction = "stick" 
 		elseif species == "oil" then
@@ -141,9 +141,9 @@ function enemy(species, hasDrop)
 			enemy.hp.max = 27
 			enemy.ap.max = 2
 		elseif species == "xps" then
-			enemy.hp.max = 45
+			enemy.hp.max = 22
 			enemy.ap.max = 1
-			--auto-healing? TODO reduce HP if so
+			enemy.ai = "regen"
 		elseif species == "light" then
 			enemy.hp.max = 21
 			enemy.ap.max = 3

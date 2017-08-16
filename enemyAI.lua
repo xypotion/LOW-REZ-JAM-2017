@@ -28,6 +28,8 @@ function queueFullEnemyTurn(ey, ex)
 		healerTurnAt(ey, ex)
 	elseif enemy.ai == "glutton" then
 		gluttonTurnAt(ey, ex)
+	elseif enemy.ai == "regen" then
+		regenTurnAt(ey, ex)
 	elseif enemy.ai == "greed" then
 		greedTurnAt(ey, ex)
 	elseif enemy.ai == "apathy" then
@@ -183,6 +185,23 @@ function gluttonTurnAt(ey, ex)
 	else 
 		meleeTurnAt(ey, ex)
 	end
+end
+
+function regenTurnAt(ey, ex)
+	local xps = cellAt(ey, ex).contents
+
+	--recover 3 HP
+	if xps.hp.actual < xps.hp.max then
+		xps.hp.actual = xps.hp.actual + 6
+		queueSet({
+			soundEvent("pharma"),
+			actuationEvent(xps.hp, 6),
+			animEvent(ey, ex, sparkAnimFrames())
+		})
+	end
+		
+	--act as melee
+	meleeTurnAt(ey, ex)
 end
 
 function greedTurnAt(ey, ex)

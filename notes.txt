@@ -22,14 +22,16 @@ high-level to do & time estimates as of 8/7, 1AM
 * also, wow, there are almost 700 entrants already. frig.
 
 8/14, 11:15 PM - basically a day an a half left. what do you still need to do?
-* todo: track turns & deaths, then print on ending screen. don't forget to reset them, too, in case player wants to try again!
+- todo: stage 9 music...
+- todo: track turns & deaths, then print on ending screen. don't forget to reset them, too, in case player wants to try again!
 - todo: disable + grey out Continue on load if you're not implementing autosaves
 - todo: improve ending text
-- todo: make VICTORY appear differently
+- todo: make ending "VICTORY" appear differently
 - todo: credits - add my itch.io username? and special thanks to dustin (+ /astralung)
-* bug?: enemy HP bars in the wrong place on dustin's computer? maybe just a quirk with love.graphics.points()?? 
+- bug?: enemy HP bars in the wrong place on dustin's computer? maybe just a quirk with love.graphics.points()?? 
   - tried subtracting 0.5 from locations; no change on OSX (good), any change on Windows?
-. bug!: algy AS AN ADD, REMAINING AFTER KILLING BOSS, leaves its stick on the hero. should never happen outside of final boss, though, so no biggie for now
+. bug: algy AS AN ADD, REMAINING AFTER KILLING BOSS, leaves its stick on the hero. should never happen outside of final boss, though, so no biggie for now
+  - fix = init hero again on every stage start. you were planning to do this, anyway, when you implemented powerups! yay
 - other minor TODOs:
   - make Start reset enemy info? hm
 	- ranged attack animation
@@ -48,6 +50,7 @@ high-level to do & time estimates as of 8/7, 1AM
 - todo: remove or hide print()s and DEBUGs
 * PLAYTESTING!
   - round 1 with dustin: pretty good :)
+	- 2 rounds for me: good. adjusted bosses to mostly be harder
 * PUBLISHING & UPLOADING!
   - including screenshots and little blurbs for game page
 	- custom app icon? hmm
@@ -60,7 +63,6 @@ high-level to do & time estimates as of 8/7, 1AM
   - playtest a little more...
 	- special behaviors:
 	  x heat powers up? or nah?
-		. healing for xps? or nah?
 	- fanfare when spawned? alarm or something?
 	- death sound and/or animation?
 - boss powerups... if out of time: killing bosses just increases your max HP, MAYBE other static boosts (see below)
@@ -721,8 +723,14 @@ dustin's feebdack on 1st play (8/15, 6:30 or so):
 
 my own playtests after adjusting bosses:
 1
-- heat is too easy? should hit harder
-- oil spill is too easy? more hp
-- xps is kinda boring. a heal would make it more interesting, at least, AND foreshadow pharma
+√ heat is too easy? should hit harder
+√ oil spill is too easy? more hp
+√ xps is kinda boring. a heal would make it more interesting, at least, AND foreshadow pharma
 - gluttony, noise, invasive: great
 - greed: too hard? well-balanced, except you need to enter with full bars...
+
+2
+√ heat still too easy. give a little more hp
+√ actually, invasive is also too easy. attack -> 2
+- i died four times on stage 7 :o bad luck? or too many toxies?
+- got lucky on greed (no room to summon adds). apathy was tough but i did it in one try

@@ -124,10 +124,10 @@ function allEnemiesAndBossForStage(n)
 		-- {"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
 		{"garby"},
 		{
-			{"garby"},
-			{"garby"},
-			{"garby"},
-			{"garby", "garby"}, --6
+			-- {"garby"},
+			-- {"garby"},
+			-- {"garby"},
+			-- {"garby", "garby"}, --6
 		},
 		"heat"
 		-- "apathy"
