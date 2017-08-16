@@ -22,8 +22,10 @@ high-level to do & time estimates as of 8/7, 1AM
 * also, wow, there are almost 700 entrants already. frig.
 
 8/14, 11:15 PM - basically a day an a half left. what do you still need to do?
-- todo: credits - add my itch.io username? and special thanks to dustin (+ /astralung)
-- bug: boss hp actuation should happen at night too (for healing)
+* PUBLISHING & UPLOADING!
+  - including screenshots and little blurbs for game page
+	- custom app icon? hmmmmmmmm
+- todo: remove or hide print()s and DEBUGs
 - bug?: enemy HP bars in the wrong place on dustin's computer? maybe just a quirk with love.graphics.points()?? 
   - tried subtracting 0.5 from locations; no change on OSX (good), any change on Windows?
 . bug: algy AS AN ADD, REMAINING AFTER KILLING BOSS, leaves its stick on the hero. should never happen outside of final boss, though, so no biggie for now
@@ -33,7 +35,6 @@ high-level to do & time estimates as of 8/7, 1AM
 	- ranged attack animation
   - resizable window!
   - alternate stage backgrounds! mountains, city, whole world for last stage?
-	- alternate title screen if game won
 	. killEnemy() when no drop (e.g. bosses): add sound? any other change? (only do if possible; boss adds should have drops, right?)
 	? can bgEvents work when time = 0? (maybe doesn't matter)
 	. UI sheet has an unnecessary repetition or two. if graphic is exactly the same, don't need multiple quads
@@ -43,18 +44,12 @@ high-level to do & time estimates as of 8/7, 1AM
 	. todo: enemy turn order fix (then shuffle turns). have one turn queue the next via functionEvent if remaining AP? like skipping stones
 	. todo: P to pass a turn? AND can't use a wish with no enemies? 
 	  * OR trying to use a wish with no enemies costs only AP and no SP?
-- todo: remove or hide print()s and DEBUGs
 * PLAYTESTING!
   - round 1 with dustin: pretty good :)
 	- 2 rounds for me: good. adjusted bosses to mostly be harder
-* PUBLISHING & UPLOADING!
-  - including screenshots and little blurbs for game page
-	- custom app icon? hmmmmmmmm
 - better art:
 	? last stage?
 	? two stage backgrounds (one with mountains instead of city?)
-- music
-	- last stage & final boss music?
 * bosses
   - playtest a little more...
 	- special behaviors:

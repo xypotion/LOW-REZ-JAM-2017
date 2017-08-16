@@ -47,7 +47,7 @@ function love.load()
 	game = {
 		state = "title",
 		maxStage = 1,
-		lastStage = 3,
+		lastStage = 9,
 		-- lastStage = 1,
 		seenPopups = {},
 		started = false,
@@ -81,6 +81,13 @@ function love.update(dt)
 	--queue enemy turns one by one
 	--TODO maybe move elsewhere
 	if game.state == "night" then
+		
+		--TODO consolidate with exact same code in day section below
+		if stage and stage.boss then
+			--saving draw() some math by determining hp bar size here
+			bossHPRatio = math.ceil(stage.boss.hp.shown * 27 / stage.boss.hp.max)
+		end
+		
 		--if event queue is empty, 
 		if not peek(eventSetQueue) then
 			--continue or finish enemy turn
@@ -260,12 +267,13 @@ function love.keypressed(key)
 				stageStart(game.maxStage)
 			elseif titleMenuCursorPos == 3 then --CREDITS
 				queue(fadeOutEvent())
-				queue(screenEvent("\nCredits:\nAll art, sound, design, and code by Max Wunderlich.", true))
+				queue(screenEvent("\nCredits:\nAll art, sound, design, and code by Max Wunderlich", true))
+				-- queue(screenEvent("\nCredits:\nAll art, sound, design, and code by Max Wunderlich\nxypotion.itch.io", true))
 				queue(screenEvent("\nArt created in Pixen\n\npixenapp.com", true))
 				queue(screenEvent("\nMusic composed in Beepbox\n\nbeepbox.co", true))
 				queue(screenEvent("\nSFX created in CFXR\n\nthirdcog.eu/\napps/cfxr", true))
-				queue(screenEvent("\nMade with Löve for LOW REZ JAM 2017\n\nitch.io/jam/lowrezjam2017", true))
-				queue(screenEvent("\n\n\nlove2d.org\n<3", true))
+				queue(screenEvent("Made with Löve for LOW REZ JAM 2017\n\nitch.io/jam/lowrezjam2017", true))
+				queue(screenEvent("Special thanks:\nDustin Cogswell\n&\nlove2d.org\n<3", true))
 				queue(fadeInEvent())
 			end
 		end
