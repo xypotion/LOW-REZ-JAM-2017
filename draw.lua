@@ -12,13 +12,20 @@ function love.draw()
 		drawTitleScreen()
 	elseif game.state == "day" or game.state == "night" then
 		drawStage()
+	elseif game.state == "ending" then
+		drawBackgrounds()
 	end
 	
-	--overlay
+	
+	
+	
+	--black overlay
 	love.graphics.setColor(255, 255, 255, blackOverlay.alpha)
 	love.graphics.draw(blackOverlay.graphic, 0, 0)
 	
 	white()
+		
+		
 		
 	--print overlay text. DEBUG, kinda.
 	-- love.graphics.print(overlay.text, overlay.xOffset, 0)
@@ -36,6 +43,8 @@ function love.draw()
 	
 	love.graphics.printf(overlay.text, overlay.xOffset + 2, 2, 60, "center")
 	
+	
+	
 	--show volume popup
 	if volumePopupAlpha > 0 then
 		love.graphics.setColor(30, 37, 108, volumePopupAlpha)
@@ -50,6 +59,8 @@ function love.draw()
 		
 		white()
 	end
+	
+	
 	
 	--DEBUG
 	-- love.graphics.printf("The quick brown fox jumps over the lazy dog.", 0, 0, 64)

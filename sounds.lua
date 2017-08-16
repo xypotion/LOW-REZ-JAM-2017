@@ -38,6 +38,8 @@ function loadSounds()
 		battleA = love.audio.newSource("bgm/battleA1.wav"),
 		battleBIntro = love.audio.newSource("bgm/battleBIntro1.wav"),
 		battleB = love.audio.newSource("bgm/battleB1.wav"),
+		endingIntro = love.audio.newSource("bgm/endingIntro.wav"),
+		ending = love.audio.newSource("bgm/ending.wav"),
 	}
 	
 	masterVolume = 1

@@ -45,7 +45,8 @@ function love.load()
 	game = {
 		state = "title",
 		maxStage = 1,
-		lastStage = 9,
+		-- lastStage = 9,
+		lastStage = 1,
 		seenPopups = {}
 	}
 	bossHPRatio = 0 --hhaaaack
@@ -117,15 +118,40 @@ function love.update(dt)
 			
 				--DEBUGgy
 				if game.maxStage == game.lastStage then
-					--ending!
-					--DEBUG
+					--ending setup
+					queue(bgmFadeEvent())
+					queue(fadeOutEvent())
 					queueSet({
-						fadeOutEvent(),
-						screenEvent("\n\nYOU WIN!\n\nThanks for\nplaying!"),
+						bgEvent("ending1"),
+						functionEvent("initStage"),
+						functionEvent("initHero"),
+						gameStateEvent("state", "ending"),
 					})
+					queue(fadeInEvent())
+					queue(waitEvent(2))
+					
+					--reveal prettyness
+					queueSet({
+						bgmEvent("endingIntro", "ending"),
+						bgEvent("ending2", 5),
+					})
+					
+					-- queue(screenEvent("\n\nYOU WIN!\n\nThanks for\nplaying!", true, true))
+					queue(screenEvent("\n\nGreat job! Love,", true, true)) --TODO real text...
+					queue(screenEvent("\n\nMOTHER\nNATURE", true, true))
+					
+					--special ending messages & graphics
+					queueSet({
+						screenEvent("\n\n\n\nDefeats: 0\nDays: 123", true), --TODO
+					})
+					
 					--and return to title
-					-- print("...and return to title")
-					-- queue(functionEvent("unloadGameAndReturnToTitle"))
+					screenEvent("", true) --a little hack to get them to press one more button before returning to title :)
+					queueSet({
+						bgmFadeEvent(),
+						fadeOutEvent(2)
+					})
+					
 					unloadGameAndReturnToTitle()
 					-- love.event.quit()
 					
@@ -190,9 +216,6 @@ function love.keypressed(key)
 		end
 	end
 	if key == "t" then tablePrint(stage.enemyList) end
-	-- if key == "x" then queue(screenEvent("The quick brown fox jumps over the lazy dog. Oh, did you know that already?", true, true)) end
-	-- if key == "x" then queue(screenEvent("\n    TOXY\n\nThe quick brown fox jumps over the lazy dog.", true, true, enemySheets.toxy)) end
-	-- if key == "x" then queue(screenEvent("\n\n- BOSS -\n\nNOISE\nPOLLUTION", true, true, enemySheets.toxy)) end
 	if key == "x" then 
 		queue(screenEvent("\n\nGARBY\nConsumes anything in reach.", true, true, enemySheets.garby))
 		queue(screenEvent("\n\nPLASTY\nHard to break down!", true, true, enemySheets.plasty))
@@ -214,18 +237,6 @@ function love.keypressed(key)
 		queue(screenEvent("\n\n- BOSS -\n\nGREED", true, true, enemySheets.greed))
 		queue(screenEvent("\n\n- BOSS -\n\nAPATHY", true, true, enemySheets.apathy))
 	end
-	if key == "q" then
-		-- queue(screenEvent("Welcome to the blue sea... but look at all this garbage! I've created you to purify my oceans.", true, true))
-		-- -- queue(screenEvent("I made you to purify all the earth's waters.\n\n\n1/4", true, true))
-		-- queue(screenEvent("Move with WASD or the arrow keys. Bump into pollution to break it down!", true, true))
-		-- queue(screenEvent("SPACE or ENTER does a special move that can hit up to 3 enemies. ZAP!!", true, true))
-		-- queue(screenEvent("Blue fish restore your HP. Red fish recharge your powers. Good luck! Love, Mother Nature", true, true))
-	end
-	-- if key == "h" then
-	-- 	hero.hp.actual = hero.hp.actual + 3
-	-- 	queue(actuationEvent(hero.hp, 3))
-	-- end
-	-- if key == "x" then sfx.pop:play() end
 	--END DEBUG
 	
 	if key == "v" then 

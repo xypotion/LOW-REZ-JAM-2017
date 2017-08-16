@@ -24,6 +24,7 @@ high-level to do & time estimates as of 8/7, 1AM
 8/14, 11:15 PM - basically a day an a half left. what do you still need to do?
 - todo: track turns & deaths, then print on ending screen. don't forget to reset them, too, in case player wants to try again!
 - todo: disable + grey out Continue on load if you're not implementing autosaves
+- todo: improve ending text
 - other minor TODOs:
   - make Start reset enemy info? hm
 	- ranged attack animation
@@ -45,12 +46,9 @@ high-level to do & time estimates as of 8/7, 1AM
   - including screenshots and little blurbs for game page
 	- custom app icon? hmm
 - better art:
-  √ title screen
-	√ ending
 	? last stage?
 	? two stage backgrounds (one with mountains instead of city?)
 - music
-	- victory music
 	- last stage & final boss music?
 - bosses
   - playtest a little more
