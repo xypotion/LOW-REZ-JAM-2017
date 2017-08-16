@@ -6,8 +6,6 @@ function love.draw()
 	
 	white()
 	
-	-- drawStage()
-	
 	if game.state == "title" then
 		drawTitleScreen()
 	elseif game.state == "day" or game.state == "night" then
@@ -15,20 +13,14 @@ function love.draw()
 	elseif game.state == "ending" then
 		drawBackgrounds()
 	end
-	
-	
-	
-	
-	--black overlay
+
+	--black overlay for screen fades
 	love.graphics.setColor(255, 255, 255, blackOverlay.alpha)
 	love.graphics.draw(blackOverlay.graphic, 0, 0)
 	
 	white()
-		
-		
-		
-	--print overlay text. DEBUG, kinda.
-	-- love.graphics.print(overlay.text, overlay.xOffset, 0)
+				
+	--display popup messages TODO one day replace with graphics, not just text?
 	if overlay.backdrop then 
 		love.graphics.setColor(0, 0, 127, 223)
 		love.graphics.rectangle("fill", 1 + overlay.xOffset, 1, 62, 62)
@@ -42,8 +34,6 @@ function love.draw()
 	end
 	
 	love.graphics.printf(overlay.text, overlay.xOffset + 2, 2, 60, "center")
-	
-	
 	
 	--show volume popup
 	if volumePopupAlpha > 0 then
@@ -59,12 +49,7 @@ function love.draw()
 		
 		white()
 	end
-	
-	
-	
-	--DEBUG
-	-- love.graphics.printf("The quick brown fox jumps over the lazy dog.", 0, 0, 64)
-	
+		
 	--draw gameCanvas
 	love.graphics.setCanvas()
 	love.graphics.draw(gameCanvas, 0, 0, 0, 8, 8)

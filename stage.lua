@@ -24,14 +24,14 @@ function stageStart(n)
 	stage.startingEnemyList, stage.enemyList, stage.bossSpecies = allEnemiesAndBossForStage(n)
 	stage.enemyList = shuffle(stage.enemyList)
 	
-	--probably just hard-code ratios for drops instead of this TODO
-	stage.powers = {} --DEBUG
-	for i = 1, 10 do
-		push(stage.powers, "blueFish")
-		push(stage.powers, "blueFish")
-		push(stage.powers, "redFish")
-	end
-	stage.powers = shuffle(stage.powers)
+	--MAYBE bring this back one day, with real powers TODO
+	-- stage.powers = {} --DEBUG
+	-- for i = 1, 10 do
+	-- 	push(stage.powers, "blueFish")
+	-- 	push(stage.powers, "blueFish")
+	-- 	push(stage.powers, "redFish")
+	-- end
+	-- stage.powers = shuffle(stage.powers)
 	
 	--count enemies
 	stage.enemyCount = {max = 0, actual = 0, shown = 0, posSound = "tick", negSound = nil}
@@ -45,10 +45,7 @@ function stageStart(n)
 	end
 	stage.enemyCount.actual = stage.enemyCount.max
 	-- print(stage.enemyCount.actual)
-	
-	--DEBUG kinda
-	--screen should be faded out at this point, either from title screen transition or stageEnd()
-	
+		
 	--actuate those stats
 	queueSet({
 		actuationEvent(hero.hp, hero.hp.actual - hero.hp.shown),
@@ -241,7 +238,7 @@ function allEnemiesAndBossForStage(n)
 		"greed"
 	elseif n == 9 then
 		return
-		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
+		{"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"},
 		{},
 		"apathy"
 	end

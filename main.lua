@@ -129,18 +129,18 @@ function love.update(dt)
 				queue(screenEvent("\n\nSTAGE "..game.maxStage.."\nCOMPLETE!"))
 				-- queue(screenEvent("\n\n  STAGE "..game.maxStage.."\n  COMPLETE!\n\n Choose reward:"))
 			
-				--DEBUGgy
+				--check if that was the final boss TODO make this a little less hacky, lol
 				if game.maxStage == game.lastStage then
 					startEnding()
 				else
 					--queue rare powerups
 					queueRarePowerups()
 			
-					--DEBUG; should happen in heroActions
+					--TODO should happen in heroActions
 					collectRarePowerup()
+					
 					stageEnd()
 					stageStart(game.maxStage)
-					--END DEBUG
 				end
 			end
 		end
