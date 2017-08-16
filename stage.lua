@@ -121,7 +121,6 @@ function allEnemiesAndBossForStage(n)
 	if n == 1 then
 		return
 		-- {"heat", "gluttony", "noise", "invasive", "oil", "light", "xps", "greed"}, --DEBUG
-		-- {"apathy"}, --DEBUG
 		-- {"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"}, --DEBUG
 		{"garby"},
 		{
@@ -131,6 +130,8 @@ function allEnemiesAndBossForStage(n)
 			{"garby", "garby"}, --6
 		},
 		"heat"
+		-- "apathy"
+		-- "greed"
 	elseif n == 2 then
 		return
 		{"garby", "garby"},

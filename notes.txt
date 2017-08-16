@@ -29,6 +29,7 @@ high-level to do & time estimates as of 8/7, 1AM
 - todo: credits - add my itch.io username? and special thanks to dustin (+ /astralung)
 * bug?: enemy HP bars in the wrong place on dustin's computer? maybe just a quirk with love.graphics.points()?? 
   - tried subtracting 0.5 from locations; no change on OSX (good), any change on Windows?
+. bug!: algy AS AN ADD, REMAINING AFTER KILLING BOSS, leaves its stick on the hero. should never happen outside of final boss, though, so no biggie for now
 - other minor TODOs:
   - make Start reset enemy info? hm
 	- ranged attack animation

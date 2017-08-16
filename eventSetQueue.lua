@@ -154,7 +154,7 @@ function functionEvent(func, arg1)
 	local e = {
 		class = "function",
 		func = func,
-		arg1 = arg1 --messy, messy, messy. oh, well.
+		arg1 = arg1, --messy, messy, messy. oh, well.
 	}
 	
 	return e

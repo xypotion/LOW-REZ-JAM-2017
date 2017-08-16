@@ -28,6 +28,10 @@ function queueFullEnemyTurn(ey, ex)
 		healerTurnAt(ey, ex)
 	elseif enemy.ai == "glutton" then
 		gluttonTurnAt(ey, ex)
+	elseif enemy.ai == "greed" then
+		greedTurnAt(ey, ex)
+	elseif enemy.ai == "apathy" then
+		apathyTurnAt(ey, ex)
 	end
 	
 	--reduce AP; this will happen whether they actually take an action or not, which is good
@@ -180,6 +184,31 @@ function gluttonTurnAt(ey, ex)
 		meleeTurnAt(ey, ex)
 	end
 end
+
+function greedTurnAt(ey, ex)
+	local greed = cellAt(ey, ex).contents
+	if greed.ap.actual == greed.ap.max then
+		--summon
+		spawnOneEnemy("pharma")
+	else
+		--act as melee
+		meleeTurnAt(ey, ex)
+	end
+end
+
+function apathyTurnAt(ey, ex)
+	local apathy = cellAt(ey, ex).contents
+	if apathy.ap.actual == apathy.ap.max then
+		--flee, then summon
+		enemyFleeHero(ey, ex)
+		queue(functionEvent("spawnOneEnemy", shuffle({"toxy", "sewy", "garby", "algy", "plasty", "pharma", "nukey", "mercuri"})[1]))
+	else
+		--act as melee
+		meleeTurnAt(ey, ex)
+	end
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 --"is there at least one adjacent cell containing a hero?"
 function heroAdjacentToEnemy(ey, ex)
@@ -349,230 +378,3 @@ end
 function getAdjacentCells(ly, lx, class)
 	return cellsInDistanceRange(ly, lx, 1, 1, class)
 end
-
-----------------------------------------------------------------------------------------------------------------------------------------------------
-
---could easily see moving enemy creating/spawning to another separate file TODO
---[[
-init: take stage's list of enemies and shuffle
-end of each night: 
-  if there's enough open space, pop the next set of enemies and insert randomly
-	if less space than required for spawn-set, spawn NEXT set. maybe pop big one off the stack and push back on the end. careful of infinite loops here
-]]
-
---spawning bosses: go ahead and use the same algo as above, for the wild case that all other cells contain powers & there's nowhere to spawn at first TODO
---...but when do you announce the boss & change the UI?
-
-function spawnEnemies(l)
-	local empties = shuffle(allClearCells())
-	local list = nil
-	
-	--either just assign l to list (usually for stage.startingEnemies), or find a set of enemies in stage.enemyList that will fit in the available space
-	if l then
-		list = l
-	else
-		local nextEnemies
-		local loops = 1
-		while not list and loops <= table.getn(stage.enemyList) do
-		  nextEnemies = pop(stage.enemyList)
-			if table.getn(nextEnemies) <= table.getn(empties) then
-				list = nextEnemies
-			else
-				push(stage.enemyList, nextEnemies)
-				print("wasn't enough room")
-				tablePrint(stage.enemyList)
-			end
-			loops = loops + 1
-		end
-	end	
-	
-	--spawn all enemies in list one by one (if there's anything to spawn)
-	if list then
-		for k, en in ipairs(list) do
-			local cell = pop(empties)
-			local newEnemy = enemy(en)
-			-- newEnemy.drop = pop(stage.powers) --leaving in in case you ever let common enemies drop rare powerups...
-			newEnemy.drop = true
-			queueSet({
-				waitEvent(0.25),
-				soundEvent("tick"),
-				cellOpEvent(cell.y, cell.x, newEnemy)
-			})
-			enemyInfoPopupIfFirstTime(en)
-		end
-	end
-end
-
--- function spawnEnemies(l)
--- 	--if not provided, get list of enemy species by popping off the stage's enemy list. if none, then return
--- 	local list = l or pop(stage.enemyList)
--- 	if not list then return end
---
--- 	local empties = shuffle(allClearCells())
---
--- 	--if there's space, spawn all enemies in list, one by one
--- 	if table.getn(list) <= table.getn(empties) then
--- 		for k, en in ipairs(list) do
--- 			local cell = pop(empties)
--- 			local newEnemy = enemy(en)
--- 			newEnemy.drop = pop(stage.powers)
--- 			queueSet({
--- 				waitEvent(0.25),
--- 				soundEvent("tick"),
--- 				cellOpEvent(cell.y, cell.x, newEnemy)
--- 			})
--- 		end
--- 	else
--- 		--there wasn't enough space! probably gotta loop through all to get it TODO what you want
--- 		print("not enough space for "..table.getn(list).." enemies!")
--- 		-- push(stage.enemyList, list)
--- 	end
--- end
-
-function spawnBossAndSwitchUI()
-	local empties = shuffle(allClearCells())
-		
-	if empties[1] then		
-		-- there's at least one clear cell for the boss, so spawn	it
-		stage.boss = enemy(stage.bossSpecies)
-	
-		print("queue boss spawn now ~~")
-		queueSet({
-			waitEvent(0.25),
-			soundEvent("tick"),
-			cellOpEvent(empties[1].y, empties[1].x, stage.boss)
-		})
-		enemyInfoPopupIfFirstTime(stage.bossSpecies)
-	else
-		--miraculously, no free spaces exist; try again next round
-	end
-end
-
-function enemy(species)
-	--base enemy
-	local enemy = {
-		class = "enemy",
-		species = species,
-		pose = "idle",
-		ai = "melee",
-		hp = {max = 5, actual = 0, shown = 0, posSound = nil, negSound = nil},
-		ap = {max = 1, actual = 0, shown = 0, posSound = nil, negSound = nil},
-		attack = 1,
-		yOffset = 0,
-		xOffset = 0
-	}
-	
-	--hp and other species-specific stuff
-	if species == "garby" then
-		enemy.hp.max = 5
-		enemy.ai = "glutton"
-		
-	elseif species == "plasty" then
-		enemy.hp.max = 10 --4 hits if atk 3, 3 if atk 4, 2 if atk 5 (rare). this seems good
-		
-	elseif species == "algy" then
-		enemy.hp.max = 7
-		enemy.effect = "stick"
-		enemy.reaction = "stick" 
-		
-	elseif species == "toxy" then
-		enemy.hp.max = 5
-		enemy.ai = "ranger"
-		
-	elseif species == "mercuri" then
-		enemy.hp.max = 4
-		enemy.ap.max = 2
-		
-	elseif species == "sewy" then
-		enemy.hp.max = 5
-		
-	elseif species == "nukey" then
-		enemy.hp.max = 3
-		enemy.reaction = "explode"
-		
-	elseif species == "pharma" then
-		enemy.hp.max = 7
-		enemy.ai = "healer"
-
-	else
-		--it's a boss
-		enemy.isBoss = true
-		
-		if species == "heat" then
-			enemy.hp.max = 18
-			enemy.ap.max = 1
-			enemy.attack = 2
-		elseif species == "invasive" then
-			enemy.hp.max = 30
-			enemy.ap.max = 1
-			enemy.effect = "stick"
-			enemy.reaction = "stick" 
-		elseif species == "oil" then
-			enemy.hp.max = 21
-			enemy.ap.max = 2
-		elseif species == "xps" then
-			enemy.hp.max = 50
-			enemy.ap.max = 1
-			--auto-healing? TODO reduce HP if so
-		elseif species == "noise" then
-			enemy.hp.max = 27
-			enemy.ap.max = 2 --TODO 3? nothing gets 3 AP... 3 for Light if you swap with Noise? or shift XPS and Noise down?
-			--TODO stinky like sewy? maybe whole field?
-		elseif species == "light" then
-			enemy.hp.max = 21
-			enemy.ap.max = 3
-			enemy.ai = "ranger"
-		elseif species == "gluttony" then
-			enemy.hp.max = 30
-			enemy.ap.max = 2
-			enemy.ai = "glutton"
-		elseif species == "greed" then
-			enemy.hp.max = 30
-			enemy.ap.max = 1
-			enemy.attack = 2
-			--TODO always summons a pharma with first action
-		elseif species == "apathy" then
-			enemy.hp.max = 72
-			enemy.ap.max = 1
-			enemy.attack = 2
-			--TODO always summons with first action. maybe just apathyTurnAt() -> meleeTurnAt
-		end
-	end
-	
-	enemy.hp.actual = enemy.hp.max
-	enemy.hp.shown = enemy.hp.max
-	enemy.ap.actual = enemy.ap.max
-	enemy.ap.shown = enemy.ap.max
-	
-	return enemy
-end
-
-function enemyInfoPopupIfFirstTime(species)
-	if game.seenPopups[species] then
-		--already seen during this game!
-		return
-	else
-		game.seenPopups[species] = true
-		queue(screenEvent(enemyInfo[species], true, true, enemySheets[species]))
-	end
-end
-
-enemyInfo = {
-		toxy = "\n\nTOXY\nA meanie that hurts from afar.",
-		mercuri = "\n\nMERCURI\nQuick like quicksilver!", 
-		algy = "\n\nALGY\nSticky - don't touch it!",
-		sewy = "\n\nSEWY\nUnbearably smelly! Yuck!!",
-		garby = "\n\nGARBY\nConsumes anything in reach.",
-		plasty = "\n\nPLASTY\nHard to break down!",
-		pharma = "\n\nPHARMA\nGood for you... or not?", 
-		nukey = "\n\nNUKEY\nDANGER: UNSTABLE ELEMENTS",
-		oil = "\n\n- BOSS -\n\nOIL\nSPILL",
-		heat = "\n\n- BOSS -\n\nHEAT\nPOLLUTION",
-		noise = "\n\n- BOSS -\n\nNOISE\nPOLLUTION",
-		light = "\n\n- BOSS -\n\nL IGHT\nPOLLUTION",
-		invasive = "\n\n- BOSS -\n\nINVASIVE\nSPECIES",
-		xps = "\n\n- BOSS -\n\nEXTRUDED\nPOLYSTYRENE",
-		gluttony = "\n\n- BOSS -\n\nGLUTTONY",
-		greed = "\n\n- BOSS -\n\nGREED",
-		apathy = "\n\n- BOSS -\n\nAPATHY",
-}
