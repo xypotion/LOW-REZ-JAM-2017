@@ -167,7 +167,7 @@ function allEnemiesAndBossForStage(n)
 			{"garby"},
 			{"garby"}, --12
 		},
-		"light"
+		"noise"
 	elseif n == 5 then
 		return
 		{"toxy", "garby", "mercuri"},
@@ -198,7 +198,7 @@ function allEnemiesAndBossForStage(n)
 			{"sewy"},
 			{"sewy"} --16
 		},
-		"noise"
+		"light"
 	elseif n == 7 then
 		return
 		{"garby", "garby", "garby", "garby"},

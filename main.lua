@@ -13,6 +13,7 @@ function love.load()
 	--initial setup stuff & constants
 	math.randomseed(os.time())
 	love.window.setMode(512, 512)
+	love.window.setTitle("Heart's Desire: Blue Sea")
 	
 	love.graphics.setLineWidth(1)
 	
@@ -349,6 +350,12 @@ function heroStuck()
 end
 
 function sewyAdjacent()
+	--slight hack to give Noise Pollution the same effect as Sewy
+	if stage and stage.boss and stage.boss.species == "noise" then
+		return true
+	end
+	
+	--check for adjacent Sewies
 	local hy, hx = locateHero()
 	local enemyNeighbors = getAdjacentCells(hy, hx, "enemy")
 	

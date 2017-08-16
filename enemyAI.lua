@@ -499,9 +499,9 @@ function enemy(species)
 		enemy.isBoss = true
 		
 		if species == "heat" then
-			enemy.hp.max = 16
+			enemy.hp.max = 18
 			enemy.ap.max = 1
-			enemy.attack = 2 --TODO "heats up"?
+			enemy.attack = 2
 		elseif species == "invasive" then
 			enemy.hp.max = 30
 			enemy.ap.max = 1
@@ -510,32 +510,32 @@ function enemy(species)
 		elseif species == "oil" then
 			enemy.hp.max = 21
 			enemy.ap.max = 2
-		elseif species == "light" then
-			enemy.hp.max = 24
-			enemy.ap.max = 2
-			enemy.ai = "ranger"
-		elseif species == "noise" then
-			enemy.hp.max = 30
-			enemy.ap.max = 2 --TODO 3? nothing gets 3 AP... 3 for Light if you swap with Noise? or shift XPS and Noise down?
-			--TODO stinky like sewy? maybe whole field?
 		elseif species == "xps" then
 			enemy.hp.max = 50
 			enemy.ap.max = 1
 			--auto-healing? TODO reduce HP if so
+		elseif species == "noise" then
+			enemy.hp.max = 27
+			enemy.ap.max = 2 --TODO 3? nothing gets 3 AP... 3 for Light if you swap with Noise? or shift XPS and Noise down?
+			--TODO stinky like sewy? maybe whole field?
+		elseif species == "light" then
+			enemy.hp.max = 21
+			enemy.ap.max = 3
+			enemy.ai = "ranger"
 		elseif species == "gluttony" then
 			enemy.hp.max = 30
 			enemy.ap.max = 2
-			enemy.attack = 1
 			enemy.ai = "glutton"
 		elseif species == "greed" then
 			enemy.hp.max = 30
-			enemy.ap.max = 2
-			--TODO always summons a pharma with first action
-		elseif species == "apathy" then
-			enemy.hp.max = 99
 			enemy.ap.max = 1
 			enemy.attack = 2
-			--TODO always summons with first action
+			--TODO always summons a pharma with first action
+		elseif species == "apathy" then
+			enemy.hp.max = 72
+			enemy.ap.max = 1
+			enemy.attack = 2
+			--TODO always summons with first action. maybe just apathyTurnAt() -> meleeTurnAt
 		end
 	end
 	

@@ -26,8 +26,6 @@ high-level to do & time estimates as of 8/7, 1AM
 - todo: disable + grey out Continue on load if you're not implementing autosaves
 - todo: improve ending text
 - todo: make VICTORY appear differently
-* todo: arrow keys should advance messages
-* todo: give the window a title! lol
 - todo: credits - add my itch.io username? and special thanks to dustin (+ /astralung)
 * bug?: enemy HP bars in the wrong place on dustin's computer? maybe just a quirk with love.graphics.points()?? 
   - tried subtracting 0.5 from locations; no change on OSX (good), any change on Windows?
@@ -61,7 +59,7 @@ high-level to do & time estimates as of 8/7, 1AM
   - playtest a little more...
 	- special behaviors:
 	  x heat powers up? or nah?
-	  - noise = sewy, at least. maybe whole field?
+	  √ noise = sewy, at least. maybe whole field?
 		- adds for greed
 		- adds for apathy
 		. healing for xps? or nah?
