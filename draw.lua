@@ -147,12 +147,12 @@ function drawEnemyHP(ey, ex)
 	
 	love.graphics.setColor(0, 0, 0, 127)
 	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + enemy.hp.max do
-		love.graphics.points(x + enemy.xOffset, (ey - 1) * 15 + 18 + enemy.yOffset)
+		love.graphics.points(x + enemy.xOffset - 0.5, (ey - 1) * 15 + 17.5 + enemy.yOffset)
 	end
 	
 	love.graphics.setColor(255, 0, 0, 127)
 	for x = (ex - 1) * 15 + 5, (ex - 1) * 15 + 4 + enemy.hp.shown do
-		love.graphics.points(x + enemy.xOffset, (ey - 1) * 15 + 18 + enemy.yOffset)
+		love.graphics.points(x + enemy.xOffset - 0.5, (ey - 1) * 15 + 17.5 + enemy.yOffset)
 	end
 	
 	white()

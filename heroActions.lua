@@ -6,8 +6,8 @@ function initHero()
 		-- hp = {max = 1, actual = 1, shown = 1, posSound = "hp", negSound = nil}, --for testing game over easily!
 		ap = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
 		sp = {max = 3, actual = 3, shown = 3, posSound = "sp", negSound = nil},
-		-- attack = 3,
-		attack = 9,
+		attack = 3,
+		-- attack = 9,
 		powers = {},
 		pose = "idle",
 		yOffset = 0,

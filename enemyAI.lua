@@ -525,7 +525,7 @@ function enemy(species)
 		elseif species == "gluttony" then
 			enemy.hp.max = 30
 			enemy.ap.max = 2
-			enemy.attack = 2
+			enemy.attack = 1
 			enemy.ai = "glutton"
 		elseif species == "greed" then
 			enemy.hp.max = 30
@@ -569,9 +569,9 @@ enemyInfo = {
 		oil = "\n\n- BOSS -\n\nOIL\nSPILL",
 		heat = "\n\n- BOSS -\n\nHEAT\nPOLLUTION",
 		noise = "\n\n- BOSS -\n\nNOISE\nPOLLUTION",
-		light = "\n\n- BOSS -\n\nLIGHT\nPOLLUTION",
+		light = "\n\n- BOSS -\n\nL IGHT\nPOLLUTION",
 		invasive = "\n\n- BOSS -\n\nINVASIVE\nSPECIES",
-		xps = "\n\n- BOSS -\n\nXPS",
+		xps = "\n\n- BOSS -\n\nEXTRUDED\nPOLYSTYRENE",
 		gluttony = "\n\n- BOSS -\n\nGLUTTONY",
 		greed = "\n\n- BOSS -\n\nGREED",
 		apathy = "\n\n- BOSS -\n\nAPATHY",

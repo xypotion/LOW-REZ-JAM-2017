@@ -45,8 +45,8 @@ function love.load()
 	game = {
 		state = "title",
 		maxStage = 1,
-		-- lastStage = 9,
-		lastStage = 1,
+		lastStage = 9,
+		-- lastStage = 1,
 		seenPopups = {}
 	}
 	bossHPRatio = 0 --hhaaaack
@@ -189,6 +189,7 @@ function love.keypressed(key)
 		--merry quitmas
 		love.event.quit()
 	end
+	--[[
 	if key == "i" then
 		--inspect grid
 		print("\ninfo:")
@@ -237,6 +238,7 @@ function love.keypressed(key)
 		queue(screenEvent("\n\n- BOSS -\n\nGREED", true, true, enemySheets.greed))
 		queue(screenEvent("\n\n- BOSS -\n\nAPATHY", true, true, enemySheets.apathy))
 	end
+	]]
 	--END DEBUG
 	
 	if key == "v" then 
