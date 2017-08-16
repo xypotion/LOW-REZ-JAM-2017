@@ -83,7 +83,7 @@ function stageStart(n)
 		end
 	else
 		--boss music			
-		queue(bgmEvent("battleAIntro", "battleA")) --TODO actual boss music
+		queue(bgmEvent("finalIntro", "final"))
 	end
 	print("queueing music at start of stage", nextBGM, currentBGM) --TODO
 	
@@ -253,11 +253,57 @@ function gameOverIFHeroDead()
 	end
 end
 
+function startEnding()
+	--ending setup
+	game.beaten = true
+	queue(bgmFadeEvent())
+	queue(fadeOutEvent())
+	queueSet({
+		bgEvent("ending1"),
+		functionEvent("initStage"),
+		functionEvent("initHero"),
+		gameStateEvent("state", "ending"),
+	})
+	queue(fadeInEvent())
+	queue(waitEvent(2))
+	
+	--reveal prettiness & Victory
+	queueSet({
+		bgmEvent("endingIntro", "ending"),
+		bgEvent("ending2", 3.8),
+	})
+	queue(bgEvent("ending3", 0.1))
+	queue(bgEvent("ending4", 2))
+	
+	--thank-you message
+	queue(screenEvent("You did it! My oceans are clean and beautifully blue once more.", true, true))
+	queue(screenEvent("You even made it so that humans will take better care of me forever!", true, true))
+	queue(screenEvent("You have fulfilled my heart's desire. Thank you!\nLove,\nMother Nature", true, true))
+	
+	--player stats
+	queue(screenEvent("\n\n\n\nDefeats: 0\nDays: 123", true)) --TODO
+	
+	--just one more look at prettiness :)
+	queue(screenEvent("", true)) 
+	
+	--and return to title
+	queue(fadeOutEvent(2))
+	unloadGameAndReturnToTitle()
+	titleMenuCursorPos = 3
+end
+
 function unloadGameAndReturnToTitle()
+	local whichTitle = nil
+	if game.beaten then 
+		whichTitle = "title2"
+	else
+		whichTitle = "title1"
+	end
+	
 	queueSet({
 		gameStateEvent("state", "title"),
 		bgmFadeEvent(),
-		bgEvent("title1", 0),
+		bgEvent(whichTitle, 0),
 		functionEvent("initStage"), --queueing to happen again since this happens in love.load()
 		functionEvent("initHero"), --queueing to happen again since this happens in love.load()
 	})

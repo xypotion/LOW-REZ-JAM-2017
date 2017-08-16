@@ -120,44 +120,7 @@ function love.update(dt)
 			
 				--DEBUGgy
 				if game.maxStage == game.lastStage then
-					--ending setup
-					queue(bgmFadeEvent())
-					queue(fadeOutEvent())
-					queueSet({
-						bgEvent("ending1"),
-						functionEvent("initStage"),
-						functionEvent("initHero"),
-						gameStateEvent("state", "ending"),
-					})
-					queue(fadeInEvent())
-					queue(waitEvent(2))
-					
-					--reveal prettyness
-					queueSet({
-						bgmEvent("endingIntro", "ending"),
-						bgEvent("ending2", 5),
-					})
-					
-					-- queue(screenEvent("\n\nYOU WIN!\n\nThanks for\nplaying!", true, true))
-					queue(screenEvent("\n\nGreat job! Love,", true, true)) --TODO real text...
-					queue(screenEvent("\n\nMOTHER\nNATURE", true, true))
-					
-					--special ending messages & graphics
-					queueSet({
-						screenEvent("\n\n\n\nDefeats: 0\nDays: 123", true), --TODO
-					})
-					
-					--and return to title
-					screenEvent("", true) --a little hack to get them to press one more button before returning to title :)
-					queueSet({
-						bgmFadeEvent(),
-						fadeOutEvent(2)
-					})
-					
-					unloadGameAndReturnToTitle()
-					-- love.event.quit()
-					
-					titleMenuCursorPos = 3
+					startEnding()
 				else
 					--queue rare powerups
 					queueRarePowerups()
@@ -191,6 +154,7 @@ function love.keypressed(key)
 		--merry quitmas
 		love.event.quit()
 	end
+	if key == "e" then startEnding() end
 	--[[
 	if key == "i" then
 		--inspect grid
