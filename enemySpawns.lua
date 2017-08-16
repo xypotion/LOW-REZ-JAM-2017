@@ -128,14 +128,14 @@ function enemy(species, hasDrop)
 		if species == "heat" then
 			enemy.hp.max = 18
 			enemy.ap.max = 1
-			enemy.attack = 2
+			enemy.attack = 3
 		elseif species == "invasive" then
 			enemy.hp.max = 30
 			enemy.ap.max = 1
 			enemy.effect = "stick"
 			enemy.reaction = "stick" 
 		elseif species == "oil" then
-			enemy.hp.max = 21
+			enemy.hp.max = 24
 			enemy.ap.max = 2
 		elseif species == "noise" then
 			enemy.hp.max = 27

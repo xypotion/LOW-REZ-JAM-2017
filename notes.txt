@@ -60,9 +60,6 @@ high-level to do & time estimates as of 8/7, 1AM
   - playtest a little more...
 	- special behaviors:
 	  x heat powers up? or nah?
-	  √ noise = sewy, at least. maybe whole field?
-		- adds for greed
-		- adds for apathy
 		. healing for xps? or nah?
 	- fanfare when spawned? alarm or something?
 	- death sound and/or animation?
@@ -720,3 +717,12 @@ dustin's feebdack on 1st play (8/15, 6:30 or so):
 * window title is Untitled! lol
 - really lamented the lack of powerups :( BUT game balance is good right now, i think. powerups would make it too easy -> would have to rebalance a lot
 - was confused about "XPS". maybe change to Styrofoam? or just Polystyrene? Extruded Polystyrene?
+
+
+my own playtests after adjusting bosses:
+1
+- heat is too easy? should hit harder
+- oil spill is too easy? more hp
+- xps is kinda boring. a heal would make it more interesting, at least, AND foreshadow pharma
+- gluttony, noise, invasive: great
+- greed: too hard? well-balanced, except you need to enter with full bars...
