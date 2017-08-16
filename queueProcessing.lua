@@ -95,7 +95,7 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
 function processGameStateEvent(e)
-	print(e.variable, e.value)
+	-- print(e.variable, e.value)
 	game[e.variable] = e.value
 	e.finished = true
 end
@@ -182,7 +182,6 @@ function processBgmEvent(e)
 	--if there is a next, set up for transition later. otherwise, loop current now
 	if e.next then
 		nextBGM = bgm[e.next]
-	print("just started music in queue processing", nextBGM, currentBGM) --TODO
 	else
 		currentBGM:setLooping(true)
 		nextBGM = nil
@@ -211,14 +210,12 @@ function processBgEvent(e)
 	--what if e.time is 0? TODO
 	
 	bgNext.alpha = bgNext.alpha + 256 * eventFrameLength / e.time
-	-- print(bgNext.alpha, bgMain.alpha)
 	
 	--fade completed? then we're done
 	if bgNext.alpha >= 255 then
 		bgMain = bgNext
 		bgNext = nil
 		e.finished = true
-		-- print("finished\n")
 	end
 end
 
@@ -241,7 +238,6 @@ function processFadeOutEvent(e)
 		blackOverlay.alpha = 255
 		e.finished = true
 	end
-	-- print(blackOverlay.alpha)
 end
 
 function processFadeInEvent(e)
@@ -255,7 +251,6 @@ function processFadeInEvent(e)
 		blackOverlay.alpha = 0
 		e.finished = true
 	end
-	-- print(blackOverlay.alpha)
 end
 
 --i hate hacking like this, but i'm out of patience for good architecture at the moment. simple effect but complicated to do nicely

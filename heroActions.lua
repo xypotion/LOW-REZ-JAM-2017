@@ -156,7 +156,7 @@ function heroGetPowerUp(y, x, dy, dx)
 end
 
 function collectRarePowerup(y, x, dy, dx)
-	print("rare powerup collected!")
+	-- print("rare powerup collected!")
 end
 
 function heroFight(y, x, dy, dx)
@@ -185,7 +185,6 @@ function heroFight(y, x, dy, dx)
 	
 	--explode; damage hero (with effect) & queue removal
 	if target.reaction == "explode" then
-		print("i'm exploding!!!", ty, tx)
 		explosionAt(ty, tx)
 	end
 	
@@ -286,7 +285,7 @@ function locateHero()
 	if h then 
 		return h.y, h.x
 	else 
-		print("hero not found!")
+		print("hero not found!?")
 		return nil, nil
 	end
 end

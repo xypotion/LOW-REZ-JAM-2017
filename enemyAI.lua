@@ -1,7 +1,5 @@
 function startEnemyTurn()
-	print("queueing night")
-	
-	--reset all enemies APs
+	--reset all enemies' APs
 	for y, r in ipairs(stage.field) do
 		for x, c in ipairs(r) do
 			if c and c.contents and c.contents.class and c.contents.class == "enemy" then

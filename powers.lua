@@ -34,5 +34,5 @@ end
 -- end
 
 function queueRarePowerups()
-	print("queueing rare powerup placement")
+	-- print("queueing rare powerup placement")
 end

@@ -13,8 +13,8 @@ function stageStart(n)
 	stage.days = 0
 	
 	--fade music
-	print("fading music at end of stage", nextBGM, currentBGM) --TODO
 	queue(bgmFadeEvent())
+	
 	--reset hero stats (will be actuated in a moment). yes, it's OK to do this here. don't panic. possibly change/move later when you implement Continue TODO
 	hero.hp.actual = hero.hp.max
 	hero.ap.actual = hero.ap.max
@@ -44,7 +44,6 @@ function stageStart(n)
 		end
 	end
 	stage.enemyCount.actual = stage.enemyCount.max
-	-- print(stage.enemyCount.actual)
 		
 	--actuate those stats
 	queueSet({
@@ -83,7 +82,6 @@ function stageStart(n)
 		--boss music			
 		queue(bgmEvent("finalIntro", "final"))
 	end
-	print("queueing music at start of stage", nextBGM, currentBGM) --TODO
 	
 	queue(fadeInEvent())
 	
@@ -98,19 +96,12 @@ function stageStart(n)
 	
 	--also queueing this to occur later so to preserve the original order
 	queue(functionEvent("startHeroTurn"))
-	
-	-- spawnEnemies(stage.startingEnemyList)
-	-- print("queue enemy info popup here")
-	
-	-- ---aaand begin
-	-- startHeroTurn()
 end
 
 function stageEnd()
 	stage.boss = nil
 				
 	--tracking total days; only added to game.days here, when stage is complete
-	print("adding "..stage.days.." to game.days, for a total of "..game.days + stage.days)
 	game.days = game.days + stage.days
 	
 	--quick fade before resetting hero pos & stats

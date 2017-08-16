@@ -14,8 +14,8 @@ function spawnEnemies(l)
 				list = nextEnemies
 			else
 				push(stage.enemyList, nextEnemies)
-				print("wasn't enough room")
-				tablePrint(stage.enemyList)
+				-- print("wasn't enough room")
+				-- tablePrint(stage.enemyList)
 			end
 			loops = loops + 1
 		end
@@ -42,7 +42,6 @@ function spawnBossAndSwitchUI()
 		-- there's at least one clear cell for the boss, so spawn	it
 		stage.boss = enemy(stage.bossSpecies)
 	
-		print("queue boss spawn now ~~")
 		queueSet({
 			waitEvent(0.25),
 			soundEvent("tick"),

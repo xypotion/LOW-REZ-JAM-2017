@@ -41,10 +41,8 @@ function love.draw()
 		love.graphics.rectangle("fill", 0, 57, 31, 7)
 		
 		love.graphics.setColor(255, 255, 255, volumePopupAlpha)
-		-- love.graphics.print("volume "..masterVolume, 2, 56)
 		love.graphics.draw(ui, quads_ui.volume, 7, 58)
 
-		-- love.graphics.setColor(255, 255, 255, volumePopupAlpha)
 		love.graphics.rectangle("fill", 2, 62 - masterVolume * 4, 3, masterVolume * 4)
 		
 		white()
@@ -195,7 +193,6 @@ function drawEnemyUI()
 	if stage.boss then
 		--boss UI
 		love.graphics.draw(ui, quads_ui.boss[getNonCharacterAnimFrame()], 51, 8)
-		-- if love.keyboard.isDown("j") then print(stage.boss.hp.shown) end
 		
 		--boss hp bar = 4 rectangles
 		love.graphics.setColor(0, 0, 0)

@@ -125,7 +125,6 @@ function love.update(dt)
 			--boss defeated; dump powerups (and for now, move on to next stage immediately)
 			if stage.boss.hp.shown <= 0 and not peek(eventSetQueue) then
 				--stage over!
-				-- print("boss is dead")
 				queue(screenEvent("\n\nSTAGE "..game.maxStage.."\nCOMPLETE!"))
 				-- queue(screenEvent("\n\n  STAGE "..game.maxStage.."\n  COMPLETE!\n\n Choose reward:"))
 			
@@ -161,13 +160,13 @@ end
 
 function love.keypressed(key)
 	--DEBUG
+	--[[
 	if key == "escape" then
 		--merry quitmas
 		love.event.quit()
 	end
 	if key == "e" then startEnding() end
 	if key == "t" then print("deaths:", game.deaths, "days", game.days) end
-	--[[
 	if key == "i" then
 		--inspect grid
 		print("\ninfo:")
@@ -216,7 +215,7 @@ function love.keypressed(key)
 		queue(screenEvent("\n\n- BOSS -\n\nGREED", true, true, enemySheets.greed))
 		queue(screenEvent("\n\n- BOSS -\n\nAPATHY", true, true, enemySheets.apathy))
 	end
-	]]
+	--]]
 	--END DEBUG
 	
 	if key == "v" then 
@@ -243,8 +242,6 @@ function love.keypressed(key)
 				heroSpecialAttack()
 			end
 		end	
-		-- print("stage.days: "..stage.days.." game.days: "..game.days)
-
 	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then		
 		if key == "up" or key == "w" then
 			titleMenuCursorPos = (titleMenuCursorPos - 2) % 3 + 1
