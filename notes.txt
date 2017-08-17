@@ -1,3 +1,26 @@
+the jam is over! what else do you want to do with this game?
+- more interesting bosses...
+  - heat heats up
+	- someone comes in multiples... oil? invasive? light?
+	- teleporting light pollution (and give the 3 AP to oil spill, i guess)
+  - test teleporting apathy, too. lots harder, but more interesting? he's slightly too easy right now
+- power-ups!! including better wish effects
+- sewy isn't as scary as you thought it was. either give more HP or allow to appear earlier (swap with algy?)
+- hard mode? + classic mode? or you unlock hard mode after beating normal mode?
+- enemy syncs (an undertaking, but could be very cool)
+  - not passive, but active? checks & does something at end of night if there's a sync?
+- better background art
+- better attack animations (skill effects, ranged attacks)
+- better SFX
+- better info popups? draw by hand instead of printing? OR just find/make a better font
+- resizable window :P
+- code cleanup, obviously.
+- graphics cleanup. lots of wasted space in those files
+- P to pass a turn? or not?
+- named stages? ehh
+- autosaves + high scores
+- custom app icons ~
+
 high-level to do & time estimates as of 8/7, 1AM
 - enemies (art, ai, special fx) - 1-2 more days
 - sound (sfx, music, implementation ) - 2-3 days
@@ -25,9 +48,6 @@ high-level to do & time estimates as of 8/7, 1AM
 * PUBLISHING & UPLOADING!
   - including screenshots and little blurbs for game page
 	- custom app icon? hmmmmmmmm
-- todo: remove or hide print()s and DEBUGs
-- bug?: enemy HP bars in the wrong place on dustin's computer? maybe just a quirk with love.graphics.points()?? 
-  - tried subtracting 0.5 from locations; no change on OSX (good), any change on Windows?
 . bug: algy AS AN ADD, REMAINING AFTER KILLING BOSS, leaves its stick on the hero. should never happen outside of final boss, though, so no biggie for now
   - fix = init hero again on every stage start. you were planning to do this, anyway, when you implemented powerups! yay
 - other minor TODOs:
@@ -726,6 +746,11 @@ my own playtests after adjusting bosses:
 - i died four times on stage 7 :o bad luck? or too many toxies?
 - got lucky on greed (no room to summon adds). apathy was tough but i did it in one try
 
-3
-- total time: _
-- deaths: _, turns: _
+3 (me on dustin's windows laptop)
+- total time: 21m (started at 2:05 pm :D)
+- deaths: 3, turns: 156
+- oil spill is really boring after invasive species
+- xps has just a little too much HP. :P
+- that toxy gang on stage 6 is killer!
+- greed is also a killer, damn
+- HP bar bug is fixed! huzzah
