@@ -1,12 +1,16 @@
 the jam is over! what else do you want to do with this game?
 - more interesting bosses...
   - heat heats up
-	- someone comes in multiples... oil? invasive? light?
+	- someone comes in multiples... xps and oil?
 	- teleporting light pollution (and give the 3 AP to oil spill, i guess)
   - test teleporting apathy, too. lots harder, but more interesting? he's slightly too easy right now
 - power-ups!! including better wish effects
+- click on enemies & powerups for popup info! also hover states!
+- what if you changed the window size and added buttons for different skills? and/or put the powerups in a grid on the lower half of the screen?
 - sewy isn't as scary as you thought it was. either give more HP or allow to appear earlier (swap with algy?)
 - hard mode? + classic mode? or you unlock hard mode after beating normal mode?
+  * i think "classic" can just be the old build of the game. probably a separate game page
+	- so modes = normal + hard + infinite?
 - enemy syncs (an undertaking, but could be very cool)
   - not passive, but active? checks & does something at end of night if there's a sync?
 - better background art
@@ -20,6 +24,7 @@ the jam is over! what else do you want to do with this game?
 - named stages? ehh
 - autosaves + high scores
 - custom app icons ~
+- announce "FINAL STAGE" and "FINAL BOSS". maybe tell players how many stages there are, too
 
 high-level to do & time estimates as of 8/7, 1AM
 - enemies (art, ai, special fx) - 1-2 more days
@@ -710,6 +715,7 @@ if doing 8 normal stages + a final stage & boss, first 8 give set power-ups:
 * 	all fish also heal all AP
 *		blue fish heal 3 HP
 *		red fish heal 2 SP
+*		special attack costs no AP
 ?		all increase HP by 1? start really weak?
 
 a fun idea if you have time to make all the graphics: let the player choose a powerup after each boss fight (all remaining spawn at once, can take 1)

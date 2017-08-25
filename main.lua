@@ -160,7 +160,7 @@ end
 
 function love.keypressed(key)
 	--DEBUG
-	--[[
+	--[ [
 	if key == "escape" then
 		--merry quitmas
 		love.event.quit()
