@@ -296,7 +296,7 @@ function love.mousereleased(mx, my)
 	local cy, cx = getTappedCell(gy, gx)
 	print("cell tapped:", cy, cx)
 	local cell = cellAt(cy, cx)
-	print("cell tapped contains:", cell.contents.class)
+	-- print("cell tapped contains:", cell.contents.class)
 	
 	--DEBUG kinda
 	if game.state == "day" then
@@ -313,6 +313,12 @@ function love.mousereleased(mx, my)
 		--very DEBUG
 		queue(fadeOutEvent())
 		stageStart(game.maxStage)
+	end
+	
+	--also DEBUG
+	if gy < 0 or gy >= 64 or gx < 0 or gx >= 64 then
+		cycleVolume() 
+		volumePopupAlpha = 255
 	end
 	
 end
