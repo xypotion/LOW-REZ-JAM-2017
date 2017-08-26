@@ -13,12 +13,8 @@ require "graphics"
 function love.load()
 	--initial setup stuff & constants
 	math.randomseed(os.time())
-	love.window.setMode(512, 512)
+	love.window.setMode(540, 740) --only works on desktop. TODO change back to 512x512 later, i guess, for desktop. also allow resizing!
 	love.window.setTitle("Heart's Desire: Blue Sea")
-	
-	love.graphics.setLineWidth(1)
-	
-	cellD = 15 --D as in "dimension"
 	
 	--load graphics & quads
 	loadGraphics()
@@ -32,9 +28,23 @@ function love.load()
 	--init canvas & other graphics stuff
 	gameCanvas = love.graphics.newCanvas(64, 64)
 	gameCanvas:setFilter("nearest")
+	
 	bgMain = {graphic = "title0", alpha = 255}
 	love.graphics.setFont(love.graphics.newFont(8))
 	overlay = {xOffset = 0, text = ""}
+	love.graphics.setLineWidth(1)
+	cellD = 15 --D as in "dimension"
+	
+	--collect some device info, then derive mobile-specific graphics things
+	screen = {}
+	screen.w, screen.h, screen.flags = love.window.getMode()
+	if screen.w < screen.h then
+		scaleFactor = math.floor(screen.w / 64)
+		screen.yOffset = (screen.h - 64 * scaleFactor) / 2
+		screen.xOffset = (screen.w - 64 * scaleFactor) / 2
+	else
+		scaleFactor = 6 -- TODO
+	end
 
 	--find & load autosave for progress, hero's current inventory (8 bools, i think), and enemy info panels seen. pretty simple
 	
@@ -50,7 +60,7 @@ function love.load()
 		lastStage = 9,
 		-- lastStage = 1,
 		seenPopups = {},
-		started = false,
+		started = true,--false, --DEBUG
 		beaten = false,
 		deaths = 0,
 		days = 0,
@@ -275,6 +285,53 @@ function love.keypressed(key)
 			end
 		end
 	end
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+function love.mousereleased(mx, my)
+	print("raw tap:", my, mx)
+	local gy, gx = convertScreenCoords(my, mx)
+	print("converted tap:", gy, gx)
+	local cy, cx = getTappedCell(gy, gx)
+	print("cell tapped:", cy, cx)
+	local cell = cellAt(cy, cx)
+	print("cell tapped contains:", cell.contents.class)
+	
+	--DEBUG kinda
+	if game.state == "day" then
+		if inputLevel == "normal" then
+			local hy, hx = locateHero()
+			print("accepting input... hero is at", hy, hx)
+			if cy == hy and cx == hx then
+				heroSpecialAttack()
+			elseif heroAdjacentToEnemy(cy, cx) then --TODO change function name? this is yucky
+				heroImpetus(cy - hy, cx - hx)
+			end
+		end
+	elseif game.state == "title" and table.getn(eventSetQueue) == 0 then
+		--very DEBUG
+		queue(fadeOutEvent())
+		stageStart(game.maxStage)
+	end
+	
+end
+
+function convertScreenCoords(sy, sx)
+	local gy = math.floor((sy - screen.yOffset) / scaleFactor)
+	local gx = math.floor((sx - screen.xOffset) / scaleFactor)
+	
+	return gy, gx
+end
+
+function convertGameCoords(gy, gx)
+end
+
+function getTappedCell(gy, gx)
+	local cy = math.ceil((gy - 2) / 15)
+	local cx = math.ceil((gx - 2) / 15)
+	
+	return cy, cx
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------

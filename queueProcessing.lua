@@ -277,7 +277,7 @@ function processScreenEvent(e)
 		end
 	elseif e.state == "waiting" then
 		if e.waitingForKeypress then
-			if love.keyboard.isDown("space", '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'b', 'n', 'm', "return", "left", "right", "up", "down") then
+			if love.keyboard.isDown("space", '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'b', 'n', 'm', "return", "left", "right", "up", "down") or love.mouse.isDown(1) then --TODO quite hacky
 				e.state = "flyout"
 			end
 		elseif e.expirationTime > 0 then

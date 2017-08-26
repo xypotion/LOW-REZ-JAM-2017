@@ -1,3 +1,11 @@
+mobile port:
+* first: tapping squares = hero impetus, tapping elsewhere = special, anywhere = advance popups. no volume for now
+- add "special" button below main game canvas when in day/night
+  - change appearance when out of SP?
+- holding squares = popup info. no longer interrupt with them for enemies! 
+- tapping anywhere on screen = advance popups
+- title screen = start with just Start, but try to detect input eventually
+
 the jam is over! what else do you want to do with this game?
 - more interesting bosses...
   - heat heats up
@@ -709,6 +717,8 @@ if doing 8 normal stages + a final stage & boss, first 8 give set power-ups:
 - 	fish heal more at bottom
 - 	wish hurts surrounding enemies
 - 	wish does a row/column laser attack
+-		hero can melee attack over any distance
+-		hero can move over any distance
 *		wish hits all enemies instead of 3
 *		OR wish does 4 damage instead of 3
 *		attack + 1 if HP full

@@ -50,7 +50,7 @@ function love.draw()
 		
 	--draw gameCanvas
 	love.graphics.setCanvas()
-	love.graphics.draw(gameCanvas, 0, 0, 0, 8, 8)
+	love.graphics.draw(gameCanvas, screen.xOffset, screen.yOffset, 0, scaleFactor, scaleFactor)
 end
 
 function drawBackgrounds()
