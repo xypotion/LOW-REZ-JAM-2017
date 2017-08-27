@@ -26,6 +26,26 @@ the jam is over! what else do you want to do with this game?
 - custom app icons ~
 - announce "FINAL STAGE" and "FINAL BOSS". maybe tell players how many stages there are, too
 
+what did you learn from this project? + feedback from players
+- event queueing is powerful!! but this implementation is still imperfect. maybe need a bi-directional queue, meta-queue, or nested queues
+  - the biggest problems had to do with enemies moving and attacking together. cell status/contents changing -> couldn't queue all enemy turns at once
+- praise:
+  - your art is decent! people liked the sprites & animations
+	- enemy diversity is good
+  - your music ain't bad :) lots of people liked it. final stage/boss music needed work, imo, but the rest got good feedback
+  - SFX also don't have to be too fancy. no one criticized the sound
+  - simple controls = good. that was one of the worst parts of other people's games...
+	- people liked the concept. i think it was important to make the theme very clear
+- criticism:
+  - boss diversity could have been better. too many were "damage races" and/or uninteresting
+	- people wanted character growth & more abilities (incl. healing). i definitely get that....
+	- day/night transition wasn't super obvious. one person was confused about turn ending
+	- maybe a mascot would be better than just a heart
+	  * customizable/swappable player sprites? :P
+	- too much text + interruptions
+	- bad fonts. i think this cost me the most points. i don't think it's THAT bad, but people are picky. readable font is of prime importance, apparently
+- gotta tell people what versions of what they need, e.g. this game crashes for love 0.9
+
 high-level to do & time estimates as of 8/7, 1AM
 - enemies (art, ai, special fx) - 1-2 more days
 - sound (sfx, music, implementation ) - 2-3 days
